@@ -30,7 +30,7 @@ export class ExpenseComponent implements OnInit {
   updateItemForm : FormGroup = new FormGroup({
     'name' : new FormControl('',Validators.required),
     'dateOfPurchase' : new FormControl(Date.now,Validators.required),
-    'price' : new FormControl('',Validators.required),  
+    'price' : new FormControl('',Validators.required),
     'quantity': new FormControl('',Validators.required),
     'description': new FormControl('',Validators.required)
   });
@@ -41,14 +41,14 @@ export class ExpenseComponent implements OnInit {
     console.log('inside expense management component')
     this.GetUsers();
     console.log(this.membersList.length);
-    this.welcomeFlag=true;
+    this.welcomeFlag = true;
     this.addItemForm = new FormGroup({
-      'name' : new FormControl('',Validators.required),
-      'dateOfPurchase' : new FormControl(Date.now,Validators.required),
-      'price' : new FormControl('',Validators.required),
-      'consumptionPerDay' : new FormControl('',Validators.required),
-      'quantity': new FormControl('',Validators.required),
-      'description': new FormControl('',Validators.required)
+      'name' : new FormControl('', Validators.required),
+      'dateOfPurchase' : new FormControl(Date.now, Validators.required),
+      'price' : new FormControl('', Validators.required),
+      'consumptionPerDay' : new FormControl('', Validators.required),
+      'quantity': new FormControl('', Validators.required),
+      'description': new FormControl('', Validators.required)
     })
   }
 
@@ -67,18 +67,18 @@ openModal(itemId:any, modalName: string){
 onCloseHandled(name:string){
   if(name=="addModal")
     this.addDisplay = 'none';
-  else 
-    this.updateDisplay = 'none';  
+  else
+    this.updateDisplay = 'none';
 }
 
 
-  
+
   MemberFunction(index:any)
   {
     this.currentUserId=index;
     console.log('memberfunction id:'+this.currentUserId);
     this.welcomeFlag=false;
-    
+
     if(this.previousUserId!=this.currentUserId || this.previousUserId==0)
     {
       this.membersList[this.previousUserId].background=false;
@@ -160,7 +160,7 @@ onCloseHandled(name:string){
     var temp=this;
     var id=this.currentUserName;
     this.updateItemList=[];
-    try 
+    try
     {
       this.firestore.collection('expenses').doc(id).collection('list').doc(itemId)
       .get()
@@ -177,16 +177,16 @@ onCloseHandled(name:string){
           });
         console.log('inside get update items subscribe',temp.updateItemList);
       //  temp.updateitemflag=true;
-        temp.updateItemForm.get('name').setValue( temp.updateItemList[0].name); 
-        temp.updateItemForm.get('dateOfPurchase').setValue( temp.updateItemList[0].dateOfPurchase); 
-        temp.updateItemForm.get('description').setValue( temp.updateItemList[0].description); 
-        temp.updateItemForm.get('price').setValue( temp.updateItemList[0].price); 
-        temp.updateItemForm.get('quantity').setValue( temp.updateItemList[0].quantity); 
+        temp.updateItemForm.get('name').setValue( temp.updateItemList[0].name);
+        temp.updateItemForm.get('dateOfPurchase').setValue( temp.updateItemList[0].dateOfPurchase);
+        temp.updateItemForm.get('description').setValue( temp.updateItemList[0].description);
+        temp.updateItemForm.get('price').setValue( temp.updateItemList[0].price);
+        temp.updateItemForm.get('quantity').setValue( temp.updateItemList[0].quantity);
    //   temp.updateItemForm.setValue(temp.updateItemList[0]);
-        
+
       });
-    } 
-    catch (error) 
+    }
+    catch (error)
     {
       alert("Add Item Failed");
       console.log(error.toString);
@@ -196,25 +196,25 @@ onCloseHandled(name:string){
 
   updateItem(item:FormControl)
   {
-    try 
+    try
     {
-  
+
         this.firestore.collection('expenses').doc(this.membersList[this.currentUserId].id).collection('list').doc(this.updateItemList[0].id.toString()).set(this.updateItemForm.value).then(()=>{
           console.log('updated the item');
           this.GetUserValues(this.membersList[this.currentUserId].id);
           this.updateDisplay = 'none';
         });
-    } 
-    catch (error) 
+    }
+    catch (error)
     {
-      
+
     }
   }
-  addItemSubmit(item:FormGroup) 
+  addItemSubmit(item:FormGroup)
   {
     var count;
     var countMap={count:null};
-    try 
+    try
     {
       this.firestore.collection('expenses').doc(this.currentUserName)
     .get().subscribe(
@@ -235,11 +235,11 @@ onCloseHandled(name:string){
     this.previousUserId=0;
     this.MemberFunction(this.currentUserId);
     //end add item function
-    } 
+    }
     catch (error) {
       alert("Add Item Failed");
     }
-    
+
    // console.log(this.membersList[this.currentUserId].id+item.name+' '+item.price+' '+item.quantity+' '+item.dateOfPurchase+' '+item.description+' '+count);
   }
 }

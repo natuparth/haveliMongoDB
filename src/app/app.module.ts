@@ -18,6 +18,8 @@ import { TestComponent } from './test/test.component';
 import { ItemFilterPipe } from './item-filter.pipe';
 import { LoginComponent } from './login/login.component';
 
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,14 +38,14 @@ import { LoginComponent } from './login/login.component';
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule, 
+    AngularFirestoreModule,
     AngularFireAuthModule,
-     
+    HttpClientModule
   ],
   providers: [CrudService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
 
- 
+
  }

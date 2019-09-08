@@ -16,25 +16,25 @@ export class ShoppingListComponent implements OnInit {
   constructor(private crudService:CrudService) { }
 
   ngOnInit() {
-    this.showSpinner=true;
-    var db=firebase.firestore();
-    var collections=db.collection('shoppingList');
-   this.crudService.getFilteredList().subscribe(
-   (itemsList: Item[])=>{
-//     this.items=itemsList;
-     itemsList.forEach((data)=>{
-   // console.log((new Date().getTime()-new Date(data.dateOfLastPurchase).getTime())/(1000*3600*24));
-       //console.log(data.quantity-(data.consumptionPerDay*(new Date().getTime()-new Date(data.dateOfLastPurchase).getTime())/(1000*3600*24)));
-       if(data.quantity-(data.consumptionPerDay*(new Date().getTime()-new Date(data.date).getTime())/(1000*3600*24))<=5)
-           this.items.push(data);
-       }
-       )
-     this.showSpinner=false;
-     console.log(this.items);
-   }
+//     this.showSpinner=true;
+//     var db=firebase.firestore();
+//     var collections=db.collection('shoppingList');
+//    this.crudService.getFilteredList().subscribe(
+//    (itemsList: Item[])=>{
+// //     this.items=itemsList;
+//      itemsList.forEach((data)=>{
+//    // console.log((new Date().getTime()-new Date(data.dateOfLastPurchase).getTime())/(1000*3600*24));
+//        //console.log(data.quantity-(data.consumptionPerDay*(new Date().getTime()-new Date(data.dateOfLastPurchase).getTime())/(1000*3600*24)));
+//        if(data.quantity-(data.consumptionPerDay*(new Date().getTime()-new Date(data.date).getTime())/(1000*3600*24))<=5)
+//            this.items.push(data);
+//        }
+//        )
+//      this.showSpinner=false;
+//      console.log(this.items);
+//    }
 
-   )
-    
+//    )
+
   }
 
 }
