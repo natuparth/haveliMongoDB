@@ -124,7 +124,7 @@ export class GroceryComponent implements OnInit {
   }
 
   updateItem() {
-    const item: Item = new Item();
+    const item: Item = new Item(null);
     console.log(this.itemName);
     this.crudService.getItem(this.itemName);
     this.crudService.getItemUpdated().subscribe((doc) => {
@@ -174,24 +174,24 @@ export class GroceryComponent implements OnInit {
 
  shoppingList() {
    // this.itemsCol = this.firestore.collection('shoppingList');
-    this.itemsCol.get().subscribe(doc => {
-      doc.docs.forEach(docu => {
-        this.itemsArray.push(docu.data());
-        //  console.log(docu.data());
+  //   this.itemsCol.get().subscribe(doc => {
+  //     doc.docs.forEach(docu => {
+  //       this.itemsArray.push(docu.data());
+  //       //  console.log(docu.data());
 
-      });
-      // console.log(this.itemsArray);
-      for (const item of this.itemsArray) {
-        let date1 = new Date();
-        const date2 = new Date(item.dateOfLastPurchase);
-        let diff = Math.abs(date2.getTime() - date1.getTime());
-        let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-        // console.log(diffDays);
-     }
+  //     });
+  //     // console.log(this.itemsArray);
+  //     for (const item of this.itemsArray) {
+  //       let date1 = new Date();
+  //       const date2 = new Date(item.dateOfLastPurchase);
+  //       let diff = Math.abs(date2.getTime() - date1.getTime());
+  //       let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+  //       // console.log(diffDays);
+  //    }
 
 
 
-   });
+  //  });
 
   }
 

@@ -11,7 +11,7 @@ import { AuthService } from '../auth/auth.service';
 export class MainComponent implements OnInit {
   user = ' ';
   constructor(private router: Router, private authService: AuthService) {
-    console.log('main constructor called');
+    console.log('main constructor called and added');
   this.authService.getUserAuthListener().subscribe((res) => {
     console.log('response is' + res);
     this.user = res;
