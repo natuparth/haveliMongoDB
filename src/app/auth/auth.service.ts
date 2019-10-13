@@ -1,47 +1,51 @@
 import { Injectable } from '@angular/core';
-import { Router } from  "@angular/router";
-import { auth } from  'firebase/app';
-import { AngularFireAuth } from  "@angular/fire/auth";
-import { User } from  'firebase';
+import { User, auth } from 'firebase';
+import { HttpClient } from '@angular/common/http';
+import { LoginComponent } from '../login/login.component';
+import { Token } from '@angular/compiler';
+import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export  class  AuthService {
   user:  User;
-  constructor(public  afAuth:  AngularFireAuth, public  router:  Router) { 
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        this.user = user;
-        localStorage.setItem('user', JSON.stringify(this.user));
-      } else {
-        localStorage.setItem('user', null);
-      }
-    })
-
+  private token: string;
+  private loginSubject: Subject<string>;
+  constructor(private http: HttpClient) {
   }
 
-  async  login(email:  string, password:  string) {
+  public userAuthListener: Subject<string>;
 
-    try {
-        await  this.afAuth.auth.signInWithEmailAndPassword(email, password)
-        this.router.navigate(['main']);
-        console.log('login successfull');
-    } catch (e) {
-      console.log('login error');
-        alert("Error!"  +  e.message);
-    }
-    }
 
-    async logout(){
-      await this.afAuth.auth.signOut();
-      localStorage.removeItem('user');
-      this.router.navigate(['admin/login']);
+
+  getToken(){
+    return this.token;
   }
-  get isLoggedIn(): boolean {
-    const  user  =  JSON.parse(localStorage.getItem('user'));
-    return  user  !==  null;
-}
-
+  addUsers(user: {email: string , password: string}){
+    this.http.post('http://localhost:3000/api/auth/addUser', user).subscribe(res=>{
+      console.log(res);
+    });
+ }
+  getUserAuthListener(){
+    return this.userAuthListener.asObservable();
+  }
+ login(values: any){
+   const authData = {
+     email : values.username,
+     password : values.password
+   };
+   console.log(authData);
+   this.http.post<{token?: string, message: string, user?: string}>('http://localhost:3000/api/auth/login', authData).subscribe(res=>{
+     const token = res.token;
+     this.token = token;
+     if(res.message === 'user signed in successfully'){
+       console.log('true');
+     this.userAuthListener.next(res.user);
+     } else {
+       this.userAuthListener.next(' ');
+     }
+   });
+ }
 
 
 }

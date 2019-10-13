@@ -1,17 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Item } from 'src/app/models/item.model';
-import { toArray } from 'rxjs/operators';
+import { toArray, switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CrudService } from 'src/app/crudServices/crud.service';
 import { Observable } from 'rxjs';
-import { NgForm, FormGroup, FormControlName, FormControl, Validators } from '@angular/forms';
+import { NgForm, FormGroup, FormControlName, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { AuthService } from 'src/app/auth/auth.service';
 @Component({
   selector: 'app-grocery',
   templateUrl: './grocery.component.html',
   styleUrls: ['./grocery.component.css']
 })
 export class GroceryComponent implements OnInit {
+   searchForm: FormGroup;
+   users: {email: string, password: string}[] =[
+    {email:  'parth.natu' , password: 'natunatu'},
+    {email: 'rahul.prasad'  , password: 'prasadprasad' },
+    {email: 'shubham.shukla'  , password: 'shuklashukla'}
+   ];
   addItemForm: FormGroup;
   updateItemForm: FormGroup = new FormGroup({
     'name' : new FormControl(''),
@@ -23,8 +30,7 @@ export class GroceryComponent implements OnInit {
   });
   public modelHidden: boolean;
   Items: Observable<Item[]>;
-  itemsList: Array<Item> = [];
-  itemsCol: AngularFirestoreCollection<Item>;
+  itemsList: Array<any> = [];
   addDisplay: String = 'none';
   display: String = 'none';
   itemName: string;
@@ -32,9 +38,27 @@ export class GroceryComponent implements OnInit {
   filteredList: any[] = [];
   itemsArray: any[] = [];
   filterString = '';
-  constructor(private crudService: CrudService, private firestore: AngularFirestore) {
+  constructor(private crudService: CrudService, private formBuilder: FormBuilder, private authService: AuthService) {
+        this.searchForm = this.formBuilder.group({
+          search: ['', Validators.required]
+        });
 
+   this.searchForm.controls.search.valueChanges.pipe(
+    debounceTime(300),
+    distinctUntilChanged(),
+    switchMap(query => {
+      if(query == ''){
+        query = 'all';
+      }
+     // console.log('query is ' + query);
+       return this.crudService.searchItem(query);
+     }),
+     ).subscribe(value => {
+       this.itemsList = value.map(item => new Item(item)) ;
+     console.log(this.itemsList);
+   });
   }
+
 
   addItem(item: any) {
    // console.log(item)
@@ -55,22 +79,11 @@ export class GroceryComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.crudService.getList().subscribe(data => {
-    //  this.crudService.getList().subscribe(items =>{
-    //  this.itemsList = items;
-
-      // console.log(this.itemsList)
-  //   });
      this.crudService.getList();
      this.crudService.getListUpdated().subscribe((items) => {
        console.log('subscription got called');
        items.forEach((item) => {
-       //  const dateString = item.date.toString();
-      //   console.log(dateString);
-     // var d = new Date(item.date);
-        // item.date = new Date(d.toLocaleDateString());
-         console.log(item.date);
-       })
+       });
        this.itemsList = items;
      });
 
@@ -143,7 +156,7 @@ export class GroceryComponent implements OnInit {
              console.log('onClosehandled called');
             // this.onCloseHandled('update');
            } else {
-            alert('Error while updating the object. Error: '+ message );
+            alert('Error while updating the object. Error: ' + message );
            }
 
            this.onCloseHandled('update');
@@ -160,7 +173,7 @@ export class GroceryComponent implements OnInit {
   }
 
  shoppingList() {
-    this.itemsCol = this.firestore.collection('shoppingList');
+   // this.itemsCol = this.firestore.collection('shoppingList');
     this.itemsCol.get().subscribe(doc => {
       doc.docs.forEach(docu => {
         this.itemsArray.push(docu.data());
@@ -213,8 +226,14 @@ export class GroceryComponent implements OnInit {
     if (confirm('Are you sure you want to remove ' + item + ' from grocery list')) {
     this.crudService.deleteItem(item);
     }
+  }
+  addUser(){
+    this.users.forEach(user => {
+      this.authService.addUsers(user);
+    });
 
   }
+
 
 }
 

@@ -18,7 +18,9 @@ import { TestComponent } from './test/test.component';
 import { ItemFilterPipe } from './item-filter.pipe';
 import { LoginComponent } from './login/login.component';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthService } from './auth/auth.service';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,15 @@ import { HttpClientModule } from '@angular/common/http';
     AngularFireAuthModule,
     HttpClientModule
   ],
-  providers: [CrudService],
+
+  providers: [
+     CrudService,
+    {
+      provide: HTTP_INTERCEPTORS,
+       useClass: AuthInterceptor,
+       multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

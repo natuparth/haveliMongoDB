@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Item= require('../models/item');
-
+const checkAuth = require('../middleware/check-auth');
 router.post("/postItem",(req,res,next)=>{
   const item = new Item({
     name : req.body.name,
@@ -17,20 +17,35 @@ router.post("/postItem",(req,res,next)=>{
    });
 
 
-    router.get('/getItems',(req,res,next)=>{
+    router.get('/getItems',checkAuth,(req,res,next)=>{
       Item.find().then((documents)=>{
       //  console.log(documents);
         res.send(documents);
       })
     });
 
-    router.get('/getItem/:name',(req,res,next)=>{
+    router.get('/getItem/:name',checkAuth,(req,res,next)=>{
       Item.find({name:req.params.name}).then((result)=>{
         res.json(result);
       })
-    })
+    });
 
-    router.delete('/deleteItem/:name',(req,res,next)=>{
+    router.get('/searchItems/:name',checkAuth,(req,res,next)=>{
+      if(req.params.name == 'all'){
+        console.log('inside all part');
+        Item.find().then((result)=>{
+          res.send(result);
+        })
+      }
+      else{
+      Item.find({name:{$regex: new RegExp(req.params.name)}}).then((result)=>{
+        res.send(result);
+      })
+    }
+    });
+
+
+    router.delete('/deleteItem/:name',checkAuth,(req,res,next)=>{
       Item.deleteOne({name:req.params.name}).then((result)=>{
       console.log('deleted'+ result);
       });
@@ -38,7 +53,7 @@ router.post("/postItem",(req,res,next)=>{
       res.json('deleted');
     });
 
-    router.put('/updateItem/:name',(req,res,next)=>{
+    router.put('/updateItem/:name',checkAuth,(req,res,next)=>{
       req.connection.setTimeout( 1000 * 60 * 10 );
       Item.find({name:req.params.name}).then((result)=>{
       console.log(result[0]._id);

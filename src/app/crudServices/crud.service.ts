@@ -6,9 +6,14 @@ import {
 import { Item } from '../models/item.model';
 import { Users } from '../models/users.model';
 import { Observable, Subject, pipe } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, debounceTime } from 'rxjs/operators';
+/*import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
+*/
 @Injectable({
   providedIn: 'root'
 })
@@ -88,6 +93,10 @@ export class CrudService {
   });
   }
 
+  searchItem(query: string){
+     return this.http.get<Item[]>('http://localhost:3000/api/item/searchItems/' + query);
+  }
+
   getItemUpdated() {
     return this.receivedItem.asObservable();
   }
@@ -106,4 +115,15 @@ export class CrudService {
   getListUpdated() {
     return this.itemsUpdated.asObservable();
   }
+
+  /*search(terms: Observable<string>) {
+    return terms.debounceTime(400).distinctUntilChanged()
+      .switchMap(term => this.searchEntries(term));
+  }
+
+  searchEntries(term) {
+    return this.http
+        .get(this.baseUrl + this.queryUrl + term)
+        .map(res => res.json());
+  }*/
 }

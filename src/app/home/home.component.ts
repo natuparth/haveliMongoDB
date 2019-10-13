@@ -12,10 +12,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
   }
-  validateCredentials(values:any){
-    //if(values.username=="parth.natu@gmail.com"&& values.password=="natunatu")
-    this.authService.login(values.username,values.password)  ;
-    //this.router.navigate(['main']);
 
-}
+
+
 }
