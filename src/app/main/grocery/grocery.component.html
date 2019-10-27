@@ -1,4 +1,16 @@
-<div>
+
+<div class="Welcomecontainer" *ngIf='welcomeFlag'>
+    <p>Loading List</p>
+    <div class="Loading"
+        [ngStyle]="{'animation-name':'Loadinganimation',
+                'animation-duration':'3s',
+                'animation-iteration-count': 'infinite',
+                'animation-direction':'alternate',
+                'animation-delay':i/5+'s'}"
+                *ngFor='let i of [0,1,2,3,4]'>
+    </div>
+</div>
+<div *ngIf="!welcomeFlag">
   <div>
     <div class="backdrop" [ngStyle]="{ display: addDisplay }"></div>
     <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{ display: addDisplay }">

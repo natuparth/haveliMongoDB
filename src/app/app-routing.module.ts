@@ -9,6 +9,7 @@ import { ShoppingListComponent } from './main/shopping-list/shopping-list.compon
 import { MilkComponent } from './main/milk/milk.component';
 import { TestComponent } from './test/test.component';
 import { LoginComponent } from './login/login.component';
+import { CalculateexpenseComponent } from './main/calculateexpense/calculateexpense.component';
 
 const routes: Routes = [
   { path: ' ', redirectTo:'home'   },
@@ -29,11 +30,17 @@ const routes: Routes = [
     },
     {
       path:'milk', component:MilkComponent
+    },
+    {
+      path:'calculate', component:CalculateexpenseComponent
     }
 
   ]},
   {path:'main' , component:MainComponent,children:
    [
+      {
+        path:'calculate', component:CalculateexpenseComponent
+      },
      {
        path:'grocery',component:GroceryComponent
      },
@@ -50,8 +57,6 @@ const routes: Routes = [
 
    ]
   }
-
-
 ];
 
 @NgModule({

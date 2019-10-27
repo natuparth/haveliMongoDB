@@ -38,6 +38,8 @@ export class GroceryComponent implements OnInit {
   filteredList: any[] = [];
   itemsArray: any[] = [];
   filterString = '';
+  welcomeFlag : boolean = true;
+
   constructor(private crudService: CrudService, private formBuilder: FormBuilder, private authService: AuthService) {
         this.searchForm = this.formBuilder.group({
           search: ['', Validators.required]
@@ -85,6 +87,7 @@ export class GroceryComponent implements OnInit {
        items.forEach((item) => {
        });
        this.itemsList = items;
+       this.welcomeFlag = false;
      });
 
 
