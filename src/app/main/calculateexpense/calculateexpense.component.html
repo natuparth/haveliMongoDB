@@ -51,6 +51,11 @@
           Enter New Details
         </button>
       </div>
+      <div *ngIf="xlsDataFlag" class="col text-center">
+          <button type="button" class="btn btn-primary" (click)="calculateExpense()">
+            Calculate Expense
+          </button>
+        </div>
     </div>
   </div>
   
@@ -86,7 +91,7 @@
                 <h5>Select dates</h5>
               </div>
               <div class="col-md-auto">
-                <input type="date" id="multidate" name="multidate" [(ngModel)]="multidate" (change)="closeModal($event)">
+                <input type="date" id="multidate" name="multidate" [(ngModel)]="multidate" (change)="addAbsentDate($event)">
               </div>
               <div class="col-md-auto">
                 <button class="btn btn-info" type="button" (click)="dateselecttoggle=!dateselecttoggle">submit</button>
@@ -117,14 +122,19 @@
           </div>
           
           
-          <form #calculateForm="ngForm" (ngSubmit)="submitForm(calculateForm)" novalidate>
+          <form #calculateForm="ngForm" novalidate>
             <div class="form-group">
               <label for="inputFile">Dates File</label>
-              <input type="file" class="form-control" id="inputFile" name="inputFile" ngModel #inputFile="ngModel" required placeholder="Choose file for dates">
+              <input type="file" class="form-control" id="inputFile" accept=".xlsx" (change)="incomingfile($event)" name="inputFile" ngModel #inputFile="ngModel" required placeholder="Choose file for dates">
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-info" [disabled]="!calculateForm.valid">Calculate</button>
+              <button type="submit" class="btn btn-info" *ngIf="!xlsDataFlag && calculateForm.valid" data-dismiss="modal">
+                Loading File
+              </button>
+              <button type="submit" class="btn btn-info" *ngIf="xlsDataFlag && calculateForm.valid" data-dismiss="modal">
+                  Submit
+                </button>
             </div>
           </form>
           
@@ -132,4 +142,39 @@
       </div>
     </div>
   </div>
+  <!-- display the xlsx data -->
+  <div *ngIf="xlsDataFlag">
+
+    &nbsp;
+    <div class="row justify-content-md-center">
+      <div class="col-sm-auto">
+          <button class="btn btn-info" *ngIf="!showXlsData" type="button" (click)="showXlsData=!showXlsData">Show Excel Data</button>
+          <button class="btn btn-info" *ngIf="showXlsData" type="button" (click)="showXlsData=!showXlsData">Hide Excel Data</button>
+      </div>
+      <!-- <div class="col-sm-auto">
+          <button class="btn btn-info" type="button" >Choose different Column Name</button>
+      </div> -->
+    </div>
+    &nbsp;
+    
+    <div *ngIf="showXlsData" class="row justify-content-md-center">
+      <div class="col">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Packets Delivered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let xlsDate of xlsFileData">
+                <td scope="row">{{xlsDate.Date}}</td>
+                <td scope="row">{{xlsDate.Pkts}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>

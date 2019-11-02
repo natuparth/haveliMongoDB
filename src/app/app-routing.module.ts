@@ -56,7 +56,10 @@ const routes: Routes = [
      }
 
    ]
-  }
+  },
+  { path:'calculate', component:CalculateexpenseComponent }
+
+
 ];
 
 @NgModule({
