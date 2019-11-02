@@ -26,7 +26,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
    this.username = 'parth.natu';
    this.password = 'natunatu';
-   this.router.navigate(['calculate']);
   }
   validateCredentials(values: any){
         this.authService.login(values) ;
