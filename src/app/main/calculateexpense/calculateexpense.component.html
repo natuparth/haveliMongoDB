@@ -1,0 +1,180 @@
+<div class="calculate container-fluid">
+  <!-- Loading bar animation -->
+  <div class="Welcomecontainer" *ngIf='welcomeFlag'>
+    <p>Loading</p>
+    <div class="Loading"
+        [ngStyle]="{'animation-name':'Loadinganimation',
+                'animation-duration':'3s',
+                'animation-iteration-count': 'infinite',
+                'animation-direction':'alternate',
+                'animation-delay':i/5+'s'}"
+                *ngFor='let i of [0,1,2,3,4]'>
+    </div>
+  </div>
+
+  <!-- calculate container with logic
+  date: 13 Oct 2019
+  author: Rahul prasad
+  vercion: 1.0 -->
+
+  <div class="container" *ngIf="!welcomeFlag">
+    &nbsp;
+    &nbsp;  
+    <div class="row">
+      <div class="col text-center">
+        <h2>Calculate your Epenses</h2>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Expenditure</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+                <th scope="row">{{user.name}}</th>
+                <th scope="row">{{user.amount}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col text-center">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#expeseform">
+          Enter New Details
+        </button>
+      </div>
+      <div *ngIf="xlsDataFlag" class="col text-center">
+          <button type="button" class="btn btn-primary" (click)="calculateExpense()">
+            Calculate Expense
+          </button>
+        </div>
+    </div>
+  </div>
+  
+    
+    <!-- Modal form to add details for expeses -->
+  <div class="modal fade bd-example-modal-lg" id="expeseform" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+      
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row justify-content-sm-center">
+            <div class="col-sm-auto">
+              <select class="btn btn-info" id="membername" name="membername" [(ngModel)]="membername" placeholder="selcet membername">
+                <option value="{{user.name}}" *ngFor="let user of users">{{user.name}}</option>
+              </select>
+            </div>
+            <div class="col-sm-auto">
+              <button class="btn btn-info" type="button" (click)="dateselecttoggle=!dateselecttoggle">Absent Dates</button>
+            </div>
+            <div class="col-sm-auto">  <button class="btn btn-info" type="button">Submit</button> </div>
+          </div>
+
+          &nbsp;
+          <!-- Absent date select and date display division -->
+          <div *ngIf="dateselecttoggle">
+
+            <!-- date select div -->
+            <div class="row justify-content-md-center">
+              <div class="col-md-auto">
+                <h5>Select dates</h5>
+              </div>
+              <div class="col-md-auto">
+                <input type="date" id="multidate" name="multidate" [(ngModel)]="multidate" (change)="addAbsentDate($event)">
+              </div>
+              <div class="col-md-auto">
+                <button class="btn btn-info" type="button" (click)="dateselecttoggle=!dateselecttoggle">submit</button>
+              </div>
+            </div>
+            &nbsp;
+
+            <!-- date display div -->
+            <div class="row justify-content-md-center">
+              <div class="col">
+                <table class="table table-dark">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Absent Dates</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of dateAbsent  | keyvalue">
+                        <td scope="row">{{user.key}}</td>
+                        <td scope="row">{{user.value}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+          
+          
+          <form #calculateForm="ngForm" novalidate>
+            <div class="form-group">
+              <label for="inputFile">Dates File</label>
+              <input type="file" class="form-control" id="inputFile" accept=".xlsx" (change)="incomingfile($event)" name="inputFile" ngModel #inputFile="ngModel" required placeholder="Choose file for dates">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-info" *ngIf="!xlsDataFlag && calculateForm.valid" data-dismiss="modal">
+                Loading File
+              </button>
+              <button type="submit" class="btn btn-info" *ngIf="xlsDataFlag && calculateForm.valid" data-dismiss="modal">
+                  Submit
+                </button>
+            </div>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- display the xlsx data -->
+  <div *ngIf="xlsDataFlag">
+
+    &nbsp;
+    <div class="row justify-content-md-center">
+      <div class="col-sm-auto">
+          <button class="btn btn-info" *ngIf="!showXlsData" type="button" (click)="showXlsData=!showXlsData">Show Excel Data</button>
+          <button class="btn btn-info" *ngIf="showXlsData" type="button" (click)="showXlsData=!showXlsData">Hide Excel Data</button>
+      </div>
+      <!-- <div class="col-sm-auto">
+          <button class="btn btn-info" type="button" >Choose different Column Name</button>
+      </div> -->
+    </div>
+    &nbsp;
+    
+    <div *ngIf="showXlsData" class="row justify-content-md-center">
+      <div class="col">
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Packets Delivered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let xlsDate of xlsFileData">
+                <td scope="row">{{xlsDate.Date}}</td>
+                <td scope="row">{{xlsDate.Pkts}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>

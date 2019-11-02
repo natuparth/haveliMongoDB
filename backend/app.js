@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://natuparth:natunatu@cluster0-yg5co.mongodb.net/test?retryWrites=true&w=majority',{useNewUrlParser: true}).then(()=>{
+mongoose.connect('mongodb+srv://rahulprasad:prasadprasad@cluster0-yg5co.mongodb.net/test?retryWrites=true&w=majority',{useNewUrlParser: true}).then(()=>{
   console.log('connection successfull')
 }).catch(()=>{
   console.log('an error occurred')

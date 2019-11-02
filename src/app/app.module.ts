@@ -17,10 +17,10 @@ import { MilkComponent } from './main/milk/milk.component';
 import { TestComponent } from './test/test.component';
 import { ItemFilterPipe } from './item-filter.pipe';
 import { LoginComponent } from './login/login.component';
-
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from './auth/auth.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
+import { CalculateexpenseComponent } from './main/calculateexpense/calculateexpense.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +33,8 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     MilkComponent,
     TestComponent,
     ItemFilterPipe,
-    LoginComponent
+    LoginComponent,
+    CalculateexpenseComponent
   ],
   imports: [FormsModule,
     ReactiveFormsModule,

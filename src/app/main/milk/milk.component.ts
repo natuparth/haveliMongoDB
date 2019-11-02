@@ -9,6 +9,7 @@ export class MilkComponent implements OnInit {
 
   constructor() { }
 
+  welcomeFlag : boolean = true;
   ngOnInit() {
   }
 

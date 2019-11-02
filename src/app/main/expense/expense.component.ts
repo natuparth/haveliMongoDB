@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from 'src/app/crudServices/crud.service';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { element } from '@angular/core/src/render3';
 import { functions } from 'firebase';
 import { snapshotChanges } from 'angularfire2/database';
 import { NgForm, FormGroup, FormControl, Validators } from "@angular/forms";
