@@ -1,0 +1,31 @@
+
+.Welcomecontainer p
+{
+    text-align: center;
+    font-size: 40px;
+    position:absolute;
+    top:45%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.Loading
+{
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    position:absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+@keyframes Loadinganimation
+{
+    0%
+    {background-color: red;transform: translate(-100px,0px);opacity: 1;}
+    50%
+    {background-color: green;transform: translate(100px,0px);opacity: 1;}
+    52%
+    {opacity: 0;}
+    100%
+    {opacity: 0;}
+}

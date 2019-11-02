@@ -1,0 +1,179 @@
+
+<div class="Welcomecontainer" *ngIf='welcomeFlag'>
+    <p>Loading List</p>
+    <div class="Loading"
+        [ngStyle]="{'animation-name':'Loadinganimation',
+                'animation-duration':'3s',
+                'animation-iteration-count': 'infinite',
+                'animation-direction':'alternate',
+                'animation-delay':i/5+'s'}"
+                *ngFor='let i of [0,1,2,3,4]'>
+    </div>
+</div>
+<div *ngIf="!welcomeFlag">
+  <div>
+    <div class="backdrop" [ngStyle]="{ display: addDisplay }"></div>
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{ display: addDisplay }">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Add Item</h4>
+            <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('add')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <form class="form-group" [formGroup]="addItemForm" (ngSubmit)="addItem(addItemForm)">
+              <label for="name">Name</label>
+              <input name="name" class="form-control" formControlName="name" type="text" />
+              <p class="help-block text-danger" *ngIf="
+                  !addItemForm.get('name').valid &&
+                  addItemForm.get('name').touched
+                ">
+                Please enter a name
+              </p>
+              <label for="dateOfLastPurchase"> Date</label>
+              <input name="dateOfLastPurchase" class="form-control" formControlName="date" type="date" required />
+              <p class="help-block text-danger" *ngIf="
+                  !addItemForm.get('date').valid &&
+                  addItemForm.get('date').touched
+                ">
+                Please select a date
+              </p>
+
+              <label for="quantity">Quantity(in gms)</label>
+              <input name="quantity" class="form-control" formControlName="quantity" type="number" />
+              <p class="help-block text-danger" *ngIf="
+                  !addItemForm.get('quantity').valid &&
+                  addItemForm.get('quantity').touched
+                ">
+                Please enter quantity
+              </p>
+
+              <label for="price">Amount </label>
+              <input name="price" class="form-control" formControlName="price" type="number" />
+              <p class="help-block text-danger" *ngIf="
+                  !addItemForm.get('price').valid &&
+                  addItemForm.get('price').touched
+                ">
+                Please enter price
+              </p>
+
+              <label for="consumptionPerDay">Consumption/Day </label>
+              <input name="consumptionPerDay" class="form-control" formControlName="consumptionPerDay" type="number" />
+              <p class="help-block text-danger" *ngIf="
+                  !addItemForm.get('consumptionPerDay').valid &&
+                  addItemForm.get('consumptionPerDay').touched
+                ">
+                Please enter consumptionPerDay
+              </p>
+
+              <div class="modal-footer text-center">
+                <button type="submit" class="btn btn-danger" data-dismiss="modal" [disabled]="!addItemForm.valid">
+                  Add Item
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-dark text-center" style="width: inherit; height: 60px;">
+    <form [formGroup]="searchForm">
+      <input formControlName="search"
+        style="border-radius: 25px ;border: 2px solid greenyellow; outline: none; width: 35%; margin-top:15px" id="search"
+        placeholder="search item" />
+    </form>
+  </div>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">dateOfLastPurchase</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of itemsList; let i = index">
+        <th scope="row">{{ i }}</th>
+        <td>{{ item.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.date | date: "MM/dd/yyyy" }}</td>
+        <button class="btn btn-info" (click)="openModal(item.name, item.date)">
+          Update
+        </button>
+        &nbsp;
+        <button class="btn btn-danger" (click)="deleteItem(item.name)">
+          Delete
+        </button>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-center">
+    <button class="btn btn-primary" (click)="openAddModal()">Add Item</button>
+  </div>
+  <!-- <div class="text-center"><button class="btn btn-primary" (click)="addUser()"> Add User</button></div> -->
+
+  <div class="backdrop" [ngStyle]="{ display: display }"></div>
+
+  <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{ display: display }">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Update Item</h4>
+          <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('update')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form [formGroup]="updateItemForm" class="form form-group" (ngSubmit)="updateItem()">
+            <label for="name">Name</label>
+            <input name="name" class="form-control" type="text" formControlName="name" [placeholder]="itemName" readonly
+              [value]="itemName" />
+
+            <label for="dateOfLastPurchase"> Date</label>
+            <input name="dateOfLastPurchase" class="form-control" formControlName="date" type="date" />
+
+            <p class="help-block text-danger" *ngIf="
+                !updateItemForm.get('date').valid &&
+                updateItemForm.get('date').touched
+              ">
+              <span *ngIf="updateItemForm.get('date').errors['invalidDate']">Please select a date after the date
+                {{ itemDate }}</span>
+              <span *ngIf="updateItemForm.get('date').errors['required']">Please select a date</span>
+            </p>
+
+            <label for="quantity">Quantity(in gms)</label>
+            <input name="quantity" class="form-control" formControlName="quantity" type="number" />
+            <p class="help-block text-danger" *ngIf="
+                !updateItemForm.get('quantity').valid &&
+                updateItemForm.get('quantity').touched
+              ">
+              Please enter quantity
+            </p>
+
+            <label for="price">Amount </label>
+            <input name="price" class="form-control" formControlName="price" type="number" />
+            <p class="help-block text-danger" *ngIf="
+                !updateItemForm.get('price').valid &&
+                updateItemForm.get('price').touched
+              ">
+              Please enter amount
+            </p>
+
+            <div class="modal-footer text-center">
+              <button type="submit" class="btn btn-danger" [disabled]="!updateItemForm.valid">
+                Update Item
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+
+
+
+@media only screen and (max-width: 768px){
+    .img-sm{
+        width: 70px;
+        height: 50px;
+
+    }
+   
+}
+
+@media only screen and (max-width: 768px){
+    .txt-left{
+        text-align: left;
+    }
+}
+@media only screen and(max-width: 576px){
+    .img-col-xs{
+       
+    }
+}
+  
