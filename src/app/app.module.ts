@@ -7,9 +7,6 @@ import { MainComponent } from './main/main.component';
 import { GroceryComponent } from './main/grocery/grocery.component';
 import { ExpenseComponent } from './main/expense/expense.component';
 import { HomeComponent } from './home/home.component';
-import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 import { CrudService } from './crudServices/crud.service';
 import { ShoppingListComponent } from './main/shopping-list/shopping-list.component';
@@ -40,9 +37,6 @@ import { CalculateexpenseComponent } from './main/calculateexpense/calculateexpe
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
-    AngularFireAuthModule,
     HttpClientModule
   ],
 

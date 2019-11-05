@@ -13,17 +13,18 @@ export class CalculateexpenseComponent implements OnInit {
 
   constructor() { }
 
-  welcomeFlag : boolean = false;
-  xlsDataFlag : boolean = false;
-  dateselecttoggle : boolean = false;
-  membername : string = "";
-  dateAbsent : { [index : string] : number[] } = {};
-  noOfMembersPresent : any;
-  multidate : Date;
-  dateModalDisplay : number[][];
-  xlsFileData : any;
-  arrayBuffer:any;
-  file:File;
+  welcomeFlag = false;
+  xlsDataFlag = false;
+  showXlsData = false;
+  dateselecttoggle = false;
+  membername  = '';
+  dateAbsent: { [index: string]: number[] } = {};
+  noOfMembersPresent: any;
+  multidate: Date;
+  dateModalDisplay: number[][];
+  xlsFileData: any;
+  arrayBuffer: any;
+  file: File;
 
   users: {name: string, amount: number}[] =[
     {name:  'Parth' , amount: 0.00},
@@ -33,25 +34,23 @@ export class CalculateexpenseComponent implements OnInit {
 
   ngOnInit()
   {
-    for(var obj of  this.users)
+    for (const obj of  this.users)
     {
       this.dateAbsent[obj.name] = [];
     }
-    var arr = new Array(30);
+    const arr = new Array(30);
     arr.fill(this.users.length);
     this.noOfMembersPresent = arr;
   }
 
   calculateExpense()
   {
-    var rate = this.xlsFileData[0].Rate;
-    console.log("start calculating",rate,this.xlsFileData.length);
-    for(var i = 0;i < this.xlsFileData.length; i++)
+    const rate = this.xlsFileData[0].Rate;
+    for (let i = 0;i < this.xlsFileData.length; i++)
     {
-      var packets = this.xlsFileData[i].Pkts;
-      if(packets)
-      {
-        for(var j = 0; j < this.users.length; j++)
+      const packets = this.xlsFileData[i].Pkts;
+      if (packets) {
+        for (let j = 0; j < this.users.length; j++)
         {
           var index = this.dateAbsent[this.users[j].name].indexOf(i+1);
           if(index == -1)
@@ -90,17 +89,17 @@ export class CalculateexpenseComponent implements OnInit {
     setTimeout(()=>{ this.dateselecttoggle = true; }, 10);
   }
 
-  incomingfile(event) 
+  incomingfile(event)
   {
     this.xlsDataFlag = false;
-    this.file= event.target.files[0]; 
+    this.file= event.target.files[0];
     if(this.file)
     {
       this.readxls();
     }
   }
 
-  readxls() 
+  readxls()
   {
     var datagot:any;
     var fileReader : FileReader = new FileReader();

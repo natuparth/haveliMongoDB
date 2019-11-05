@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import * as firebase from 'firebase';
 import { config } from 'rxjs';
 
 @Component({

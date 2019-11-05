@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Item } from 'src/app/models/item.model';
 import { toArray, switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CrudService } from 'src/app/crudServices/crud.service';

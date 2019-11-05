@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from 'src/app/crudServices/crud.service';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { functions } from 'firebase';
-import { snapshotChanges } from 'angularfire2/database';
-import { NgForm, FormGroup, FormControl, Validators } from "@angular/forms";
+import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-expense',
@@ -34,7 +31,7 @@ export class ExpenseComponent implements OnInit {
     'description': new FormControl('',Validators.required)
   });
   addItemForm: FormGroup;
-  constructor(private crudService:CrudService,private firestore:AngularFirestore) { }
+  constructor(private crudService:CrudService) { }
 
   ngOnInit() {
     console.log('inside expense management component')
@@ -89,7 +86,7 @@ onCloseHandled(name:string){
   }
 
   async GetUserValues(id:string)
-  {
+  {/*
     this.itemList=[];
     console.log('inside get uservalues function id: '+id);
     var temp=this;
@@ -121,11 +118,12 @@ onCloseHandled(name:string){
       console.log('user fetch error');
       alert(e.message);
     }
+    */
   }
 
   async GetUsers()
   {
-    var temp=this;
+   /* var temp=this;
     this.membersList=[];
     console.log('inside expense get user');
     try
@@ -146,7 +144,7 @@ onCloseHandled(name:string){
     {
       console.log('user fetch error');
       alert(e.message);
-    }
+    }*/
   }
 
   AddItem()
@@ -156,7 +154,7 @@ onCloseHandled(name:string){
   UpdateItem(itemId:any)
   {
     // this.updateitemflag=true;
-    var temp=this;
+    /*var temp=this;
     var id=this.currentUserName;
     this.updateItemList=[];
     try
@@ -191,10 +189,11 @@ onCloseHandled(name:string){
       console.log(error.toString);
     }
     // console.log('inside update id:',itemId);
+  */
   }
 
   updateItem(item:FormControl)
-  {
+  {/*
     try
     {
 
@@ -208,9 +207,10 @@ onCloseHandled(name:string){
     {
 
     }
+    */
   }
   addItemSubmit(item:FormGroup)
-  {
+  {/*
     var count;
     var countMap={count:null};
     try
@@ -240,5 +240,7 @@ onCloseHandled(name:string){
     }
 
    // console.log(this.membersList[this.currentUserId].id+item.name+' '+item.price+' '+item.quantity+' '+item.dateOfPurchase+' '+item.description+' '+count);
-  }
+
+*/
+}
 }

@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection
-} from 'angularfire2/firestore';
 import { Item } from '../models/item.model';
 import { Users } from '../models/users.model';
 import { Observable, Subject, pipe } from 'rxjs';
@@ -18,10 +14,8 @@ import 'rxjs/add/operator/switchMap';
   providedIn: 'root'
 })
 export class CrudService {
-  itemsCol: AngularFirestoreCollection<Item>;
   items: Item[];
   users: any[] = [];
-  usersCol: AngularFirestoreCollection<Users>;
   newItem: any;
   userid: string;
   itemsUpdated = new Subject<Item[]>();

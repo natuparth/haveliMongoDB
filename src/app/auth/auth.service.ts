@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { User, auth } from 'firebase';
 import { HttpClient } from '@angular/common/http';
 import { LoginComponent } from '../login/login.component';
 import { Token } from '@angular/compiler';
@@ -8,7 +7,6 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export  class  AuthService {
-  user:  User;
   private token: string;
   private loginSubject: Subject<string>;
   constructor(private http: HttpClient) {

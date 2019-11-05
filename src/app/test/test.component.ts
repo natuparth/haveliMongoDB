@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from 'src/app/crudServices/crud.service';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+
 
 @Component({
   selector: 'app-test',
@@ -9,14 +9,14 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 })
 export class TestComponent implements OnInit {
 
-  constructor(private crudService:CrudService,private firestore:AngularFirestore) { }
+  constructor(private crudService:CrudService) { }
 
   ngOnInit() {
     this.GetUsers();
   }
   membersList:any[]=[];
   async GetUsers()
-  {
+  {/*
     var temp=this;
     this.membersList=[];
     console.log('inside expense get user');
@@ -38,6 +38,7 @@ export class TestComponent implements OnInit {
       console.log('user fetch error');
       alert(e.message);
     }
-  }
+
+  */}
 
 }

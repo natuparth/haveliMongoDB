@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CrudService } from 'src/app/crudServices/crud.service';
 import { Observable } from 'rxjs';
 import { Item } from 'src/app/models/item.model';
-import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-shopping-list',
