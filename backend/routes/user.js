@@ -51,7 +51,8 @@ router.post("/login",(req,res,next)=>{
          res.status(200).json({
            token : token,
            message : 'user signed in successfully',
-           user : fetchedUser.email.split('.')[0]
+           user : fetchedUser.email.split('.')[0],
+           expiresIn: 3600
 
          })
   }).catch(()=>{

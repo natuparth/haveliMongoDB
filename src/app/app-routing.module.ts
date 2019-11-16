@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { GroceryComponent } from './main/grocery/grocery.component';
 import { ExpenseComponent } from './main/expense/expense.component';
@@ -10,60 +9,47 @@ import { MilkComponent } from './main/milk/milk.component';
 import { TestComponent } from './test/test.component';
 import { LoginComponent } from './login/login.component';
 import { CalculateexpenseComponent } from './main/calculateexpense/calculateexpense.component';
+import { AuthGuard } from './auth/authguard.service';
 
 const routes: Routes = [
-  { path: ' ', redirectTo:'home'   },
-  { path:'test', component:TestComponent},
-  {path: 'home', component:HomeComponent, children:
+  { path: '', redirectTo: 'home', pathMatch: 'full'   },
+  { path: 'test', component: TestComponent},
+  {path: 'home', component: HomeComponent, children:
   [ {
-       path: 'login', component:LoginComponent
+       path: '', component: LoginComponent
     },
-    {
-      path:'grocery',component:GroceryComponent
-    },
-    { path:'test', component:TestComponent},
-    {
-      path:'expense', component:ExpenseComponent
-    },
-    {
-      path:'shopping', component:ShoppingListComponent
-    },
-    {
-      path:'milk', component:MilkComponent
-    },
-    {
-      path:'calculate', component:CalculateexpenseComponent
-    }
-
   ]},
-  {path:'main' , component:MainComponent,children:
+  {path: 'main' , component: MainComponent, children:
    [
       {
-        path:'calculate', component:CalculateexpenseComponent
+        path: 'calculate', component: CalculateexpenseComponent
       },
      {
-       path:'grocery',component:GroceryComponent
+       path: 'grocery', component: GroceryComponent
      },
-     { path:'test', component:TestComponent},
+     { path: 'test', component: TestComponent},
      {
-       path:'expense', component:ExpenseComponent
-     },
-     {
-       path:'shopping', component:ShoppingListComponent
+       path: 'expense', component: ExpenseComponent
      },
      {
-       path:'milk', component:MilkComponent
+       path: 'shopping', component: ShoppingListComponent
+     },
+     {
+       path: 'milk', component: MilkComponent
+     },
+     {
+        path: 'calculate', component: CalculateexpenseComponent
      }
-
    ]
   },
-  { path:'calculate', component:CalculateexpenseComponent }
+
 
 
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
 export class AppRoutingModule { }
