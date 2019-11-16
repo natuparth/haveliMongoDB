@@ -10,11 +10,12 @@ import { CrudService } from 'src/app/crudServices/crud.service';
 export class TestComponent implements OnInit {
 
   constructor(private crudService:CrudService) { }
+  membersList: any[] = [];
+
 
   ngOnInit() {
     this.GetUsers();
   }
-  membersList:any[]=[];
   async GetUsers()
   {/*
     var temp=this;

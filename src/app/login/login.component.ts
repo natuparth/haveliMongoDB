@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +14,15 @@ export class LoginComponent implements OnInit {
   public isAuthenticated: boolean;
   constructor(private authService: AuthService, private router: Router) {
     this.authService.userAuthListener = new Subject<string>();
+
+  }
+
+  ngOnInit() {
+   this.username = 'parth.natu';
+   this.password = 'natunatu';
+  }
+  validateCredentials(values: any){
+    this.authService.login(values);
     this.authService.getUserAuthListener().subscribe((res) => {
       if (res !== ' ') {
         this.router.navigate(['main']);
@@ -22,13 +31,5 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit() {
-   this.username = 'parth.natu';
-   this.password = 'natunatu';
-  }
-  validateCredentials(values: any){
-        this.authService.login(values) ;
-        }
 
 }

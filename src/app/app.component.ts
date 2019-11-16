@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { config } from 'rxjs';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,17 @@ import { config } from 'rxjs';
 })
 export class AppComponent {
   title = 'myProject';
-constructor(private router:Router){
+constructor(private router: Router, private authservice: AuthService){
   // const db=firebase.firestore();
   // db.settings({timestampsInSnapshots:true});
-  router.navigate(['/home/login'])
+  // if(authservice.getUserAuthenticated())
+  // {
+  //   router.navigate(['/main/grocery']);
+  // } else {
+  //   router.navigate(['/home/login'])
+  // }
+    console.log('app component instantiated');
+
 }
 
 
