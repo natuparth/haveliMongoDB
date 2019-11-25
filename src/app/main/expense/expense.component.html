@@ -1,6 +1,6 @@
 
 <div class="Expensecontainer">
-    <div class="Welcomecontainer" *ngIf='welcomeFlag && !membersList.length'>
+    <div class="Welcomecontainer" *ngIf='welcomeFlag && !memberFlag '>
         <p>Welcome</p>
         <div class="Loading"
             [ngStyle]="{'animation-name':'Loadinganimation',
@@ -11,17 +11,17 @@
                     *ngFor='let i of [0,1,2,3,4]'>
         </div>
     </div>
-    
-    <section *ngIf='welcomeFlag && membersList.length'>
+
+    <section *ngIf='!welcomeFlag && !memberFlag'>
         <div class="container" >
             <div class="row">
-                <div class="col-lg mt-4 outerbox" 
+                <div class="col-lg mt-4 outerbox"
                     *ngFor='let member of membersList'>
                     <div class="card box">
                         <img src={{member.pic}} class="card-img-top" style="height:200px" alt="...">
-                        <h1>{{member.id[0]}}</h1>
+                        <h1>{{member.name[0]}}</h1>
                         <div class="card-body">
-                        <h3 class="card-title">{{member.id}}</h3>
+                        <h3 class="card-title">{{member.name}}</h3>
                         <p class="card-text">Responsible citizens are change agents that act out against social, economic, and environmental injustices.</p>
                         <a (click)='MemberFunction(member.index)' class="btn btn-primary">View Expense</a>
                         </div>
@@ -30,8 +30,8 @@
             </div>
         </div>
     </section>
-    
-    <div class="Welcomecontainer" *ngIf='!welcomeFlag && !itemList.length'>
+
+    <div class="Welcomecontainer" *ngIf='welcomeFlag '>
         <p>Please Wait...</p>
         <div class="Loading"
             [ngStyle]="{'animation-name':'Loadinganimation',
@@ -57,14 +57,14 @@
         </div>
     </div> -->
     <div class="Itemscontainer"
-        *ngIf='itemList.length && !welcomeFlag &&!additemflag &&!updateitemflag'>
+        *ngIf='memberFlag'>
         <div class="row">
             <div class="col">&nbsp;</div>
         </div>
         <div class="row">
             <div class="col-md-6 text-left">
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" (click)="status=!status" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-secondary dropdown-toggle" (click)="status=!status"   (mouseover)="status=true" (mouseleave)="status=false" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Select User
                     </button>
                     <div class="dropdown-menu"
@@ -72,7 +72,7 @@
                         [ngClass]="status ? 'dropdown-menu show' : 'dropdown-menu'"
                         aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" (click)='MemberFunction(member.index);status=!status'
-                                *ngFor='let member of membersList'>{{member.id}}</a>
+                                *ngFor='let member of membersList'>{{member.name}}</a>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 <h2>{{currentUserName}}</h2>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col">&nbsp;</div>
         </div>
@@ -97,22 +97,20 @@
                 <tr>
                   <th scope="col">#List</th>
                   <!-- <th scope="col">#ID</th> -->
-                  <th scope="col">Name</th>
-                  <th scope="col">Quantity</th>
+                  <th scope="col">Description</th>
                   <th scope="col">Price</th>
                   <th scope="col">Date</th>
-                  <th scope="col">description</th>
+
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let item of itemList ;let i = index">
                       <th scope="row">{{i}}</th>
                       <!-- <td>{{item.id}}</td> -->
-                      <td>{{item.name}}</td>
-                      <td>{{item.quant}}</td>
-                      <td>{{item.price}}</td>
-                      <td>{{item.date}}</td>
-                      <td>{{item.desc}}</td>
+                      <td>{{item.description}}</td>
+                      <td>{{item.amount}}</td>
+                      <td>{{item.dateOfPurchase}}</td>
+
                       <button class="btn btn-info" (click)='openModal(item.id,"updateModal")'>Update</button>
                 </tr>
             </tbody>
@@ -128,7 +126,7 @@
                 <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('addModal')"><span
                     aria-hidden="true">&times;</span></button>
               </div>
-      
+
               <div class="modal-body">
                 <form class="form-group"  [formGroup]="addItemForm" (ngSubmit)="addItemSubmit(addItemForm)">
                   <label for="name">Name</label>
@@ -137,21 +135,17 @@
                   <label for="dateOfLastPurchase"> Date</label>
                   <input name="dateOfLastPurchase" class="form-control" formControlName='dateOfPurchase' type="date" required>
                   <p class="help-block text-danger" *ngIf="!addItemForm.get('dateOfPurchase').valid && addItemForm.get('dateOfPurchase').touched">Please select a date</p>
-      
+
                   <label for="quantity">Quantity(in gms)</label>
                   <input name="quantity" class="form-control" formControlName='quantity' type="number">
                   <p class="help-block text-danger" *ngIf="!addItemForm.get('quantity').valid && addItemForm.get('quantity').touched">Please select a date</p>
-                 
+
                   <label for="price">Amount
                   </label>
                   <input name="price" class="form-control" formControlName = 'price' type="number">
                   <p class="help-block text-danger" *ngIf="!addItemForm.get('price').valid && addItemForm.get('price').touched">Please select a date</p>
-       
-                  <label for="consumptionPerDay">Consumption/Day
-                  </label>
-                  <input name="consumptionPerDay" class="form-control" formControlName="consumptionPerDay" type="number">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('consumptionPerDay').valid && addItemForm.get('consumptionPerDay').touched">Please select a date</p>
-                  
+
+
                   <label for="description">Description</label>
                   <input name="description" class="form-control" formControlName='description' type="text">
                   <p class="help-block text-danger" *ngIf="!addItemForm.get('description').valid && addItemForm.get('description').touched">Please select a date</p>
@@ -160,82 +154,82 @@
                   </div>
                 </form>
               </div>
-      
+
             </div>
-      
-      
+
+
           </div>
-      
-      
+
+
         </div>
-      
+
       </div>
 
 
     <div class="backdrop" [ngStyle]="{'display':updateDisplay}"></div>
-    
-    
+
+
     <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':updateDisplay}">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
            <div class="modal-header">
-    
+
                     <h4 class="modal-title">Update Item</h4>
                     <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('updateModal')"><span
                             aria-hidden="true">&times;</span></button>
-    
+
                 </div>
-    
-    
+
+
                 <div class="modal-body">
-    
-    
+
+
                     <form [formGroup]="updateItemForm" class="form form-group" (ngSubmit)="updateItem()">
                         <label for="name">Name</label>
                         <input name="name" class="form-control" type="text" formControlName="name" [placeholder]="itemName"
                             readonly [value]="itemName">
-    
+
                         <label for="dateOfLastPurchase"> Date</label>
                         <input name="dateOfLastPurchase" class="form-control" formControlName="dateOfPurchase" type="date">
-    
+
                         <p class="help-block text-danger"
                             *ngIf="!updateItemForm.get('dateOfPurchase').valid && updateItemForm.get('dateOfPurchase').touched"><span
                                 *ngIf="updateItemForm.get('dateOfPurchase').errors['invalidDate']">Please select a date after the date
                                 {{itemDate}}</span>
                             <span *ngIf="updateItemForm.get('dateOfPurchase').errors['required']  ">Please select a date</span>
                         </p>
-    
+
                         <label for="quantity">Quantity(in gms)</label>
                         <input name="quantity" class="form-control" formControlName="quantity" type="number">
                         <p class="help-block text-danger"
                             *ngIf="!updateItemForm.get('quantity').valid && updateItemForm.get('quantity').touched">Please
                             select a quantity</p>
-    
+
                         <label for="price">Amount
                         </label>
                         <input name="price" class="form-control" formControlName="price" type="number">
                         <p class="help-block text-danger"
                             *ngIf="!updateItemForm.get('price').valid && updateItemForm.get('price').touched">Please enter a price</p>
-                        
+
                             <label for="description">Description
                             </label>
                             <input name="description" class="form-control" formControlName="description" type="text">
                             <p class="help-block text-danger"
                                 *ngIf="!updateItemForm.get('description').valid && updateItemForm.get('description').touched">Please enter a Description</p>
-        
+
                         <div class="modal-footer text-center">
                             <button type="submit" class="btn btn-danger" [disabled]="!updateItemForm.valid">Update
                                 Item</button>
                         </div>
                     </form>
-    
-    
+
+
                 </div>
-    
+
             </div>
-    
-    
+
+
         </div>
-    
-    
+
+
     </div>

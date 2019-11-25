@@ -5,11 +5,21 @@ const jwt = require('jsonwebtoken');
 const User= require('../models/user');
 
 
+router.get("/getUsers", (req,res,next)=>{
+ User.find().then((doc)=>{
+   res.status(200).json({
+     users: doc
+   })
+ });
+
+});
+
 router.post("/addUser",(req,res,next)=>{
  bcrypt.hash(req.body.password,10).then((hash)=>{
    const user = new User({
      email : req.body.email,
-     password : hash
+     password : hash,
+     name : req.body.name
    });
 
    user.save().then((result)=>{

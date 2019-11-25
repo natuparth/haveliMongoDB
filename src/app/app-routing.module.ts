@@ -9,7 +9,7 @@ import { MilkComponent } from './main/milk/milk.component';
 import { TestComponent } from './test/test.component';
 import { LoginComponent } from './login/login.component';
 import { CalculateexpenseComponent } from './main/calculateexpense/calculateexpense.component';
-import { AuthGuard } from './auth/authguard.service';
+import { AuthGuard } from './authService/authguard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'   },

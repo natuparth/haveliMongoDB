@@ -10,6 +10,8 @@ const itemRoutes = require('./routes/items');
 
 const authRoutes = require('./routes/user');
 
+const expenseRoutes = require('./routes/expense');
+
 const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
@@ -27,6 +29,7 @@ app.use(cors());
 
 app.use('/api/item',itemRoutes);
 app.use('/api/auth',authRoutes);
+app.use('/api/expense',expenseRoutes);
 
 
  module.exports = app;
