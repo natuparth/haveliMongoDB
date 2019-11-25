@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LoginComponent } from '../login/login.component';
 import { Token } from '@angular/compiler';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export  class  AuthService {
   getToken() {
     return this.token;
   }
-  addUsers(user: {email: string , password: string}){
+  addUsers(user: {email: string , password: string, name: string}){
     this.http.post('http://localhost:3000/api/auth/addUser', user).subscribe(res=>{
       console.log(res);
     });
@@ -68,9 +68,14 @@ export  class  AuthService {
   }
 
   logout(){
-
-    this.router.navigate(['/home']);
+     this.router.navigate(['/home']);
   }
+
+   getUsers() :Observable<any>{
+
+    return this.http.get('http://localhost:3000/api/auth/getUsers');
+
+   }
 
 
 }

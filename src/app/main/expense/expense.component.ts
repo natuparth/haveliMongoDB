@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CrudService } from 'src/app/crudServices/crud.service';
+import { CrudService } from 'src/app/crudService/crud.service';
 import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
+import { ExpenseService } from 'src/app/expenseService/expense-service.service';
+import { AuthService } from 'src/app/authService/auth.service';
+import { Users } from 'src/app/models/users.model';
 
 @Component({
   selector: 'app-expense',
@@ -9,6 +12,7 @@ import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class ExpenseComponent implements OnInit {
   membersList:any[]=[];
+  memberFlag: boolean= false;
   addDisplay: string = 'none';
   updateDisplay : string ='none';
   itemList:any=[];
@@ -31,13 +35,19 @@ export class ExpenseComponent implements OnInit {
     'description': new FormControl('',Validators.required)
   });
   addItemForm: FormGroup;
-  constructor(private crudService:CrudService) { }
+  constructor(private crudService:CrudService, private expenseService: ExpenseService, private authService: AuthService) { }
 
   ngOnInit() {
+    this.memberFlag = false;
+   /* this.expenseService.getExpenses().subscribe((expenses)=>{
+          this.welcomeFlag = false;
+    });*/
     console.log('inside expense management component')
-    this.GetUsers();
+    this.GetUsers().then(()=>{
+      this.welcomeFlag = false;
+    });
     console.log(this.membersList.length);
-    this.welcomeFlag = true;
+    //this.welcomeFlag = false;
     this.addItemForm = new FormGroup({
       'name' : new FormControl('', Validators.required),
       'dateOfPurchase' : new FormControl(Date.now, Validators.required),
@@ -68,25 +78,33 @@ onCloseHandled(name:string){
 }
 
 
-
-  MemberFunction(index:any)
+MemberFunction(index:any)
   {
-    this.currentUserId=index;
+  this.currentUserId=index;
     console.log('memberfunction id:'+this.currentUserId);
     this.welcomeFlag=false;
+    this.memberFlag = true;
 
-    if(this.previousUserId!=this.currentUserId || this.previousUserId==0)
-    {
+   // if(this.previousUserId!=this.currentUserId || this.previousUserId==0)
+   // {
       this.membersList[this.previousUserId].background=false;
       this.membersList[index].background=true;
       this.previousUserId=this.currentUserId;
-      this.currentUserName=this.membersList[index].id;
-      this.GetUserValues(this.membersList[index].id);
-    }
+      this.currentUserName=this.membersList[index].name;
+      this.GetUserValues(this.membersList[index].name);
+ //   }
+
   }
 
-  async GetUserValues(id:string)
-  {/*
+   GetUserValues(id:string)
+  {
+    this.itemList = [];
+    console.log(id);
+    this.expenseService.getExpenses(id).subscribe((doc)=>{
+      console.log(doc);
+      this.itemList = doc;
+    })
+    /*
     this.itemList=[];
     console.log('inside get uservalues function id: '+id);
     var temp=this;
@@ -123,6 +141,16 @@ onCloseHandled(name:string){
 
   async GetUsers()
   {
+    this.membersList = [];
+    this.authService.getUsers().subscribe((doc)=>{
+      console.log(doc.users.length);
+      var count = 0;
+      doc.users.forEach((user)=>{
+        this.membersList.push({index:count++,name:user.name,background:false,pic:'../assets/'+user.name.split(' ')[0].toLocaleLowerCase()+'.jpg'});
+        this.memberListTranslate.push('translate('+(this.memberListTranslatePos+count*55)+'px,0px)');
+      });
+      console.log(this.membersList);
+    });
    /* var temp=this;
     this.membersList=[];
     console.log('inside expense get user');
@@ -210,7 +238,22 @@ onCloseHandled(name:string){
     */
   }
   addItemSubmit(item:FormGroup)
-  {/*
+  {
+     console.log(item.value);
+     const expense = {
+       user: this.currentUserName,
+       amount: item.value.price,
+       dateOfPurchase: item.value.dateOfPurchase,
+       description: item.value.name
+     };
+
+     this.expenseService.addExpenses(expense).subscribe((message)=>{
+       console.log(message);
+     });
+
+
+
+    /*
     var count;
     var countMap={count:null};
     try

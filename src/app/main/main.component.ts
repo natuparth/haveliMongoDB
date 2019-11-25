@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../authService/auth.service';
 
 @Component({
   selector: 'app-main',

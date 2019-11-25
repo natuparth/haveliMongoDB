@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Item } from 'src/app/models/item.model';
 import { toArray, switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { CrudService } from 'src/app/crudServices/crud.service';
+import { CrudService } from 'src/app/crudService/crud.service';
 import { Observable } from 'rxjs';
 import { NgForm, FormGroup, FormControlName, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from 'src/app/authService/auth.service';
 @Component({
   selector: 'app-grocery',
   templateUrl: './grocery.component.html',
@@ -13,10 +13,9 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class GroceryComponent implements OnInit {
    searchForm: FormGroup;
-   users: {email: string, password: string}[] =[
-    {email:  'parth.natu' , password: 'natunatu'},
-    {email: 'rahul.prasad'  , password: 'prasadprasad' },
-    {email: 'shubham.shukla'  , password: 'shuklashukla'}
+   users: {email: string, password: string, name: string}[] =[
+    {email:  'sayantan.ghosh' , password: 'sentisenti', name: 'sayantan ghosh'},
+    {email: 'shubham.tayal'  , password: 'tayaltayal', name: 'shubham tayal' }
    ];
   addItemForm: FormGroup;
   updateItemForm: FormGroup = new FormGroup({
@@ -40,7 +39,8 @@ export class GroceryComponent implements OnInit {
   welcomeFlag : boolean = true;
 
   constructor(private crudService: CrudService, private formBuilder: FormBuilder, private authService: AuthService) {
-        this.searchForm = this.formBuilder.group({
+     //this.addUser();
+    this.searchForm = this.formBuilder.group({
           search: ['', Validators.required]
         });
 

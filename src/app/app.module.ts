@@ -8,15 +8,15 @@ import { GroceryComponent } from './main/grocery/grocery.component';
 import { ExpenseComponent } from './main/expense/expense.component';
 import { HomeComponent } from './home/home.component';
 import { environment } from '../environments/environment';
-import { CrudService } from './crudServices/crud.service';
+import { CrudService } from './crudService/crud.service';
 import { ShoppingListComponent } from './main/shopping-list/shopping-list.component';
 import { MilkComponent } from './main/milk/milk.component';
 import { TestComponent } from './test/test.component';
 import { ItemFilterPipe } from './item-filter.pipe';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthService } from './auth/auth.service';
-import { AuthInterceptor } from './auth/auth-interceptor';
+import { AuthService } from './authService/auth.service';
+import { AuthInterceptor } from './authService/auth-interceptor';
 import { CalculateexpenseComponent } from './main/calculateexpense/calculateexpense.component';
 
 @NgModule({
