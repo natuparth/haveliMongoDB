@@ -19,6 +19,6 @@ export class ExpenseService {
   }
 
   public addExpenses(expense: any): Observable<any>{
-    return this.http.post('http://localhost:3000/api/expense/addExpenses/', expense);
+    return this.http.post<{message: string, errMessage: string}>('http://localhost:3000/api/expense/addExpenses/', expense);
   }
 }

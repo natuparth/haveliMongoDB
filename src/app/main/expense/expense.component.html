@@ -138,17 +138,17 @@
 
                   <label for="quantity">Quantity(in gms)</label>
                   <input name="quantity" class="form-control" formControlName='quantity' type="number">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('quantity').valid && addItemForm.get('quantity').touched">Please select a date</p>
+                  <p class="help-block text-danger" *ngIf="!addItemForm.get('quantity').valid && addItemForm.get('quantity').touched">Please select quantity</p>
 
                   <label for="price">Amount
                   </label>
                   <input name="price" class="form-control" formControlName = 'price' type="number">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('price').valid && addItemForm.get('price').touched">Please select a date</p>
+                  <p class="help-block text-danger" *ngIf="!addItemForm.get('price').valid && addItemForm.get('price').touched">Please select an amount</p>
 
 
-                  <label for="description">Description</label>
+                  <!-- <label for="description">Description</label>
                   <input name="description" class="form-control" formControlName='description' type="text">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('description').valid && addItemForm.get('description').touched">Please select a date</p>
+                  <p class="help-block text-danger" *ngIf="!addItemForm.get('description').valid && addItemForm.get('description').touched">Please select a date</p> -->
                   <div class="modal-footer text-center">
                     <button type="submit" class="btn btn-danger" data-dismiss="modal" [disabled]="!addItemForm.valid">Add Item</button>
                   </div>
@@ -213,9 +213,9 @@
 
                             <label for="description">Description
                             </label>
-                            <input name="description" class="form-control" formControlName="description" type="text">
+                            <!-- <input name="description" class="form-control" formControlName="description" type="text">
                             <p class="help-block text-danger"
-                                *ngIf="!updateItemForm.get('description').valid && updateItemForm.get('description').touched">Please enter a Description</p>
+                                *ngIf="!updateItemForm.get('description').valid && updateItemForm.get('description').touched">Please enter a Description</p> -->
 
                         <div class="modal-footer text-center">
                             <button type="submit" class="btn btn-danger" [disabled]="!updateItemForm.valid">Update
