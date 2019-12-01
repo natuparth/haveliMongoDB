@@ -20,10 +20,10 @@ router.post("/addExpenses",checkAuth, (req,res,next)=>{
     description: req.body.description
   });
 
-  expense.save().then((message)=>{
-     res.status(200).send(message);
-  }).catch((mess)=>{
-    res.status(400).send(mess);
+  expense.save().then((Message)=>{
+     res.status(200).send({message:'item added successfully', error: Message});
+  }).catch((errMessage)=>{
+    res.status(400).send({message:'failed to add item', error: errMessage});
   })
 })
 module.exports = router;

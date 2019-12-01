@@ -10,6 +10,7 @@ import { AuthService } from '../authService/auth.service';
 })
 export class MainComponent implements OnInit {
   user = ' ';
+  userImg = ' ';
   subscription: Subscription;
   constructor(private router: Router, private authService: AuthService) {
     console.log('main constructor called and added');
@@ -30,6 +31,7 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     console.log(localStorage.getItem('expiresAt'));
     this.user = localStorage.getItem('userLogged');
+    this.userImg = '../assets/' + this.user.split(' ')[0].toLocaleLowerCase() + '.jpg';
     const a1 = new Date(localStorage.getItem('expiresAt')).getTime();
     const a2 = new Date().getTime();
     console.log(a1);
