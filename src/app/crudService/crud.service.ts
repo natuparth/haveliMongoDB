@@ -2,14 +2,10 @@ import { Injectable } from '@angular/core';
 import { Item } from '../models/item.model';
 import { Users } from '../models/users.model';
 import { Observable, Subject, pipe } from 'rxjs';
-
+import { environment as env} from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, debounceTime } from 'rxjs/operators';
-/*import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-*/
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,9 +20,7 @@ export class CrudService {
 
   constructor(private http: HttpClient) {}
   addItem(item: any) {
-   // item.date = new Date(item.date.toDateString());
-   // const dateOfLastPurchase = new Date(item.date.split('T')[0]);
-  // console.log(dateOfLastPurchase);
+
     const itemAdded: Item = {
        name: item.name,
        date : item.date,
@@ -37,7 +31,7 @@ export class CrudService {
     };
 
     this.http
-      .post('http://localhost:3000/api/item/postItem', itemAdded)
+      .post(env.apiUrl + '/item/postItem', itemAdded)
       .subscribe(data => {
         console.log('post data successful');
         this.items.push(itemAdded);
@@ -48,7 +42,7 @@ export class CrudService {
 
   deleteItem(itemName: string) {
     this.http
-      .delete('http://localhost:3000/api/item/deleteItem/' + itemName)
+      .delete(env.apiUrl + '/item/deleteItem/' + itemName)
       .subscribe(() => {
         const updatedItems = this.items.filter(
           itemDeleted => itemDeleted.name !== itemName
@@ -59,7 +53,7 @@ export class CrudService {
   }
   // tslint:disable-next-line: whitespace
   updateItem(item: Item, name: string) {
-    this.http.put('http://localhost:3000/api/item/updateItem/' + name, item, {
+    this.http.put(env.apiUrl + '/item/updateItem/' + name, item, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
    }).subscribe((resData) => {
        console.log(resData);
@@ -81,14 +75,14 @@ export class CrudService {
 
   getItem(name: string) {
 
-    this.http.get('http://localhost:3000/api/item/getItem/' + name).subscribe((data) => {
+    this.http.get(env.apiUrl + '/item/getItem/' + name).subscribe((data) => {
         console.log(data);
         this.receivedItem.next(data as Item);
   });
   }
 
   searchItem(query: string){
-     return this.http.get<Item[]>('http://localhost:3000/api/item/searchItems/' + query);
+     return this.http.get<Item[]>(env.apiUrl + '/item/searchItems/' + query);
   }
 
   getItemUpdated() {
@@ -96,7 +90,7 @@ export class CrudService {
   }
 
   getList() {
-    this.http.get<Item[]>('http://localhost:3000/api/item/getItems').subscribe(
+    this.http.get<Item[]>(env.apiUrl + '/item/getItems').subscribe(
       items => {
         console.log(items);
         this.items = items;
@@ -110,14 +104,4 @@ export class CrudService {
     return this.itemsUpdated.asObservable();
   }
 
-  /*search(terms: Observable<string>) {
-    return terms.debounceTime(400).distinctUntilChanged()
-      .switchMap(term => this.searchEntries(term));
-  }
-
-  searchEntries(term) {
-    return this.http
-        .get(this.baseUrl + this.queryUrl + term)
-        .map(res => res.json());
-  }*/
-}
+ }

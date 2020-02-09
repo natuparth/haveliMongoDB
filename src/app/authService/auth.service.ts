@@ -4,6 +4,7 @@ import { LoginComponent } from '../login/login.component';
 import { Token } from '@angular/compiler';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment as env} from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +23,7 @@ export  class  AuthService {
     return this.token;
   }
   addUsers(user: {email: string , password: string, name: string}){
-    this.http.post('http://localhost:3000/api/auth/addUser', user).subscribe(res=>{
+    this.http.post(env.apiUrl + '/auth/addUser', user).subscribe(res=>{
       console.log(res);
     });
  }
@@ -41,7 +42,7 @@ export  class  AuthService {
      password : values.password
    };
    console.log(authData);
-   this.http.post<{token?: string, message: string, user?: string,expiresIn?: number}>('http://localhost:3000/api/auth/login', authData).subscribe(res=>{
+   this.http.post<{token?: string, message: string, user?: string,expiresIn?: number}>(env.apiUrl + '/auth/login', authData).subscribe(res=>{
      const token = res.token;
      this.token = token;
      console.log(res.expiresIn);
@@ -73,7 +74,7 @@ export  class  AuthService {
 
    getUsers() :Observable<any>{
 
-    return this.http.get('http://localhost:3000/api/auth/getUsers');
+    return this.http.get(env.apiUrl + '/auth/getUsers');
 
    }
 

@@ -12,39 +12,54 @@ import { CalculateexpenseComponent } from './main/calculateexpense/calculateexpe
 import { AuthGuard } from './authService/authguard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full'   },
-  { path: 'test', component: TestComponent},
-  {path: 'home', component: HomeComponent, children:
-  [ {
-       path: '', component: LoginComponent
-    },
-  ]},
-  {path: 'main' , component: MainComponent, children:
-   [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'test', component: TestComponent },
+  {
+    path: 'home',
+    component: HomeComponent,
+    children: [
       {
-        path: 'calculate', component: CalculateexpenseComponent
+        path: '',
+        component: LoginComponent
       },
-     {
-       path: 'grocery', component: GroceryComponent
-     },
-     { path: 'test', component: TestComponent},
-     {
-       path: 'expense', component: ExpenseComponent
-     },
-     {
-       path: 'shopping', component: ShoppingListComponent
-     },
-     {
-       path: 'milk', component: MilkComponent
-     },
-     {
-        path: 'calculate', component: CalculateexpenseComponent
-     }
-   ]
+      {
+        path: 'login',
+        component: LoginComponent
+      }
+
+    ]
   },
-
-
-
+  {
+    path: 'main',
+    component: MainComponent,
+    children: [
+      {
+        path: 'calculate',
+        component: CalculateexpenseComponent
+      },
+      {
+        path: 'grocery',
+        component: GroceryComponent
+      },
+      { path: 'test', component: TestComponent },
+      {
+        path: 'expense',
+        component: ExpenseComponent
+      },
+      {
+        path: 'shopping',
+        component: ShoppingListComponent
+      },
+      {
+        path: 'milk',
+        component: MilkComponent
+      },
+      {
+        path: 'calculate',
+        component: CalculateexpenseComponent
+      }
+    ]
+  }
 ];
 
 @NgModule({
@@ -52,4 +67,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [AuthGuard]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
