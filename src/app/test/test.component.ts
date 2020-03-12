@@ -10,36 +10,10 @@ import { CrudService } from 'src/app/crudService/crud.service';
 export class TestComponent implements OnInit {
 
   constructor(private crudService:CrudService) { }
-  membersList: any[] = [];
-
 
   ngOnInit() {
-    this.GetUsers();
   }
-  async GetUsers()
-  {/*
-    var temp=this;
-    this.membersList=[];
-    console.log('inside expense get user');
-    try
-    {
-      await this.firestore.collection('expenses')
-      .get()
-      .subscribe(function(querysnapshot)
-      {
-        var count=0;
-        querysnapshot.forEach(function(doc)
-        {
-          temp.membersList.push({index:count++,id:doc.id,name:doc.data().name,background:false});
-        })
-      })
-    }
-    catch(e)
-    {
-      console.log('user fetch error');
-      alert(e.message);
-    }
-
-  */}
-
+  
 }
+
+
