@@ -135,14 +135,45 @@
               <span> <p class="signintext"> Create your Account </p></span>
               <hr>
               <div class="form-group">
-              <form action="post" #inputForm="ngForm" (submit)="validateCredentials(inputForm.value)">
-                  <label for="username">Username:</label>
-                  <input class="form-control" name="username" type="text" [(ngModel)]="username"> <br>
-                  <label for="password">Password:</label>
-                  <input class="form-control" name="password" type="password" [(ngModel)]="password"><br>
-                  <button class="btn btn-success" (click)="loginPageToggle=!loginPageToggle">Register</button> <br><br>
-              </form>
+                <form class="form-group" [formGroup]="registerUserForm" (ngSubmit)="addUser(registerUserForm)">
+                  <label for="name">Name</label>
+                  <input name="name" class="form-control" formControlName="name" type="text" />
+                  <p class="help-block text-danger" *ngIf="
+                      !registerUserForm.get('name').valid &&
+                      registerUserForm.get('name').touched
+                    ">
+                    Please enter your name
+                  </p>
+                  <label for="quantity">Email</label>
+                  <input name="email" class="form-control" formControlName="email" type="email" />
+                  <p class="help-block text-danger" *ngIf="
+                      !registerUserForm.get('email').valid &&
+                      registerUserForm.get('email').touched
+                    ">
+                    Please enter a valid Email id
+                  </p>
+    
+                  <label for="price">Password</label>
+                  <input name="password" class="form-control" formControlName="password" type="password" />
+                  <p class="help-block text-danger" *ngIf="
+                      !registerUserForm.get('password').valid &&
+                      registerUserForm.get('password').touched
+                    ">
+                    Please enter login Password
+                  </p>
+                  <br>
+                  <button type="submit" class="btn btn-success" [disabled]="!registerUserForm.valid">Register</button>
+                </form>
             </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container moreOptionContainer card box" *ngIf='loginPageToggle || registerPageToggle'>
+      <div class="row">
+        <div class="col-md text-center">
+          <button *ngIf='registerPageToggle' class="btn btn-success getStartedbutton" (click)="loginPageToggle=!loginPageToggle; registerPageToggle=false"> Login </button><br>
+          <button *ngIf='loginPageToggle' class="btn btn-success getStartedbutton" (click)="registerPageToggle=!registerPageToggle; loginPageToggle=false">Register </button>
         </div>
       </div>
     </div>

@@ -23,8 +23,8 @@ export  class  AuthService {
     return this.token;
   }
   addUsers(user: {email: string , password: string, name: string}){
-    this.http.post(env.apiUrl + '/auth/addUser', user).subscribe(res=>{
-      console.log(res);
+    this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user).subscribe(res=>{
+      alert(res.message);
     });
  }
 
