@@ -5,6 +5,7 @@ import { Token } from '@angular/compiler';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment as env} from '../../environments/environment';
+import { Users } from '../../../backend/models/user';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,10 +23,8 @@ export  class  AuthService {
   getToken() {
     return this.token;
   }
-  addUsers(user: {email: string , password: string, name: string}){
-    this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user).subscribe(res=>{
-      alert(res.message);
-    });
+  addUsers(user: {email: string , password: string, name: string, groupId: string }){
+    return this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user);
  }
 
  getUserAuthenticated(){
@@ -77,6 +76,16 @@ export  class  AuthService {
     return this.http.get(env.apiUrl + '/auth/getUsers');
 
    }
+
+  searchGroup(query: Number):Observable<Users>{
+    console.log('searchGroup')
+    return this.http.get<Users[]>(env.apiUrl + '/auth/searchGroup/' + query);
+ }
+
+ searchMaxGroupId():Observable<Users>
+ {
+   return this.http.get<Users>(env.apiUrl + '/auth/searchMaxGroupId');
+ }
 
 
 }

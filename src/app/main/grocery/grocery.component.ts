@@ -229,12 +229,12 @@ export class GroceryComponent implements OnInit {
     this.crudService.deleteItem(item);
     }
   }
-  addUser(){
-    this.users.forEach(user => {
-      this.authService.addUsers(user);
-    });
+  // addUser(){
+  //   this.users.forEach(user => {
+  //     this.authService.addUsers(user);
+  //   });
 
-  }
+  // }
 
 
 }

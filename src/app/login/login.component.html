@@ -161,6 +161,14 @@
                     ">
                     Please enter login Password
                   </p>
+                  <label for="groupId">Group ID</label>
+                  <input name="groupId" class="form-control" formControlName="groupId" type="number" />
+                  <p class="help-block text-danger" *ngIf="
+                      !registerUserForm.get('groupId').valid &&
+                      registerUserForm.get('groupId').touched
+                    ">
+                    Please enter valid Group ID
+                  </p>
                   <br>
                   <button type="submit" class="btn btn-success" [disabled]="!registerUserForm.valid">Register</button>
                 </form>
@@ -178,4 +186,62 @@
       </div>
     </div>
   </div>
-  
+
+  <div class="backdrop" [ngStyle]="{ display: addDisplayNewGroupId }"></div>
+  <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{ display: addDisplayNewGroupId }">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="close" aria-label="Close" (click)="onCloseHandled()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          No group found!!
+          <br>
+          Do you want to create your own group?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="onCloseHandled()" data-dismiss="modal">Try Again</button>
+          <button type="button" class="btn btn-success" (click)="addUserWithNewGroup()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="backdrop" [ngStyle]="{ display: addDisplayBlankGroupId }"></div>
+  <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{ display: addDisplayBlankGroupId }">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="close" aria-label="Close" (click)="onCloseHandled1()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Group Id is blank
+          <br>
+          Do you want to create your own group?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="addUserNoGroupId()" data-dismiss="modal">No</button>
+          <button type="button" class="btn btn-success" (click)="addUserWithNewGroup()">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="backdrop" [ngStyle]="{ display: loadingFlag }"></div>
+  <div class="Welcomecontainer" [ngStyle]="{ display: loadingFlag }">
+    <p>Hold On {{registerUserForm.value.name}}. We are processing your request</p>
+    <div class="Loading"
+        [ngStyle]="{'animation-name':'Loadinganimation',
+                'animation-duration':'3s',
+                'animation-iteration-count': 'infinite',
+                'animation-direction':'alternate',
+                'animation-delay':i/5+'s'}"
+                *ngFor='let i of [0,1,2,3,4]'>
+    </div>
+  </div>
