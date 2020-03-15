@@ -162,13 +162,18 @@
                     Please enter login Password
                   </p>
                   <label for="groupId">Group ID</label>
-                  <input name="groupId" class="form-control" formControlName="groupId" type="number" />
+                  <input name="groupId" class="form-control" formControlName="groupId" type="number" placeholder="Leave it balnk for new group"/>
                   <p class="help-block text-danger" *ngIf="
                       !registerUserForm.get('groupId').valid &&
                       registerUserForm.get('groupId').touched
                     ">
                     Please enter valid Group ID
                   </p>
+                  <!-- <p class="help-block text-danger" *ngIf="
+                      registerUserForm.get('groupId').touched
+                    ">
+                    If you dont know the group id, leave it blank. You can update it later
+                  </p> -->
                   <br>
                   <button type="submit" class="btn btn-success" [disabled]="!registerUserForm.valid">Register</button>
                 </form>

@@ -82,8 +82,10 @@
        margin-left: 5%;
        border: none;
        background-color: rgba(255, 255, 255, 0);
-       top: 20%;
+       top: 50%;
        left: 45%;
+       transform: translateY(-50%);
+
    }
    .welcomedetailsContainer
    {
@@ -118,7 +120,7 @@
    .loginContainer input:hover
    {
        width: 90%;
-       background-color: rgb(7, 196, 89);;
+       background-color: rgba(193, 218, 218, 0.925);;
        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.9);
        transition:0.5s;
    

@@ -92,11 +92,9 @@ export class LoginComponent implements OnInit {
 
   addUserNoGroupId()
   {
-    console.log(this.loadingFlag);
     this.addDisplayBlankGroupId = 'none';
-    alert("No Group Id is assigned you can update you profile later-"+this.loadingFlag);
     this.loadingFlag = 'block';
-    console.log('after alert',this.loadingFlag);
+    alert("No Group Id is assigned you can update you profile later");
     this.authService.addUsers(this.registerUserForm.value).subscribe(res=>{
       alert(res.message);
       this.loadingFlag = 'none';
