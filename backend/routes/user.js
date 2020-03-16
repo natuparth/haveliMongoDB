@@ -14,12 +14,25 @@ router.get("/getUsers", (req,res,next)=>{
 
 });
 
+router.get("/searchGroup/:groupId", (req,res,next)=>{
+  User.find({groupId : req.params.groupId}).then((doc)=>{
+    res.status(200).json({users: doc})
+  })
+});
+
+router.get("/searchMaxGroupId", (req,res,next)=>{
+  User.find().sort({groupId:-1}).limit(1).then((doc)=>{
+    res.status(200).json({users:doc})
+  })
+});
+
 router.post("/addUser",(req,res,next)=>{
  bcrypt.hash(req.body.password,10).then((hash)=>{
    const user = new User({
      email : req.body.email,
      password : hash,
-     name : req.body.name
+     name : req.body.name,
+     groupId : req.body.groupId
    });
 
    user.save().then((result)=>{
@@ -30,7 +43,7 @@ router.post("/addUser",(req,res,next)=>{
 
    }).catch((err)=>{
      res.json({
-       message : 'some error occurred',
+       message : 'some error occurred'+err,
         result : err
      });
    })
