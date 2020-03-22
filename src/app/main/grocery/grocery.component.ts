@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Item } from 'src/app/models/item.model';
 import { toArray, switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { CrudService } from 'src/app/crudService/crud.service';
+import { CrudService } from 'src/app/Services/crudService/crud.service';
 import { Observable } from 'rxjs';
 import { NgForm, FormGroup, FormControlName, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
-import { AuthService } from 'src/app/authService/auth.service';
+import { AuthService } from 'src/app/Services/authService/auth.service';
 @Component({
   selector: 'app-grocery',
   templateUrl: './grocery.component.html',

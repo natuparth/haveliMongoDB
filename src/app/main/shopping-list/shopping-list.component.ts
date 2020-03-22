@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CrudService } from 'src/app/crudService/crud.service';
+import { CrudService } from 'src/app/Services/crudService/crud.service';
 import { Observable } from 'rxjs';
 import { Item } from 'src/app/models/item.model';
 

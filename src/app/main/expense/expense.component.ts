@@ -1,39 +1,39 @@
-import { Component, OnInit } from "@angular/core";
-import { CrudService } from "src/app/crudService/crud.service";
-import { NgForm, FormGroup, FormControl, Validators } from "@angular/forms";
-import { ExpenseService } from "src/app/expenseService/expense-service.service";
-import { AuthService } from "src/app/authService/auth.service";
-import { Users } from "src/app/models/users.model";
-import { Subject } from "rxjs";
+import { Component, OnInit } from '@angular/core';
+import { CrudService } from 'src/app/Services/crudService/crud.service';
+import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
+import { ExpenseService } from 'src/app/Services/expenseService/expense-service.service';
+import { AuthService } from 'src/app/Services/authService/auth.service';
+import { Users } from 'src/app/models/users.model';
+import { Subject } from 'rxjs';
 
 @Component({
-  selector: "app-expense",
-  templateUrl: "./expense.component.html",
-  styleUrls: ["./expense.component.css"]
+  selector: 'app-expense',
+  templateUrl: './expense.component.html',
+  styleUrls: ['./expense.component.css']
 })
 export class ExpenseComponent implements OnInit {
   membersList: any[] = [];
   itemSubject = new Subject<any>();
-  memberFlag: boolean = false;
-  addDisplay: string = "none";
-  updateDisplay: string = "none";
+  memberFlag = false;
+  addDisplay = 'none';
+  updateDisplay = 'none';
   itemList: any = [];
   updateItemList: any = [];
-  previousUserId: number = 0;
+  previousUserId = 0;
   memberListTranslate: any = [];
-  memberListPos = "40%";
+  memberListPos = '40%';
   memberListTranslatePos = -165;
-  currentUserId: number = -1;
-  currentUserName: string = "";
-  welcomeFlag: boolean = true;
-  sideBarExpand: boolean = true;
-  additemflag: boolean = false;
-  updateitemflag: boolean = false;
+  currentUserId = -1;
+  currentUserName = '';
+  welcomeFlag = true;
+  sideBarExpand = true;
+  additemflag = false;
+  updateitemflag = false;
   updateItemForm: FormGroup = new FormGroup({
-    name: new FormControl("", Validators.required),
+    name: new FormControl('', Validators.required),
     dateOfPurchase: new FormControl(Date.now, Validators.required),
-    price: new FormControl("", Validators.required),
-    quantity: new FormControl("", Validators.required)
+    price: new FormControl('', Validators.required),
+    quantity: new FormControl('', Validators.required)
   });
   addItemForm: FormGroup;
   constructor(
@@ -47,7 +47,7 @@ export class ExpenseComponent implements OnInit {
     this.itemSubject.subscribe(doc => {
       this.itemList = doc;
     });
-    console.log("inside expense management component");
+    console.log('inside expense management component');
     this.GetUsers().then(() => {
       this.welcomeFlag = false;
     });
@@ -61,10 +61,10 @@ export class ExpenseComponent implements OnInit {
   }
 
   openModal(itemId: any, modalName: string) {
-    if (modalName == "addModal") {
-      this.addDisplay = "block";
+    if (modalName == 'addModal') {
+      this.addDisplay = 'block';
     } else {
-      this.updateDisplay = "block";
+      this.updateDisplay = 'block';
       this.UpdateItem(itemId);
     }
   }
@@ -72,13 +72,13 @@ export class ExpenseComponent implements OnInit {
     if (name === 'addModal') {
     this.addDisplay = 'none';
     } else {
-      this.updateDisplay = "none";
+      this.updateDisplay = 'none';
     }
   }
 
   MemberFunction(index: any) {
     this.currentUserId = index;
-    console.log("memberfunction id:" + this.currentUserId);
+    console.log('memberfunction id:' + this.currentUserId);
     this.welcomeFlag = false;
     this.memberFlag = true;
     this.membersList[this.previousUserId].background = false;
@@ -140,15 +140,15 @@ export class ExpenseComponent implements OnInit {
     };
 
     this.expenseService.addExpenses(expense).subscribe(response => {
-      this.addDisplay = "none";
+      this.addDisplay = 'none';
 
-      if (response.message == "item added successfully") {
-        alert("item added successfully");
+      if (response.message == 'item added successfully') {
+        alert('item added successfully');
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);
       } else {
         alert(
-          "some error occurred while adding the expense. Error: " +
+          'some error occurred while adding the expense. Error: ' +
             response.errMessage
         );
       }

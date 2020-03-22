@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LoginComponent } from '../login/login.component';
-import { Token } from '@angular/compiler';
-import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { environment as env} from '../../environments/environment';
-import { Users } from '../../../backend/models/user';
+import { environment as env} from '../../../environments/environment';
+import { Users } from '../../../../backend/models/user';
 @Injectable({
   providedIn: 'root'
 })

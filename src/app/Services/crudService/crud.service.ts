@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Item } from '../models/item.model';
-import { Users } from '../models/users.model';
+import { Item } from '../../models/item.model';
+import { Users } from '../../models/users.model';
 import { Observable, Subject, pipe } from 'rxjs';
-import { environment as env} from '../../environments/environment';
+import { environment as env} from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, debounceTime } from 'rxjs/operators';
 
