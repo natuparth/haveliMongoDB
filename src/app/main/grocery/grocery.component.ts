@@ -83,8 +83,8 @@ export class GroceryComponent implements OnInit {
      this.crudService.getList();
      this.crudService.getListUpdated().subscribe((items) => {
        console.log('subscription got called');
-       items.forEach((item) => {
-       });
+      // items.forEach((item) => {
+      // });
        this.itemsList = items;
        this.welcomeFlag = false;
      });
@@ -134,8 +134,6 @@ export class GroceryComponent implements OnInit {
       const date1 = new Date(this.updateItemForm.get('date').value);
       const date2 = new Date(doc[0].date);
       console.log(date1);
-      //console.log(typeof date2);
-      //const type2 = typeof date2;
       console.log(date2);
       const diff = Math.abs(date2.getTime() - date1.getTime());
       const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
