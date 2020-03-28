@@ -195,6 +195,11 @@
     color: #ffffff29;
     transition:0.5s;
 }
+.outerbox
+{
+    max-width: 25%;
+    min-width: 200px;
+}
 .outerbox:hover .box h1
 {
     top:170px;

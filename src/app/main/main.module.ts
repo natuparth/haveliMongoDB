@@ -6,10 +6,11 @@ import { GroceryComponent } from './grocery/grocery.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { CalculateexpenseComponent } from './calculateexpense/calculateexpense.component';
 import { MainRouting } from './main-routing.module';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
-  declarations : [MainComponent, ExpenseComponent, GroceryComponent, ShoppingListComponent, CalculateexpenseComponent ],
+  declarations : [MainComponent, ExpenseComponent, GroceryComponent, ShoppingListComponent, CalculateexpenseComponent, ProfileComponent ],
   imports : [SharedModule, MainRouting]
 })
 

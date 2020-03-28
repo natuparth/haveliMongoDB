@@ -1,27 +1,3 @@
-/* 
-
-
-@media only screen and (max-width: 768px){
-    .img-sm{
-        width: 70px;
-        height: 50px;
-
-    }
-   
-}
-
-@media only screen and (max-width: 768px){
-    .txt-left{
-        text-align: left;
-    }
-}
-@media only screen and(max-width: 576px){
-    .img-col-xs{
-       
-    }
-}
-   */
-
    .startPage
    {
        height: 650px;
@@ -70,7 +46,7 @@
    }
    .getStartedbutton:hover
    {
-       background-color: rgb(7, 196, 89);
+       background-color: #343a40;
        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.9);
        width: 50%;
        transition:0.5s;
@@ -134,7 +110,7 @@
    }
    .loginContainer button:hover
    {
-       background-color: rgb(7, 196, 89);
+       background-color: #343a40;
        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.9);
        width: 50%;
        transition:0.5s;

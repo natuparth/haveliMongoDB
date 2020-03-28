@@ -10,6 +10,7 @@ import { Users } from '../../../../backend/models/user';
 export  class  AuthService {
   private token: string;
   private userAuthenticated: boolean;
+  private user: Users;
   private loginSubject: Subject<string>;
   constructor(private http: HttpClient, private router:Router) {
   }
@@ -21,7 +22,7 @@ export  class  AuthService {
   getToken() {
     return this.token;
   }
-  addUsers(user: {email: string , password: string, name: string, groupId: string }){
+  addUsers(user: {email: string , password: string, name: string, groupId: Number, profilePicId: Number }){
     return this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user);
  }
 
@@ -51,7 +52,7 @@ export  class  AuthService {
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
    //  console.log(expiresAt);
-     this.saveAuth(token,expiresAt.toLocaleString(),res.user);
+     this.saveAuth(token,expiresAt.toLocaleString(),res.user,values.username);
      this.router.navigate(['main']);
      } else {
        this.userAuthListener.next(' ');
@@ -59,10 +60,18 @@ export  class  AuthService {
    });
  }
 
-  private saveAuth(token: string, expiresAt: string, user: string){
+  private saveAuth(token: string, expiresAt: string, user: string, email: string){
+    this.getUserDetails(email).subscribe(doc => {
+      // console.log("inside saveauth",doc.users.length);
+      localStorage.setItem('userName', doc.users[0].name);
+      localStorage.setItem('userEmail',doc.users[0].email);
+      localStorage.setItem('groupId', doc.users[0].groupId);
+      localStorage.setItem('profilePicId', doc.users[0].profilePicId);
+    });
     localStorage.setItem('token', token);
     localStorage.setItem('expiresAt', expiresAt.toString());
     localStorage.setItem('userLogged', user);
+    // localStorage.setItem('userEmail', email);
   }
 
   logout(){
@@ -74,15 +83,23 @@ export  class  AuthService {
     return this.http.get(env.apiUrl + '/auth/getUsers');
 
    }
+  
+  getUsersByGroupId(groupId: Number):Observable<Users>{
+    return this.http.get<Users[]>(env.apiUrl + '/auth/getUsersByGroupId/' + groupId);
+  }
+
 
   searchGroup(query: Number):Observable<Users>{
-    console.log('searchGroup')
     return this.http.get<Users[]>(env.apiUrl + '/auth/searchGroup/' + query);
  }
 
  searchMaxGroupId():Observable<Users>
  {
    return this.http.get<Users>(env.apiUrl + '/auth/searchMaxGroupId');
+ }
+
+ getUserDetails(email: string):Observable<Users>{
+   return this.http.get<Users[]>(env.apiUrl + '/auth/getUserDetails/' + email);
  }
 
 

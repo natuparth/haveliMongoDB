@@ -32,7 +32,8 @@ export class LoginComponent implements OnInit {
     'name' : new FormControl('', Validators.required),
     'email' : new FormControl('', Validators.required),
     'password' : new FormControl('', Validators.required),
-    'groupId' : new FormControl('')
+    'groupId' : new FormControl(''),
+    'profilePicId' : new FormControl('')
   });
   }
   validateCredentials(values: any){

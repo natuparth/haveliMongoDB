@@ -14,8 +14,20 @@ router.get("/getUsers", (req,res,next)=>{
 
 });
 
+router.get("/getUsersByGroupId/:groupId", (req,res,next)=>{
+  User.find({groupId : req.params.groupId}).then((doc)=>{
+    res.status(200).json({users: doc})
+  })
+});
+
 router.get("/searchGroup/:groupId", (req,res,next)=>{
   User.find({groupId : req.params.groupId}).then((doc)=>{
+    res.status(200).json({users: doc})
+  })
+});
+
+router.get("/getUserDetails/:email", (req,res,next)=>{
+  User.find({email : req.params.email}).then((doc)=>{
     res.status(200).json({users: doc})
   })
 });
@@ -32,7 +44,8 @@ router.post("/addUser",(req,res,next)=>{
      email : req.body.email,
      password : hash,
      name : req.body.name,
-     groupId : req.body.groupId
+     groupId : req.body.groupId,
+     profilePicId : req.body.profilePicId
    });
 
    user.save().then((result)=>{
