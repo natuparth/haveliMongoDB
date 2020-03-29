@@ -20,9 +20,7 @@ export class ExpenseComponent implements OnInit {
   itemList: any = [];
   updateItemList: any = [];
   previousUserId = 0;
-  memberListTranslate: any = [];
   memberListPos = '40%';
-  memberListTranslatePos = -165;
   currentUserId = -1;
   currentUserName = '';
   welcomeFlag = true;
@@ -100,23 +98,42 @@ export class ExpenseComponent implements OnInit {
 
   async GetUsers() {
     this.membersList = [];
-    this.authService.getUsers().subscribe(doc => {
-      console.log(doc.users.length);
-      let count = 0;
-      doc.users.forEach(user => {
-        this.membersList.push({
-          index: count++,
-          name: user.name,
-          background: false,
-          pic:
-            '../assets/' + user.name.split(' ')[0].toLocaleLowerCase() + '.jpg'
+    var groupId = localStorage.getItem('groupId');//data strored in string 
+    if(groupId == 'null')//string comparision => if group id is not assigned pull the user details only 
+    {
+      //console.log("group id null");
+      this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
+        //console.log(doc.users.length);
+        let count = 0;
+        doc.users.forEach(user => {
+          this.membersList.push({
+            index: count++,
+            name: user.name,
+            background: false,
+            pic:
+              '../assets/' + user.name.split(' ')[0].toLocaleLowerCase() + '.jpg'
+          });
         });
-        this.memberListTranslate.push(
-          'translate(' + (this.memberListTranslatePos + count * 55) + 'px,0px)'
-        );
+        //console.log(this.membersList);
       });
-      console.log(this.membersList);
-    });
+    }
+    else{
+      //console.log("groupid not null",groupId)
+      this.authService.getUsersByGroupId(+groupId).subscribe(doc => {
+        //console.log(doc.users.length);
+        let count = 0;
+        doc.users.forEach(user => {
+          this.membersList.push({
+            index: count++,
+            name: user.name,
+            background: false,
+            pic:
+              '../assets/' + user.name.split(' ')[0].toLocaleLowerCase() + '.jpg'
+          });
+        });
+        //console.log(this.membersList);
+      });
+    }
   }
 
   AddItem() {

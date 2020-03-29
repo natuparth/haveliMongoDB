@@ -5,6 +5,7 @@ import { GroceryComponent } from './grocery/grocery.component';
 import { ExpenseComponent } from './expense/expense.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { NgModule } from '@angular/core';
+import { ProfileComponent } from './profile/profile.component';
 
 
 const routes: Routes = [
@@ -31,6 +32,10 @@ const routes: Routes = [
       {
         path: 'calculate',
         component: CalculateexpenseComponent
+      },
+      {
+        path: 'profile',
+        component:  ProfileComponent
       }
     ]
   }
