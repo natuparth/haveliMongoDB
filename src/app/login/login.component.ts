@@ -26,8 +26,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-   this.username = 'parth.natu';
-   this.password = 'natunatu';
    this.registerUserForm = new FormGroup({
     'name' : new FormControl('', Validators.required),
     'email' : new FormControl('', Validators.required),
@@ -77,16 +75,19 @@ export class LoginComponent implements OnInit {
 
   addUserWithNewGroup()
   {
+    this.username = " ";
+    this.password = " ";
     this.addDisplayNewGroupId = 'none';
     this.addDisplayBlankGroupId = 'none';
     this.loadingFlag = 'block';
     this.authService.searchMaxGroupId().subscribe(doc => {
-      this.newGroupId = doc.users[0].groupId + 1;
+     // this.newGroupId = doc.users[0].groupId + 1;
       alert("new group created with group Id " + this.newGroupId);
       this.loadingFlag = 'block';
-      this.registerUserForm.value.groupId = this.newGroupId;
-      this.authService.addUsers(this.registerUserForm.value).subscribe(res => {
-        alert(res.message);
+    //  this.registerUserForm.value.groupId = this.newGroupId;
+      console.log(this.registerUserForm.value);
+      this.authService.addUsers(this.registerUserForm.value).subscribe( res => {
+        console.log(res);
         this.loadingFlag = 'none';
       });
     });

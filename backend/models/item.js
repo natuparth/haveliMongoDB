@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const itemSchema = mongoose.Schema({
-  name: String,
+  name: {type:String, required: true},
 quantity:Number,
 date:Date,
 consumptionPerDay:{type:Number,required:false},
