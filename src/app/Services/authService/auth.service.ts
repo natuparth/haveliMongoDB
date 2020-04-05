@@ -22,7 +22,7 @@ export  class  AuthService {
   getToken() {
     return this.token;
   }
-  addUsers(user: {email: string , password: string, name: string, groupId: Number, profilePicId: Number }){
+  addUsers(user: {email: string , password: string, name: string, groupId: string, profilePicId: Number }){
     return this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user);
  }
 
@@ -81,7 +81,7 @@ export  class  AuthService {
     return this.http.get(env.apiUrl + '/auth/getUsers');
 
    }
-  
+
   getUsersByGroupId(groupId: Number):Observable<Users>{
     return this.http.get<Users[]>(env.apiUrl + '/auth/getUsersByGroupId/' + groupId);
   }

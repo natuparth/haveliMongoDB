@@ -3,7 +3,7 @@ import { Item } from '../../models/item.model';
 import { Users } from '../../models/users.model';
 import { Observable, Subject, pipe } from 'rxjs';
 import { environment as env} from '../../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, debounceTime } from 'rxjs/operators';
 
 @Injectable({
@@ -15,11 +15,10 @@ export class CrudService {
   newItem: any;
   userid: string;
   itemsUpdated = new Subject<Item[]>();
-  receivedItem = new Subject<Item>();
   message = new Subject<string>();
 
   constructor(private http: HttpClient) {}
-  addItem(item: any) {
+  addItem(item: any, groupId: string) {
 
     const itemAdded: Item = {
        name: item.name,
@@ -29,31 +28,38 @@ export class CrudService {
        price : item.price
 
     };
-
+    console.log(itemAdded);
     this.http
-      .post(env.apiUrl + '/item/postItem', itemAdded)
+      .post<{message: string}>(env.apiUrl + '/item/postItem/' + groupId, itemAdded)
       .subscribe(data => {
-        console.log('post data successful');
+        if (data.message === 'successful') {
         this.items.push(itemAdded);
-        console.log(this.items);
         this.itemsUpdated.next([...this.items]);
+      }else {
+      alert('error adding the item to the database');
+    }
       });
   }
 
-  deleteItem(itemName: string) {
+  deleteItem(itemName: string, groupId: string) {
+    let params = new HttpParams();
+    params = params.append('name', itemName);
+    params = params.append('gid', groupId);
     this.http
-      .delete(env.apiUrl + '/item/deleteItem/' + itemName)
-      .subscribe(() => {
+      .delete<{message: string , name: string , error: string}>(env.apiUrl + '/item/deleteItem' , {params: params})
+      .subscribe((resData) => {
+        if (resData.message === 'item deleted successfully'){
         const updatedItems = this.items.filter(
           itemDeleted => itemDeleted.name !== itemName
         );
-        this.items = updatedItems;
+       this.items = updatedItems;
+      }
         this.itemsUpdated.next([...this.items]);
       });
   }
   // tslint:disable-next-line: whitespace
-  updateItem(item: Item, name: string) {
-    this.http.put(env.apiUrl + '/item/updateItem/' + name, item, {
+  updateItem(item: Item, name: string, groupId: string) {
+    this.http.put(env.apiUrl + '/item/updateItem/' + name + '/' + groupId, item, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
    }).subscribe((resData) => {
        console.log(resData);
@@ -73,27 +79,19 @@ export class CrudService {
     return this.message.asObservable();
   }
 
-  getItem(name: string) {
+  getItem(name: string, groupId: string): Observable<any> {
+       return  this.http.get(env.apiUrl + '/item/getItem/' + name + '/' + groupId);
+      }
 
-    this.http.get(env.apiUrl + '/item/getItem/' + name).subscribe((data) => {
+  searchItem(query: string, groupId: string){
+     return this.http.get<Item[]>(env.apiUrl + '/item/searchItems/' + query + '/' + groupId);
+  }
+
+  getList(groupId: string) {
+    this.http.get<Item[]>(env.apiUrl + '/item/getItems/' + groupId ).subscribe(
+      data => {
         console.log(data);
-        this.receivedItem.next(data as Item);
-  });
-  }
-
-  searchItem(query: string){
-     return this.http.get<Item[]>(env.apiUrl + '/item/searchItems/' + query);
-  }
-
-  getItemUpdated() {
-    return this.receivedItem.asObservable();
-  }
-
-  getList() {
-    this.http.get<Item[]>(env.apiUrl + '/item/getItems').subscribe(
-      items => {
-        console.log(items);
-        this.items = items;
+        this.items = data;
         this.itemsUpdated.next(this.items);
       },
       err => console.log(err)
@@ -102,6 +100,12 @@ export class CrudService {
 
   getListUpdated() {
     return this.itemsUpdated.asObservable();
+  }
+
+  getShoppingList(): Observable<Item[]> {
+      return this.http.get<Item[]>(env.apiUrl + '/item/getItems');
+
+
   }
 
  }
