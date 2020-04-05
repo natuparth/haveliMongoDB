@@ -21,11 +21,13 @@
     </ul>
       <ul class="navbar-nav">
       <li class= "nav-item">
-        <img style='height:40px;width:40px ;border-radius: 20px;' src={{userImg}}>
+        <!-- <img style='height:40px;width:40px ;border-radius: 20px;' src={{userImg}}> -->
+        <div style='height:40px;width:40px ;border-radius: 50%;'><app-profile-logo [userName]="userName"></app-profile-logo></div>
+        
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" routerLink="profile">Welcome {{user}}</a>
+        <a class="nav-link" routerLink="profilelogo">Welcome {{user}}</a>
 
       </li>
       <li class="nav-item">

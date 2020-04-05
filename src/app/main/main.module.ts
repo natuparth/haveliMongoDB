@@ -7,10 +7,11 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { CalculateexpenseComponent } from './calculateexpense/calculateexpense.component';
 import { MainRouting } from './main-routing.module';
 import { ProfileComponent } from './profile/profile.component';
+import { ProfileLogoComponent } from './profile/profile-logo/profile-logo.component';
 
 
 @NgModule({
-  declarations : [MainComponent, ExpenseComponent, GroceryComponent, ShoppingListComponent, CalculateexpenseComponent, ProfileComponent ],
+  declarations : [MainComponent, ExpenseComponent, GroceryComponent, ShoppingListComponent, CalculateexpenseComponent, ProfileComponent, ProfileLogoComponent ],
   imports : [SharedModule, MainRouting]
 })
 

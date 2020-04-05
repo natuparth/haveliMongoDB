@@ -89,26 +89,30 @@ router.post("/login", (req, res, next) => {
       });
     }
     fetchedUser = user;
-    return bcrypt.compare(req.body.password, user.password);
-  }).then((result) => {
-    console.log(result);
-    if (!result) {
-      return res.status(401).json({
-        message: 'user not found'
-      });
-    }
-    const token = jwt.sign({ email: fetchedUser.email, user_id: fetchedUser._id }, "this_is_the_secret_message", { expiresIn: "1h" });
-    res.status(200).json({
-      token: token,
-      message: 'user signed in successfully',
-      user: fetchedUser.email.split('.')[0],
-      expiresIn: 3600
+    return bcrypt.compare(req.body.password,user.password);
+  }).then((result)=>{
+      console.log(result);
+           if(!result){
+          return  res.status(401).json({
+              message: 'user not found'
+            });
+           }
+         const token = jwt.sign({email: fetchedUser.email, user_id: fetchedUser._id},"this_is_the_secret_message",{expiresIn: "1h"});
+         res.status(200).json({
+           token : token,
+           message : 'user signed in successfully',
+           user : fetchedUser.email.split('.')[0],
+           userName : fetchedUser.name,
+           userEmail : fetchedUser.email,
+           groupId : fetchedUser.groupId,
+           profilePicId : fetchedUser.profilePicId,
+           expiresIn: 3600
 
-    })
-  }).catch(() => {
-    return res.status(401).json({
-      message: 'user not found'
-    });
+         })
+  }).catch(()=>{
+   return res.status(401).json({
+       message: 'user not found'
+     });
 
   })
 

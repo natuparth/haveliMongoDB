@@ -18,7 +18,8 @@
                 <div class="col-lg mt-4 outerbox"
                     *ngFor='let member of membersList'>
                     <div class="card box">
-                        <img src={{member.pic}} class="card-img-top" style="height:200px" alt="...">
+                        <!-- <img src={{member.pic}} class="card-img-top" style="height:200px" alt="..."> -->
+                        <div class="card-img-top" style="height:200px"><app-profile-logo [userName]="member.name"></app-profile-logo></div>
                         <h1>{{member.name[0]}}</h1>
                         <div class="card-body">
                         <h3 class="card-title">{{member.name}}</h3>

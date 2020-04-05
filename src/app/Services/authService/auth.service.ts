@@ -40,7 +40,9 @@ export  class  AuthService {
      password : values.password
    };
    console.log(authData);
-   this.http.post<{token?: string, message: string, user?: string,expiresIn?: number}>(env.apiUrl + '/auth/login', authData).subscribe(res=>{
+   this.http.post<{token?: string, message: string, user?: string,userName:string,
+                    userEmail:string,groupId:string,profilePicId:string,expiresIn?: number}>
+                    (env.apiUrl + '/auth/login', authData).subscribe(res=>{
      const token = res.token;
      this.token = token;
      console.log(res.expiresIn);
@@ -52,7 +54,7 @@ export  class  AuthService {
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
    //  console.log(expiresAt);
-     this.saveAuth(token,expiresAt.toLocaleString(),res.user,values.username);
+     this.saveAuth(token,expiresAt.toLocaleString(),res.user,res.userName,res.userEmail,res.groupId,res.profilePicId);
      this.router.navigate(['main']);
      } else {
        this.userAuthListener.next(' ');
@@ -60,18 +62,14 @@ export  class  AuthService {
    });
  }
 
-  private saveAuth(token: string, expiresAt: string, user: string, email: string){
-    this.getUserDetails(email).subscribe(doc => {
-      // console.log("inside saveauth",doc.users.length);
-    //  localStorage.setItem('userName', doc.users[0].name);
-     // localStorage.setItem('userEmail',doc.users[0].email);
-      localStorage.setItem('groupId', doc.users[0].groupId);
-      //localStorage.setItem('profilePicId', doc.users[0].profilePicId);
-    });
+  private saveAuth(token: string, expiresAt: string, user: string, userName:  string,userEmail: string,groupId: string,profilePicId: string){
+    localStorage.setItem('userName', userName);
+    localStorage.setItem('userEmail', userName);
+    localStorage.setItem('groupId', groupId);
+    localStorage.setItem('profilePicId', profilePicId);
     localStorage.setItem('token', token);
     localStorage.setItem('expiresAt', expiresAt.toString());
     localStorage.setItem('userLogged', user);
-    // localStorage.setItem('userEmail', email);
   }
 
   logout(){
