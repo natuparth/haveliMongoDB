@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Item } from 'src/app/models/item.model';
-import { toArray, switchMap, map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { switchMap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { CrudService } from 'src/app/Services/crudService/crud.service';
 import { Observable } from 'rxjs';
-import { NgForm, FormGroup, FormControlName, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/Services/authService/auth.service';
 @Component({
   selector: 'app-grocery',
@@ -34,9 +33,7 @@ export class GroceryComponent implements OnInit {
   display: String = 'none';
   itemName: string;
   itemDate: Date;
-  filteredList: any[] = [];
   itemsArray: any[] = [];
-  filterString = '';
   welcomeFlag = true;
 
   constructor(private crudService: CrudService, private formBuilder: FormBuilder, private authService: AuthService) {
@@ -52,12 +49,11 @@ export class GroceryComponent implements OnInit {
       if (query === '') {
         query = 'all';
       }
-
-       return this.crudService.searchItem(query, this.groupId);
-     }),
+      return this.searchItem(query);
+      }),
      ).subscribe(value => {
-       this.itemsList = value.map(item => new Item(item)) ;
-     console.log(this.itemsList);
+      this.itemsList = value.map(item => new Item(item)) ;
+      console.log(this.itemsList);
    });
   }
 
@@ -68,6 +64,7 @@ export class GroceryComponent implements OnInit {
     this.crudService.getListUpdated().subscribe((items) => {
       console.log('subscription got called');
       this.itemsList = items;
+      this.itemsArray = items;
       this.welcomeFlag = false;
     });
 
@@ -162,14 +159,10 @@ export class GroceryComponent implements OnInit {
 
 
   validateDate(date: Date) {
-    console.log(date.toString);
-    console.log(this.itemDate);
-    console.log(this.updateItemForm);
-    if (date.toString() == '') {
+    if (date.toString() === '') {
     this.updateItemForm.get('date').setErrors({required: true});
-    } else if (date < this.itemDate && date.toString() != '') {
-     // alert('the entered date is prior to the last purchase date');
-      this.updateItemForm.get('date').setErrors({'invalidDate': true});
+    } else if (date < this.itemDate && date.toString() !== '') {
+    this.updateItemForm.get('date').setErrors({'invalidDate': true});
     } else {
       this.updateItemForm.get('date').setErrors({'invalidDate': null});
     }
@@ -193,6 +186,20 @@ export class GroceryComponent implements OnInit {
     }
   }
 
+  searchItem(query: string): Observable<Item[]> {
+    const regex = new RegExp('^' + query + '$');
+   const filtered =  this.itemsList.filter((item) => {
+      return item.name.includes(query);
+      });
+      this.Items = new Observable(observer => {
+        if (query === 'all'){
+          observer.next(this.itemsArray);
+        } else {
+        observer.next(filtered);
+        }
+      });
+    return this.Items;
+  }
 }
 
 
