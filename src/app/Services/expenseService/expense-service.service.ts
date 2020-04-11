@@ -19,7 +19,15 @@ export class ExpenseService {
    return this.http.get(env.apiUrl + '/expense/getExpenses/'+ user);
   }
 
-  public addExpenses(expense: any): Observable<any>{
-    return this.http.post<{message: string, errMessage: string}>(env.apiUrl + '/expense/addExpenses/', expense);
+  public addExpenses(expense: any, email:string): Observable<any>{
+    const expenseItem : Expense = {
+      expenseName : expense.expenseName,
+      amount :  expense.amount,
+      dateOfPurchase : expense.dateOfPurchase,
+      description : expense.description,
+      forWhom : expense.forWhom
+    };
+    console.log("expense item",expenseItem);
+    return this.http.post<{message: string}>(env.apiUrl + '/expense/addExpenses/'+ email, expenseItem);
   }
 }

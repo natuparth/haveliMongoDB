@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Expense= require('../models/expense');
+const User  = require('../models/user');
 const checkAuth = require('../middleware/check-auth');
 
 router.get("/getExpenses/:id",checkAuth,(req,res,next)=>{
@@ -12,19 +13,23 @@ router.get("/getExpenses/:id",checkAuth,(req,res,next)=>{
 
 });
 
-router.post("/addExpenses",checkAuth, (req,res,next)=>{
+router.post("/addExpenses/:email",checkAuth, (req,res,next)=>{
+  console.log("reqbody",req.body);
   const expense = new Expense({
-    user : req.body.user,
-    amount: req.body.amount,
-    dateOfPurchase: req.body.dateOfPurchase,
-    description: req.body.description
+    expenseName : req.body.expenseName,
+    amount :  req.body.amount,
+    dateOfPurchase : req.body.dateOfPurchase,
+    description : req.body.description,
+    forWhom : req.body.forWhom
   });
-
-  expense.save().then((Message)=>{
-     res.status(200).send({message:'item added successfully', error: Message});
-  }).catch((errMessage)=>{
-    res.status(400).send({message:'failed to add item', error: errMessage});
-  })
-})
+  User.findOne({email : req.params.email},(err,doc)=>{
+    doc.expense.push(expense);
+    doc.save().then(()=>{
+      res.send({message:'successful'});
+    }).catch((err)=>{
+      res.send({message:'error occurred: '+err})
+    });
+  });
+});
 module.exports = router;
 

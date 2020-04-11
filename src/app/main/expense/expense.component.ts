@@ -42,12 +42,12 @@ export class ExpenseComponent implements OnInit {
 
   ngOnInit() {
     this.memberFlag = false;
+    this.welcomeFlag = true;
     this.itemSubject.subscribe(doc => {
       this.itemList = doc;
     });
     console.log('inside expense management component');
     this.GetUsers().then(() => {
-      this.welcomeFlag = false;
     });
     console.log(this.membersList.length);
     this.addItemForm = new FormGroup({
@@ -76,8 +76,8 @@ export class ExpenseComponent implements OnInit {
 
   MemberFunction(index: any) {
     this.currentUserId = index;
-    console.log('memberfunction id:' + this.currentUserId);
-    this.welcomeFlag = false;
+    console.log('memberfunction id:' + this.currentUserId,this.membersList[index].email);
+    this.welcomeFlag = true;
     this.memberFlag = true;
     this.membersList[this.previousUserId].background = false;
     this.membersList[index].background = true;
@@ -93,45 +93,51 @@ export class ExpenseComponent implements OnInit {
     this.expenseService.getExpenses(id).subscribe(doc => {
       console.log(doc);
       this.itemSubject.next(doc);
+      this.welcomeFlag = false;
     });
   }
-
+  /*
+  GetUsers()
+    Functionality:  Fetch deails for all members of the group. Group Id is taken from localstorage.
+                    Saves the data of the members in a list. <membersList>
+    Returns:        No values are returned from this funcion.
+    Inputs:         No input variable
+  */
   async GetUsers() {
     this.membersList = [];
-    var groupId = localStorage.getItem('groupId');//data strored in string 
+    var groupId = localStorage.getItem('groupId');//data strored in string
+    console.log("sart");
     if(groupId == 'null')//string comparision => if group id is not assigned pull the user details only 
     {
-      //console.log("group id null");
       this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
-        //console.log(doc.users.length);
         let count = 0;
         doc.users.forEach(user => {
           this.membersList.push({
             index: count++,
             name: user.name,
+            email:  user.email,
             background: false,
             pic:
               '../assets/' + user.name.split(' ')[0].toLocaleLowerCase() + '.jpg'
           });
         });
-        //console.log(this.membersList);
+        this.welcomeFlag = false;
       });
     }
     else{
-      //console.log("groupid not null",groupId)
-      this.authService.getUsersByGroupId(+groupId).subscribe(doc => {
-        //console.log(doc.users.length);
+      this.authService.getUsersByGroupId(groupId.toString()).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
           this.membersList.push({
             index: count++,
             name: user.name,
+            email:  user.email,
             background: false,
             pic:
               '../assets/' + user.name.split(' ')[0].toLocaleLowerCase() + '.jpg'
           });
         });
-        //console.log(this.membersList);
+        this.welcomeFlag = false;
       });
     }
   }
@@ -150,15 +156,16 @@ export class ExpenseComponent implements OnInit {
   addItemSubmit(item: FormGroup) {
     console.log(item.value);
     const expense = {
-      user: this.currentUserName,
+      // user: this.currentUserName,
+      expenseName:'test expense',
       amount: item.value.price,
       dateOfPurchase: item.value.dateOfPurchase,
-      description: item.value.name
+      description: item.value.name,
+      forWhom : ['rahul.prasad','shubham.shukla','tayal.shubham']
     };
 
-    this.expenseService.addExpenses(expense).subscribe(response => {
+    this.expenseService.addExpenses(expense,"rahul.prasad").subscribe(response => {
       this.addDisplay = 'none';
-
       if (response.message == 'item added successfully') {
         alert('item added successfully');
         this.itemList.push(expense);
