@@ -15,7 +15,8 @@ export class ExpenseComponent implements OnInit {
   membersList: any[] = [];
   itemSubject = new Subject<any>();
   memberFlag = false;
-  addDisplay = 'none';
+  addDisplay = false;
+  editforUser = false;
   updateDisplay = 'none';
   itemList: any = [];
   updateItemList: any = [];
@@ -33,7 +34,7 @@ export class ExpenseComponent implements OnInit {
     price: new FormControl('', Validators.required),
     quantity: new FormControl('', Validators.required)
   });
-  addItemForm: FormGroup;
+  addExpenseForm: FormGroup;
   constructor(
     private crudService: CrudService,
     private expenseService: ExpenseService,
@@ -49,18 +50,29 @@ export class ExpenseComponent implements OnInit {
     console.log('inside expense management component');
     this.GetUsers().then(() => {
     });
-    console.log(this.membersList.length);
-    this.addItemForm = new FormGroup({
-      name: new FormControl('', Validators.required),
-      dateOfPurchase: new FormControl(Date.now, Validators.required),
-      price: new FormControl('', Validators.required),
-      quantity: new FormControl('', Validators.required)
-    });
+    this.addExpenseForm = new FormGroup({});
+    //   'purpose': new FormControl('', Validators.required),
+    //   'dateOfPurchase': new FormControl(Date.now, Validators.required),
+    //   'amount': new FormControl('', Validators.required),
+    //   'description': new FormControl(''),
+    //   'forWhom' : new FormControl('',Validators.required)
+    // });
   }
 
   openModal(itemId: any, modalName: string) {
     if (modalName == 'addModal') {
-      this.addDisplay = 'block';
+      this.addExpenseForm = new FormGroup({
+        'purpose': new FormControl('', Validators.required),
+        'dateOfPurchase': new FormControl(Date.now, Validators.required),
+        'amount': new FormControl('', Validators.required),
+        'description': new FormControl(''),
+        'forWhom' : new FormControl([],Validators.required)
+      });
+      for(var i=0; i < this.membersList.length;i++)
+      {
+        this.addExpenseForm.value.forWhom.push(this.membersList[i].email);
+      }
+      this.addDisplay = true;
     } else {
       this.updateDisplay = 'block';
       this.UpdateItem(itemId);
@@ -68,7 +80,7 @@ export class ExpenseComponent implements OnInit {
   }
   onCloseHandled(name: string) {
     if (name === 'addModal') {
-    this.addDisplay = 'none';
+    this.addDisplay = false;
     } else {
       this.updateDisplay = 'none';
     }
@@ -84,7 +96,6 @@ export class ExpenseComponent implements OnInit {
     this.previousUserId = this.currentUserId;
     this.currentUserName = this.membersList[index].name;
     this.GetUserValues(this.membersList[index].name);
-    //   }
   }
 
   GetUserValues(id: string) {
@@ -153,21 +164,27 @@ export class ExpenseComponent implements OnInit {
 
 
   }
-  addItemSubmit(item: FormGroup) {
+  /*
+  addExpense()
+    Functionality:  Add a expense for the specified user.
+    Returns:        No values are returned from this funcion.
+    Inputs:         Take the form value of Add Expense form.
+  */
+  addExpense(item: FormGroup) {
     console.log(item.value);
     const expense = {
-      // user: this.currentUserName,
-      expenseName:'test expense',
-      amount: item.value.price,
+      purpose: item.value.purpose,
+      amount: item.value.amount,
       dateOfPurchase: item.value.dateOfPurchase,
-      description: item.value.name,
-      forWhom : ['rahul.prasad','shubham.shukla','tayal.shubham']
+      description: item.value.description,
+      forWhom : item.value.forWhom
     };
 
-    this.expenseService.addExpenses(expense,"rahul.prasad").subscribe(response => {
-      this.addDisplay = 'none';
-      if (response.message == 'item added successfully') {
-        alert('item added successfully');
+    this.expenseService.addExpenses(expense,"shubham.shukla").subscribe(response => {
+      this.addDisplay = false;
+      alert("message"+response.message);
+      if (response.message === 'successful') {
+        alert('Expense added successfully');
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);
       } else {
@@ -177,5 +194,35 @@ export class ExpenseComponent implements OnInit {
         );
       }
     });
+  }
+  /*
+  changeforUser()
+    Functionality:  Update the for User list of expense form. A expense user is added or removed based on the select criteria
+    Returns:        No values are returned from this funcion.
+    Inputs:         take the index of the user.
+  */
+  changeforUser(index:any){
+    var memberemail = this.membersList[index].email;
+    if(this.addExpenseForm.value.forWhom.indexOf(memberemail) >=0){
+      this.addExpenseForm.value.forWhom.splice(memberemail,1);
+    }
+    else{
+      this.addExpenseForm.value.forWhom.push(memberemail);
+    }
+  }
+  /*
+  checkforUser()
+    Functionality:  to update the checkbox based on the user is selected or not.
+    Returns:        return boolean. True if user is seleced, False if not selected.
+    Inputs:         take the index of the user.
+  */
+  checkforUser(index:any){
+    var memberemail = this.membersList[index].email;
+    if(this.addExpenseForm.value.forWhom.indexOf(memberemail) >=0){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }

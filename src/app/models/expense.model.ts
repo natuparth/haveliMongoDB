@@ -1,5 +1,5 @@
 export class Expense{
-  expenseName: String;
+  purpose: String;
   amount : Number;
   dateOfPurchase: Date;
   description : String;

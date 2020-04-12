@@ -19,7 +19,9 @@
                     *ngFor='let member of membersList'>
                     <div class="card box">
                         <!-- <img src={{member.pic}} class="card-img-top" style="height:200px" alt="..."> -->
-                        <div class="card-img-top" style="height:200px"><app-profile-logo [userName]="member.name"></app-profile-logo></div>
+                        <div class="card-img-top" style="height:200px">
+                            <app-profile-logo [userName]="member.name"></app-profile-logo>
+                        </div>
                         <h1>{{member.name[0]}}</h1>
                         <div class="card-body">
                         <h3 class="card-title">{{member.name}}</h3>
@@ -75,7 +77,7 @@
         </div>
         <div class="row">
             <div class="col text-center">
-              <button (click)="openModal('','addModal')" class="button btn ">Add Items</button>
+              <button (click)="openModal('','addModal')" class="btn btn-primary">Add Expense</button>
             </div>
         </div>
         <div class="row">
@@ -100,47 +102,88 @@
                       <td>{{item.amount}}</td>
                       <td>{{item.dateOfPurchase}}</td>
 
-                      <button class="btn btn-info" (click)='openModal(item.id,"updateModal")'>Update</button>
+                      <button class="btn btn-info" (click)='form(item.id,"updateModal")'>Update</button>
                 </tr>
             </tbody>
         </table>
     </div>
     <div>
-        <div class="backdrop" [ngStyle]="{'display':addDisplay}"></div>
-        <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':addDisplay}">
+        <!-- <div class="backdrop" [ngStyle]="{'display':addDisplay}"></div>
+        <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':addDisplay}"> -->
+        <div class="backdrop" *ngIf='addDisplay'></div>
+        <div class="modal" tabindex="-1" role="dialog" *ngIf='addDisplay' [ngStyle]="{'display':'block'}">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Add Item</h4>
+                <h4 class="modal-title">Add Expense</h4>
                 <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('addModal')"><span
                     aria-hidden="true">&times;</span></button>
               </div>
 
               <div class="modal-body">
-                <form class="form-group"  [formGroup]="addItemForm" (ngSubmit)="addItemSubmit(addItemForm)">
-                  <label for="name">Name</label>
-                  <input name="name" class="form-control" formControlName="name" type="text" >
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('name').valid && addItemForm.get('name').touched">Please enter a name</p>
-                  <label for="dateOfLastPurchase"> Date</label>
-                  <input name="dateOfLastPurchase" class="form-control" formControlName='dateOfPurchase' type="date" required>
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('dateOfPurchase').valid && addItemForm.get('dateOfPurchase').touched">Please select a date</p>
+                <form class="form-group"  [formGroup]="addExpenseForm" (ngSubmit)="addExpense(addExpenseForm)">
 
-                  <label for="quantity">Quantity(in gms)</label>
-                  <input name="quantity" class="form-control" formControlName='quantity' type="number">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('quantity').valid && addItemForm.get('quantity').touched">Please select quantity</p>
+                    <label for="purpose">Purpose</label>
+                    <input name="purpose" class="form-control"
+                        formControlName="purpose" type="text" placeholder="Purpose of Expense"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!addExpenseForm.get('purpose').valid && 
+                        addExpenseForm.get('purpose').touched">
+                        Please enter purpose of expoense</p>
 
-                  <label for="price">Amount
-                  </label>
-                  <input name="price" class="form-control" formControlName = 'price' type="number">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('price').valid && addItemForm.get('price').touched">Please select an amount</p>
+                    <label for="dateOfLastPurchase"> Date</label>
+                    <input name="dateOfLastPurchase" class="form-control"
+                        formControlName='dateOfPurchase'
+                        type="date" placeholder="date of purchase"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!addExpenseForm.get('dateOfPurchase').valid &&
+                        addExpenseForm.get('dateOfPurchase').touched">
+                        Please select a date</p>
 
+                    <label for="amount">Amount Spent</label>
+                    <input name="amount" class="form-control"
+                        formControlName='amount' type="number" placeholder="Amount Spent on Expense"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!addExpenseForm.get('amount').valid &&
+                        addExpenseForm.get('amount').touched">
+                        Please select quantity</p>
+                        
+                    <label for="description">Description</label>
+                    <input name="description" class="form-control"
+                        formControlName='description' type="text" placeholder="Description on the expense *not required"/>
+                    <!-- <p class="help-block text-danger"
+                        *ngIf="!addExpenseForm.get('description').valid &&
+                        addExpenseForm.get('description').touched">
+                        Please select a date</p> -->
+                    <br>
 
-                  <!-- <label for="description">Description</label>
-                  <input name="description" class="form-control" formControlName='description' type="text">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('description').valid && addItemForm.get('description').touched">Please select a date</p> -->
-                  <div class="modal-footer text-center">
-                    <button type="submit" class="btn btn-danger" data-dismiss="modal" [disabled]="!addItemForm.valid">Add Item</button>
-                  </div>
+                    <a (click)="editforUser=!editforUser" style="color: crimson;">Edit User</a>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg mt-4 foruserbox" *ngFor='let member of addExpenseForm.value.forWhom'>
+                                <div class="card boxuser foruser">
+                                    <div class="card-img-top" style="height:40px">
+                                        <app-profile-logo [userName]="member"></app-profile-logo>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf='editforUser' class="container">
+                        <br>
+                        <div class="row" *ngFor='let member of membersList'>
+                            <div class="col-lg-10 mt-10">{{member.name}}</div>
+                            <div class="col-lg-2 mt-2"><input type="checkbox" [checked]="checkforUser(member.index)"(change)="changeforUser(member.index)"></div>
+                        </div>
+                    </div>
+
+                    <div>
+
+                    </div>
+                    <br>
+                    <div class="modal-footer text-center">
+                        <button type="submit" class="btn btn-danger" data-dismiss="modal" [disabled]="!addExpenseForm.valid">Add Item</button>
+                    </div>
                 </form>
               </div>
 

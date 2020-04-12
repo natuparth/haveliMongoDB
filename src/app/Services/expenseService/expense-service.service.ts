@@ -21,13 +21,13 @@ export class ExpenseService {
 
   public addExpenses(expense: any, email:string): Observable<any>{
     const expenseItem : Expense = {
-      expenseName : expense.expenseName,
+      purpose : expense.purpose,
       amount :  expense.amount,
       dateOfPurchase : expense.dateOfPurchase,
       description : expense.description,
       forWhom : expense.forWhom
     };
-    console.log("expense item",expenseItem);
+    console.log("expense item",expenseItem,"expense",expense);
     return this.http.post<{message: string}>(env.apiUrl + '/expense/addExpenses/'+ email, expenseItem);
   }
 }

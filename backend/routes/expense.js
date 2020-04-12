@@ -16,14 +16,14 @@ router.get("/getExpenses/:id",checkAuth,(req,res,next)=>{
 router.post("/addExpenses/:email",checkAuth, (req,res,next)=>{
   console.log("reqbody",req.body);
   const expense = new Expense({
-    expenseName : req.body.expenseName,
+    purpose : req.body.purpose,
     amount :  req.body.amount,
     dateOfPurchase : req.body.dateOfPurchase,
     description : req.body.description,
     forWhom : req.body.forWhom
   });
   User.findOne({email : req.params.email},(err,doc)=>{
-    doc.expense.push(expense);
+    doc.expenses.push(expense);
     doc.save().then(()=>{
       res.send({message:'successful'});
     }).catch((err)=>{
