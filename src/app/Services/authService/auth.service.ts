@@ -82,7 +82,7 @@ export  class  AuthService {
 
    }
 
-  getUsersByGroupId(groupId: Number):Observable<Users>{
+  getUsersByGroupId(groupId: String):Observable<Users>{
     return this.http.get<Users[]>(env.apiUrl + '/auth/getUsersByGroupId/' + groupId);
   }
 

@@ -37,9 +37,13 @@ export class ProfileLogoComponent implements OnInit {
 
   abbrName()
   {
-    console.log('username',this.userName);
-    var nameList = this.userName.split(' ');
-    console.log('namelist',nameList,nameList.length);
+    var nameList;
+    if(this.userName.indexOf('.') >= 0){
+      nameList = this.userName.split('.');
+    }
+    else{
+      nameList = this.userName.split(' ');
+    }
     if(nameList.length>0)
     {
       this.name = '';

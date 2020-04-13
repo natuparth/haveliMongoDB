@@ -9,7 +9,7 @@
     font-size: 30px;
     font-weight: 200;
     position:absolute;
-    top:45%;
+    top:50%;
     left: 50%;
     transform: translate(-50%,-50%);
 }
@@ -19,7 +19,7 @@
     height: 10px;
     border-radius: 100%;
     position:absolute;
-    top:50%;
+    top:55%;
     left: 50%;
     transform: translate(-50%,-50%);
 }
@@ -216,24 +216,43 @@
     opacity: 1;
 }
 .backdrop{ 
-
-
     background-color:rgba(0,0,0,0.6);
-    
-    
     position:fixed;
-    
-    
     top:0;
-    
-    
     left:0;
-    
-    
     width:100%;
-    
-    
     height:100vh;
-    
-    
     }
+.modal
+{
+    overflow-y:auto;
+}
+.boxuser
+{
+    background: #1d1c1c;
+    color:#fff;
+}
+.foruserbox
+{
+    max-width: 16%;
+    min-width: 40px;
+    display: flex;
+}
+.foruserbox:hover .foruser
+{
+    transform: translate(0px,-10px);
+    opacity: 1;
+    transition:0.5s;
+}
+.foruser
+{
+    transition:0.5s;
+}
+input
+{
+    color: #1d1c1c;
+}
+label
+{
+    font-weight: bold;
+}

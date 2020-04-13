@@ -15,25 +15,18 @@ export class ExpenseComponent implements OnInit {
   membersList: any[] = [];
   itemSubject = new Subject<any>();
   memberFlag = false;
-  addDisplay = 'none';
-  updateDisplay = 'none';
+  addDisplay = false;
+  updateDisplay = false;
   itemList: any = [];
   updateItemList: any = [];
-  previousUserId = 0;
   memberListPos = '40%';
-  currentUserId = -1;
   currentUserName = '';
+  currentUserEmail = '';
   welcomeFlag = true;
   sideBarExpand = true;
-  additemflag = false;
   updateitemflag = false;
-  updateItemForm: FormGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    dateOfPurchase: new FormControl(Date.now, Validators.required),
-    price: new FormControl('', Validators.required),
-    quantity: new FormControl('', Validators.required)
-  });
-  addItemForm: FormGroup;
+  updateExpenseForm: FormGroup;
+  addExpenseForm: FormGroup;
   constructor(
     private crudService: CrudService,
     private expenseService: ExpenseService,
@@ -42,125 +35,184 @@ export class ExpenseComponent implements OnInit {
 
   ngOnInit() {
     this.memberFlag = false;
+    this.welcomeFlag = true;
     this.itemSubject.subscribe(doc => {
       this.itemList = doc;
     });
     console.log('inside expense management component');
     this.GetUsers().then(() => {
-      this.welcomeFlag = false;
     });
-    console.log(this.membersList.length);
-    this.addItemForm = new FormGroup({
-      name: new FormControl('', Validators.required),
-      dateOfPurchase: new FormControl(Date.now, Validators.required),
-      price: new FormControl('', Validators.required),
-      quantity: new FormControl('', Validators.required)
-    });
+    this.addExpenseForm = new FormGroup({});
+    this.updateExpenseForm = new FormGroup({});
   }
-
-  openModal(itemId: any, modalName: string) {
+  /*
+  openModal()
+    Functionality:  open the selected model
+    Returns:        No values are returned from this funcion.
+    Inputs:         itemId: 
+                    modalName:  Name of the modal to be displayed
+  */
+  openModal(expense: any, modalName: string) {
     if (modalName == 'addModal') {
-      this.addDisplay = 'block';
-    } else {
-      this.updateDisplay = 'block';
-      this.UpdateItem(itemId);
+      this.addExpenseForm = new FormGroup({
+        'purpose': new FormControl('', Validators.required),
+        'dateOfPurchase': new FormControl(Date.now, Validators.required),
+        'amount': new FormControl('', Validators.required),
+        'description': new FormControl(''),
+        'forWhom' : new FormControl([],Validators.required)
+      });
+      for(var i=0; i < this.membersList.length;i++)
+      {
+        this.addExpenseForm.value.forWhom.push(this.membersList[i].email);
+      }
+      this.addDisplay = true;
+    }
+    else {
+      this.updateExpenseForm = new FormGroup({
+        'purpose' : new FormControl(expense.purpose,Validators.required),
+        'dateOfPurchase': new FormControl(expense.dateOfPurchase, Validators.required),
+        'amount': new FormControl(expense.amount, Validators.required),
+        'description': new FormControl(expense.description),
+        'forWhom' : new FormControl(expense.forWhom,Validators.required),
+        'expenseId' : new FormControl(expense._id,Validators.required)
+      });
+      this.updateDisplay = true;
     }
   }
+  /*
+  onCloseHandled()
+    Functionality:  close the selected model
+    Returns:        No values are returned from this funcion.
+    Inputs:         modalName:  Name of the modal to be displayed
+  */
   onCloseHandled(name: string) {
     if (name === 'addModal') {
-    this.addDisplay = 'none';
+    this.addDisplay = false;
     } else {
-      this.updateDisplay = 'none';
+      this.updateDisplay = false;
     }
   }
-
-  MemberFunction(index: any) {
-    this.currentUserId = index;
-    console.log('memberfunction id:' + this.currentUserId);
-    this.welcomeFlag = false;
+  /*
+  MemberFunction()
+    Functionality:  To fetch the current user for expense component.
+    Returns:        No values are returned from this funcion.
+    Inputs:         Index of MemberList and type of function to be executed name/email
+                    name: calls the getexpense function
+                    email:  sets the current user-email
+  */
+  MemberFunction(index: any,type:String) {
     this.memberFlag = true;
-    this.membersList[this.previousUserId].background = false;
-    this.membersList[index].background = true;
-    this.previousUserId = this.currentUserId;
     this.currentUserName = this.membersList[index].name;
-    this.GetUserValues(this.membersList[index].name);
-    //   }
+    this.currentUserEmail= this.membersList[index].email;
+    if(type==='name'){
+      this.GetUserValues(this.membersList[index].email);
+    }
   }
-
-  GetUserValues(id: string) {
+  /*
+  GetUserValues()
+    Functionality:  To fetch the expense for selected user.
+    Returns:        No values are returned from this funcion.
+    Inputs:         email:  email of the selected user
+  */
+  GetUserValues(email: string) {
+    this.welcomeFlag = true;
     this.itemList = [];
-    console.log(id);
-    this.expenseService.getExpenses(id).subscribe(doc => {
-      console.log(doc);
+    this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
+      this.welcomeFlag = false;
     });
+    
   }
-
+  /*
+  GetUsers()
+    Functionality:  Fetch deails for all members of the group. Group Id is taken from localstorage.
+                    Saves the data of the members in a list. <membersList>
+    Returns:        No values are returned from this funcion.
+    Inputs:         No input variable
+  */
   async GetUsers() {
     this.membersList = [];
-    var groupId = localStorage.getItem('groupId');//data strored in string 
+    var groupId = localStorage.getItem('groupId');//data strored in string
+    console.log("sart");
     if(groupId == 'null')//string comparision => if group id is not assigned pull the user details only 
     {
-      //console.log("group id null");
       this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
-        //console.log(doc.users.length);
         let count = 0;
         doc.users.forEach(user => {
           this.membersList.push({
             index: count++,
             name: user.name,
+            email:  user.email,
             background: false,
             pic:
               '../assets/' + user.name.split(' ')[0].toLocaleLowerCase() + '.jpg'
           });
         });
-        //console.log(this.membersList);
+        this.welcomeFlag = false;
       });
     }
     else{
-      //console.log("groupid not null",groupId)
-      this.authService.getUsersByGroupId(+groupId).subscribe(doc => {
-        //console.log(doc.users.length);
+      this.authService.getUsersByGroupId(groupId.toString()).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
           this.membersList.push({
             index: count++,
             name: user.name,
+            email:  user.email,
             background: false,
             pic:
               '../assets/' + user.name.split(' ')[0].toLocaleLowerCase() + '.jpg'
           });
         });
-        //console.log(this.membersList);
+        this.welcomeFlag = false;
       });
     }
   }
-
-  AddItem() {
-    this.additemflag = true;
-  }
-  UpdateItem(itemId: any) {
-
-  }
-
-  updateItem(item: FormControl) {
-
-
-  }
-  addItemSubmit(item: FormGroup) {
-    console.log(item.value);
+  /*
+  updateItem()
+    Functionality:  Update a expense for the specified user.
+    Returns:        No values are returned from this funcion.
+    Inputs:         Take the form value of Add Expense form.
+  */
+  updateExpense(expensedata: FormControl) {
     const expense = {
-      user: this.currentUserName,
-      amount: item.value.price,
+      purpose: expensedata.value.purpose,
+      amount: expensedata.value.amount,
+      dateOfPurchase: expensedata.value.dateOfPurchase,
+      description: expensedata.value.description,
+      forWhom : expensedata.value.forWhom
+    };
+    var expenseId = expensedata.value.expenseId;
+    this.expenseService.updateExpense(expense,this.currentUserEmail,expenseId).subscribe(response =>{
+      if(response.message === 'successfully updated'){
+        alert('Expense successfully updated');
+      } else{
+        alert('some error occurred while adding the expense. Error: ' +
+        response.error)
+      }
+      this.onCloseHandled('updateModal');
+      this.GetUserValues(this.currentUserEmail);
+    });
+  }
+  /*
+  addExpense()
+    Functionality:  Add a expense for the specified user.
+    Returns:        No values are returned from this funcion.
+    Inputs:         Take the form value of Add Expense form.
+  */
+  addExpense(item: FormGroup) {
+    const expense = {
+      purpose: item.value.purpose,
+      amount: item.value.amount,
       dateOfPurchase: item.value.dateOfPurchase,
-      description: item.value.name
+      description: item.value.description,
+      forWhom : item.value.forWhom
     };
 
-    this.expenseService.addExpenses(expense).subscribe(response => {
-      this.addDisplay = 'none';
-
-      if (response.message == 'item added successfully') {
-        alert('item added successfully');
+    this.expenseService.addExpenses(expense,this.currentUserEmail).subscribe(response => {
+      this.onCloseHandled('addModal')
+      if (response.message === 'successful') {
+        alert('Expense added successfully');
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);
       } else {
@@ -170,5 +222,85 @@ export class ExpenseComponent implements OnInit {
         );
       }
     });
+  }
+  /*
+  changeforUser()
+    Functionality:  Update the for User list of expense form. A expense user is added or removed based on the select criteria
+    Returns:        No values are returned from this funcion.
+    Inputs:         index:take the index of the user.
+                    modalName:take the modal name for which the operation to be executed
+  */
+  changeforUser(index:any,modalName:String){
+    if(modalName === 'addExpense'){
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex >=0){
+        this.addExpenseForm.value.forWhom.splice(memberIndex,1);
+      }
+      else{
+        this.addExpenseForm.value.forWhom.push(memberemail);
+      }
+    }
+    else
+    {
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex >=0){
+        this.updateExpenseForm.value.forWhom.splice(memberIndex,1);
+      }
+      else{
+        this.updateExpenseForm.value.forWhom.push(memberemail);
+      }
+    }
+    
+  }
+  /*
+  checkforUser()
+    Functionality:  to update the checkbox based on the user is selected or not.
+    Returns:        return boolean. True if user is seleced, False if not selected.
+    Inputs:         index:take the index of the user.
+                    modalName:take the modal name for which the operation to be executed
+  */
+  deleteExpense(expense : any){
+    console.log("delete");
+    if (confirm('Are you sure you want to remove ' + expense.purpose + ' expense')) {
+      this.expenseService.deleteExpense(this.currentUserEmail,expense._id).subscribe(response =>{
+        if(response.message === 'successfully deleted'){
+          alert('Expense successfully deleted');
+        } else{
+          alert('some error occurred while adding the expense. Error: ')
+        }
+        this.GetUserValues(this.currentUserEmail);
+      });
+      }
+  }
+  /*
+  checkforUser()
+    Functionality:  to update the checkbox based on the user is selected or not.
+    Returns:        return boolean. True if user is seleced, False if not selected.
+    Inputs:         index:take the index of the user.
+                    modalName:take the modal name for which the operation to be executed
+  */
+  checkforUser(index:any,modalName:String){
+    if(modalName === 'addExpense'){
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex>=0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    else{
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex>=0){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
   }
 }

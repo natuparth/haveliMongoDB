@@ -1,7 +1,7 @@
 
 <div class="Expensecontainer">
-    <div class="Welcomecontainer" *ngIf='welcomeFlag && !memberFlag '>
-        <p>Welcome</p>
+    <div class="Welcomecontainer" *ngIf='welcomeFlag'>
+        <p>Please Wait</p>
         <div class="Loading"
             [ngStyle]="{'animation-name':'Loadinganimation',
                     'animation-duration':'3s',
@@ -19,12 +19,14 @@
                     *ngFor='let member of membersList'>
                     <div class="card box">
                         <!-- <img src={{member.pic}} class="card-img-top" style="height:200px" alt="..."> -->
-                        <div class="card-img-top" style="height:200px"><app-profile-logo [userName]="member.name"></app-profile-logo></div>
+                        <div class="card-img-top" style="height:200px">
+                            <app-profile-logo [userName]="member.name"></app-profile-logo>
+                        </div>
                         <h1>{{member.name[0]}}</h1>
                         <div class="card-body">
                         <h3 class="card-title">{{member.name}}</h3>
                         <p class="card-text">Responsible citizens are change agents that act out against social, economic, and environmental injustices.</p>
-                        <a (click)='MemberFunction(member.index)' class="btn btn-primary">View Expense</a>
+                        <a (click)="MemberFunction(member.index,'name')" class="btn btn-primary">View Expense</a>
                         </div>
                     </div>
                 </div>
@@ -32,31 +34,6 @@
         </div>
     </section>
 
-    <div class="Welcomecontainer" *ngIf='welcomeFlag '>
-        <p>Please Wait...</p>
-        <div class="Loading"
-            [ngStyle]="{'animation-name':'Loadinganimation',
-                    'animation-duration':'3s',
-                    'animation-iteration-count': 'infinite',
-                    'animation-direction':'alternate',
-                    'animation-delay':i/5+'s'}"
-                    *ngFor='let i of [0,1,2,3,4]'>
-        </div>
-    </div>
-    <!-- <div *ngIf='itemList.length || !welcomeFlag'
-        (mouseover)="hover=true" (mouseleave)="hover=false"
-        class="Sidebar">
-        <div *ngIf='sideBarExpand'
-            class="SideIcons">
-            <ul *ngIf='hover'>
-                <li (click)='MemberFunction(member.index)'
-                    [ngStyle]="{'background-image':member.background==true ? 'radial-gradient(#00000030,#00000080)':'',
-                                'color':member.background==true ? 'white':'black'}"
-                    class="TableClass"
-                    *ngFor='let member of membersList'>{{member.id}}</li>
-            </ul>
-        </div>
-    </div> -->
     <div class="Itemscontainer"
         *ngIf='memberFlag'>
         <div class="row">
@@ -72,7 +49,7 @@
                         (mouseover)="status=true" (mouseleave)="status=false"
                         [ngClass]="status ? 'dropdown-menu show' : 'dropdown-menu'"
                         aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" (click)='MemberFunction(member.index);status=!status'
+                        <a class="dropdown-item" (click)="MemberFunction(member.index,'name');status=!status"
                                 *ngFor='let member of membersList'>{{member.name}}</a>
                     </div>
                 </div>
@@ -87,7 +64,7 @@
         </div>
         <div class="row">
             <div class="col text-center">
-              <button (click)="openModal('','addModal')" class="button btn ">Add Items</button>
+              <button (click)="openModal('','addModal')" class="btn btn-primary">Add Expense</button>
             </div>
         </div>
         <div class="row">
@@ -97,140 +74,179 @@
             <thead>
                 <tr>
                   <th scope="col">#List</th>
-                  <!-- <th scope="col">#ID</th> -->
-                  <th scope="col">Description</th>
+                  <th scope="col">Purpose</th>
                   <th scope="col">Price</th>
                   <th scope="col">Date</th>
-
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let item of itemList ;let i = index">
-                      <th scope="row">{{i}}</th>
-                      <!-- <td>{{item.id}}</td> -->
-                      <td>{{item.description}}</td>
-                      <td>{{item.amount}}</td>
-                      <td>{{item.dateOfPurchase}}</td>
-
-                      <button class="btn btn-info" (click)='openModal(item.id,"updateModal")'>Update</button>
+                    <th scope="row">{{i}}</th>
+                    <td>{{item.purpose}}</td>
+                    <td>{{item.amount}}</td>
+                    <td>{{item.dateOfPurchase}}</td>
+                    <td><button class="btn btn-info" (click)='openModal(item,"updateModal")'>Update</button></td>
+                    <td><button class="btn btn-danger" (click)='deleteExpense(item)'>Delete</button></td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div>
-        <div class="backdrop" [ngStyle]="{'display':addDisplay}"></div>
-        <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':addDisplay}">
+        <div class="backdrop" *ngIf='addDisplay'></div>
+        <div class="modal" tabindex="-1" role="dialog" *ngIf='addDisplay' [ngStyle]="{'display':'block'}">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">Add Item</h4>
+                <h4 class="modal-title">Add Expense</h4>
                 <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('addModal')"><span
                     aria-hidden="true">&times;</span></button>
               </div>
 
               <div class="modal-body">
-                <form class="form-group"  [formGroup]="addItemForm" (ngSubmit)="addItemSubmit(addItemForm)">
-                  <label for="name">Name</label>
-                  <input name="name" class="form-control" formControlName="name" type="text" >
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('name').valid && addItemForm.get('name').touched">Please enter a name</p>
-                  <label for="dateOfLastPurchase"> Date</label>
-                  <input name="dateOfLastPurchase" class="form-control" formControlName='dateOfPurchase' type="date" required>
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('dateOfPurchase').valid && addItemForm.get('dateOfPurchase').touched">Please select a date</p>
+                <form class="form-group"  [formGroup]="addExpenseForm" (ngSubmit)="addExpense(addExpenseForm)">
 
-                  <label for="quantity">Quantity(in gms)</label>
-                  <input name="quantity" class="form-control" formControlName='quantity' type="number">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('quantity').valid && addItemForm.get('quantity').touched">Please select quantity</p>
+                    <div class="row">
+                        <div class="col-md-4 text-left">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" (click)="statusAddExpense=!statusAddExpense"   (mouseover)="statusAddExpense=true" (mouseleave)="statusAddExpense=false" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Paid By
+                                </button>
+                                <div class="dropdown-menu"
+                                    (mouseover)="statusAddExpense=true" (mouseleave)="statusAddExpense=false"
+                                    [ngClass]="statusAddExpense ? 'dropdown-menu show' : 'dropdown-menu'"
+                                    aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" (click)="MemberFunction(member.index,'email');statusAddExpense=!statusAddExpense"
+                                            *ngFor='let member of membersList'>{{member.name}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 text-right">
+                            <h2>{{currentUserName}}</h2>
+                        </div>
+                    </div>
+                    <label for="purpose">Purpose</label>
+                    <input name="purpose" class="form-control"
+                        formControlName="purpose" type="text" placeholder="Purpose of Expense"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!addExpenseForm.get('purpose').valid && 
+                        addExpenseForm.get('purpose').touched">
+                        Please enter purpose of expoense</p>
 
-                  <label for="price">Amount
-                  </label>
-                  <input name="price" class="form-control" formControlName = 'price' type="number">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('price').valid && addItemForm.get('price').touched">Please select an amount</p>
+                    <label for="dateOfLastPurchase"> Date</label>
+                    <input name="dateOfLastPurchase" class="form-control"
+                        formControlName='dateOfPurchase'
+                        type="date" placeholder="date of purchase"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!addExpenseForm.get('dateOfPurchase').valid &&
+                        addExpenseForm.get('dateOfPurchase').touched">
+                        Please select a date</p>
 
+                    <label for="amount">Amount Spent</label>
+                    <input name="amount" class="form-control"
+                        formControlName='amount' type="number" placeholder="Amount Spent on Expense"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!addExpenseForm.get('amount').valid &&
+                        addExpenseForm.get('amount').touched">
+                        Please select quantity</p>
+                        
+                    <label for="description">Description</label>
+                    <input name="description" class="form-control"
+                        formControlName='description' type="text" placeholder="Description on the expense *not required"/>
+                    <br>
 
-                  <!-- <label for="description">Description</label>
-                  <input name="description" class="form-control" formControlName='description' type="text">
-                  <p class="help-block text-danger" *ngIf="!addItemForm.get('description').valid && addItemForm.get('description').touched">Please select a date</p> -->
-                  <div class="modal-footer text-center">
-                    <button type="submit" class="btn btn-danger" data-dismiss="modal" [disabled]="!addItemForm.valid">Add Item</button>
-                  </div>
+                    <p style="color: crimson;">Edit User</p>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg mt-4 foruserbox" *ngFor='let member of membersList'>
+                                <div class="card boxuser foruser" [style.background]="checkforUser(member.index,'addExpense') ? 'green' : 'red' ">
+                                    <div class="card-img-top" style="height:40px" (click)="changeforUser(member.index,'addExpense')">
+                                        <app-profile-logo [userName]="member.name"></app-profile-logo>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="modal-footer text-center">
+                        <button type="submit" class="btn btn-danger" data-dismiss="modal" [disabled]="!addExpenseForm.valid">Add Item</button>
+                    </div>
                 </form>
               </div>
-
             </div>
-
-
           </div>
-
-
         </div>
-
       </div>
 
 
-    <div class="backdrop" [ngStyle]="{'display':updateDisplay}"></div>
-
-
-    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':updateDisplay}">
+    <div class="backdrop" *ngIf='updateDisplay'></div>
+    <div class="modal" tabindex="-1" role="dialog" *ngIf='updateDisplay' [ngStyle]="{'display':'block'}">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
            <div class="modal-header">
-
-                    <h4 class="modal-title">Update Item</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('updateModal')"><span
-                            aria-hidden="true">&times;</span></button>
-
-                </div>
-
-
-                <div class="modal-body">
-
-
-                    <form [formGroup]="updateItemForm" class="form form-group" (ngSubmit)="updateItem()">
-                        <label for="name">Name</label>
-                        <input name="name" class="form-control" type="text" formControlName="name" [placeholder]="itemName"
-                            readonly [value]="itemName">
-
-                        <label for="dateOfLastPurchase"> Date</label>
-                        <input name="dateOfLastPurchase" class="form-control" formControlName="dateOfPurchase" type="date">
-
-                        <p class="help-block text-danger"
-                            *ngIf="!updateItemForm.get('dateOfPurchase').valid && updateItemForm.get('dateOfPurchase').touched"><span
-                                *ngIf="updateItemForm.get('dateOfPurchase').errors['invalidDate']">Please select a date after the date
-                                {{itemDate}}</span>
-                            <span *ngIf="updateItemForm.get('dateOfPurchase').errors['required']  ">Please select a date</span>
-                        </p>
-
-                        <label for="quantity">Quantity(in gms)</label>
-                        <input name="quantity" class="form-control" formControlName="quantity" type="number">
-                        <p class="help-block text-danger"
-                            *ngIf="!updateItemForm.get('quantity').valid && updateItemForm.get('quantity').touched">Please
-                            select a quantity</p>
-
-                        <label for="price">Amount
-                        </label>
-                        <input name="price" class="form-control" formControlName="price" type="number">
-                        <p class="help-block text-danger"
-                            *ngIf="!updateItemForm.get('price').valid && updateItemForm.get('price').touched">Please enter a price</p>
-
-                            <label for="description">Description
-                            </label>
-                            <!-- <input name="description" class="form-control" formControlName="description" type="text">
-                            <p class="help-block text-danger"
-                                *ngIf="!updateItemForm.get('description').valid && updateItemForm.get('description').touched">Please enter a Description</p> -->
-
-                        <div class="modal-footer text-center">
-                            <button type="submit" class="btn btn-danger" [disabled]="!updateItemForm.valid">Update
-                                Item</button>
-                        </div>
-                    </form>
-
-
-                </div>
-
+                <h4 class="modal-title">Update Expense</h4>
+                <button type="button" class="close" aria-label="Close" (click)="onCloseHandled('updateModal')">
+                    <span aria-hidden="true">&times;</span></button>
             </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-left">
+                        <h2>Paid By</h2>
+                    </div>
+                    <div class="col-md-8 text-right">
+                        <h2>{{currentUserName}}</h2>
+                    </div>
+                </div>
+                <form [formGroup]="updateExpenseForm" class="form form-group" (ngSubmit)="updateExpense(updateExpenseForm)">
+                    <label for="purpose">Purpose</label>
+                    <input name="purpose" class="form-control"
+                        formControlName="purpose" type="text" placeholder="Purpose of Expense"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!updateExpenseForm.get('purpose').valid && 
+                        updateExpenseForm.get('purpose').touched">
+                        Please enter purpose of expoense</p>
+                    
+                    <label for="dateOfLastPurchase"> Date</label>
+                    <input name="dateOfLastPurchase" class="form-control"
+                        formControlName='dateOfPurchase'
+                        type="date" placeholder="date of purchase"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!updateExpenseForm.get('dateOfPurchase').valid &&
+                        updateExpenseForm.get('dateOfPurchase').touched">
+                        Please select a date</p>
 
+                    <label for="amount">Amount Spent</label>
+                    <input name="amount" class="form-control"
+                        formControlName='amount' type="number" placeholder="Amount Spent on Expense"/>
+                    <p class="help-block text-danger"
+                        *ngIf="!updateExpenseForm.get('amount').valid &&
+                        updateExpenseForm.get('amount').touched">
+                        Please select quantity</p>
+                        
+                    <label for="description">Description</label>
+                    <input name="description" class="form-control"
+                        formControlName='description' type="text" placeholder="Description on the expense *not required"/>
+                    <br>
 
+                    <p style="color: crimson;">Edit User</p>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg mt-4 foruserbox" *ngFor='let member of membersList'>
+                                <div class="card boxuser foruser" [style.background]="checkforUser(member.index,'updateExpense') ? 'green' : 'red' ">
+                                    <div class="card-img-top" style="height:40px" (click)="changeforUser(member.index,'updateExpense')">
+                                        <app-profile-logo [userName]="member.name"></app-profile-logo>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                
+                    <div class="modal-footer text-center">
+                        <button type="submit" class="btn btn-danger" [disabled]="!updateExpenseForm.valid">Update
+                            Item</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-
+        </div>
     </div>

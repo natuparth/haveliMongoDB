@@ -1,5 +1,11 @@
 export class Expense{
-  user: String;
+  purpose: String;
   amount : Number;
   dateOfPurchase: Date;
+  description : String;
+  forWhom : [];
+
+  constructor(value: any){
+   Object.assign(this,value);
+  }
 }
