@@ -46,5 +46,14 @@ router.put("/updateExpense/:email/:_id",checkAuth,(req,res,next)=>{
                     return res.send({error : 'none', message : 'successfully updated'});
                   })
 });
+
+router.delete('/deleteExpense',checkAuth,(req,res,next)=>{
+  User.findOneAndUpdate(  {email : req.query.email},
+                          {$pull : { expenses : { _id: req.query._id}}},
+                          function(err,doc){
+                            if(err) return  res.status(500).send({error:err,message:'something went wrong'});
+                            return res.send({error : 'none', message : 'successfully deleted'});
+                          });
+});
 module.exports = router;
 

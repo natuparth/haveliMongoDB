@@ -101,7 +101,6 @@ export class ExpenseComponent implements OnInit {
                     email:  sets the current user-email
   */
   MemberFunction(index: any,type:String) {
-    this.welcomeFlag = true;
     this.memberFlag = true;
     this.currentUserName = this.membersList[index].name;
     this.currentUserEmail= this.membersList[index].email;
@@ -116,11 +115,13 @@ export class ExpenseComponent implements OnInit {
     Inputs:         email:  email of the selected user
   */
   GetUserValues(email: string) {
+    this.welcomeFlag = true;
     this.itemList = [];
     this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
       this.welcomeFlag = false;
     });
+    
   }
   /*
   GetUsers()
@@ -182,16 +183,16 @@ export class ExpenseComponent implements OnInit {
       forWhom : expensedata.value.forWhom
     };
     var expenseId = expensedata.value.expenseId;
-    console.log("id:"+expenseId,"data"+expensedata.value)
     this.expenseService.updateExpense(expense,this.currentUserEmail,expenseId).subscribe(response =>{
       if(response.message === 'successfully updated'){
         alert('Expense successfully updated');
-        // this.itemList.find(expenseUpdated => expenseUpdated._id === expenseId).then(()=>)
       } else{
         alert('some error occurred while adding the expense. Error: ' +
-        response.erroe)
+        response.error)
       }
-    })
+      this.onCloseHandled('updateModal');
+      this.GetUserValues(this.currentUserEmail);
+    });
   }
   /*
   addExpense()
@@ -209,7 +210,7 @@ export class ExpenseComponent implements OnInit {
     };
 
     this.expenseService.addExpenses(expense,this.currentUserEmail).subscribe(response => {
-      this.addDisplay = false;
+      this.onCloseHandled('addModal')
       if (response.message === 'successful') {
         alert('Expense added successfully');
         this.itemList.push(expense);
@@ -260,6 +261,26 @@ export class ExpenseComponent implements OnInit {
     Inputs:         index:take the index of the user.
                     modalName:take the modal name for which the operation to be executed
   */
+  deleteExpense(expense : any){
+    console.log("delete");
+    if (confirm('Are you sure you want to remove ' + expense.purpose + ' expense')) {
+      this.expenseService.deleteExpense(this.currentUserEmail,expense._id).subscribe(response =>{
+        if(response.message === 'successfully deleted'){
+          alert('Expense successfully deleted');
+        } else{
+          alert('some error occurred while adding the expense. Error: ')
+        }
+        this.GetUserValues(this.currentUserEmail);
+      });
+      }
+  }
+  /*
+  checkforUser()
+    Functionality:  to update the checkbox based on the user is selected or not.
+    Returns:        return boolean. True if user is seleced, False if not selected.
+    Inputs:         index:take the index of the user.
+                    modalName:take the modal name for which the operation to be executed
+  */
   checkforUser(index:any,modalName:String){
     if(modalName === 'addExpense'){
       var memberemail = this.membersList[index].email;
@@ -281,6 +302,5 @@ export class ExpenseComponent implements OnInit {
         return false;
       }
     }
-    
   }
 }

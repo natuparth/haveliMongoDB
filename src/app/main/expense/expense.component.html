@@ -74,29 +74,24 @@
             <thead>
                 <tr>
                   <th scope="col">#List</th>
-                  <!-- <th scope="col">#ID</th> -->
-                  <th scope="col">Description</th>
+                  <th scope="col">Purpose</th>
                   <th scope="col">Price</th>
                   <th scope="col">Date</th>
-
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let item of itemList ;let i = index">
-                      <th scope="row">{{i}}</th>
-                      <!-- <td>{{item._id}}</td> -->
-                      <td>{{item.description}}</td>
-                      <td>{{item.amount}}</td>
-                      <td>{{item.dateOfPurchase}}</td>
-
-                      <button class="btn btn-info" (click)='openModal(item,"updateModal")'>Update</button>
+                    <th scope="row">{{i}}</th>
+                    <td>{{item.purpose}}</td>
+                    <td>{{item.amount}}</td>
+                    <td>{{item.dateOfPurchase}}</td>
+                    <td><button class="btn btn-info" (click)='openModal(item,"updateModal")'>Update</button></td>
+                    <td><button class="btn btn-danger" (click)='deleteExpense(item)'>Delete</button></td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div>
-        <!-- <div class="backdrop" [ngStyle]="{'display':addDisplay}"></div>
-        <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':addDisplay}"> -->
         <div class="backdrop" *ngIf='addDisplay'></div>
         <div class="modal" tabindex="-1" role="dialog" *ngIf='addDisplay' [ngStyle]="{'display':'block'}">
           <div class="modal-dialog" role="document">
