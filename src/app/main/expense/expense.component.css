@@ -248,3 +248,11 @@
 {
     transition:0.5s;
 }
+input
+{
+    color: #1d1c1c;
+}
+label
+{
+    font-weight: bold;
+}

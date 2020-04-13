@@ -14,9 +14,9 @@ export class ExpenseService {
 
   }
 
-  public getExpenses(user: string):Observable<any> {
+  public getExpenses(email: string):Observable<any> {
 
-   return this.http.get(env.apiUrl + '/expense/getExpenses/'+ user);
+   return this.http.get<Expense[]>(env.apiUrl + '/expense/getExpenses/'+ email);
   }
 
   public addExpenses(expense: any, email:string): Observable<any>{
@@ -27,7 +27,18 @@ export class ExpenseService {
       description : expense.description,
       forWhom : expense.forWhom
     };
-    console.log("expense item",expenseItem,"expense",expense);
     return this.http.post<{message: string}>(env.apiUrl + '/expense/addExpenses/'+ email, expenseItem);
   }
+
+  public updateExpense(expense : any, email : string, _id : string): Observable<any>{
+    const expenseItem : Expense = {
+      purpose : expense.purpose,
+      amount :  expense.amount,
+      dateOfPurchase : expense.dateOfPurchase,
+      description : expense.description,
+      forWhom : expense.forWhom
+    };
+    return this.http.put<{message: string}>(env.apiUrl + '/expense/updateExpense/'+ email + '/' + _id, expenseItem);
+  }
+
 }

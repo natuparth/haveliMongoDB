@@ -16,24 +16,16 @@ export class ExpenseComponent implements OnInit {
   itemSubject = new Subject<any>();
   memberFlag = false;
   addDisplay = false;
-  editforUser = false;
-  updateDisplay = 'none';
+  updateDisplay = false;
   itemList: any = [];
   updateItemList: any = [];
-  previousUserId = 0;
   memberListPos = '40%';
-  currentUserId = -1;
   currentUserName = '';
+  currentUserEmail = '';
   welcomeFlag = true;
   sideBarExpand = true;
-  additemflag = false;
   updateitemflag = false;
-  updateItemForm: FormGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    dateOfPurchase: new FormControl(Date.now, Validators.required),
-    price: new FormControl('', Validators.required),
-    quantity: new FormControl('', Validators.required)
-  });
+  updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
   constructor(
     private crudService: CrudService,
@@ -51,15 +43,16 @@ export class ExpenseComponent implements OnInit {
     this.GetUsers().then(() => {
     });
     this.addExpenseForm = new FormGroup({});
-    //   'purpose': new FormControl('', Validators.required),
-    //   'dateOfPurchase': new FormControl(Date.now, Validators.required),
-    //   'amount': new FormControl('', Validators.required),
-    //   'description': new FormControl(''),
-    //   'forWhom' : new FormControl('',Validators.required)
-    // });
+    this.updateExpenseForm = new FormGroup({});
   }
-
-  openModal(itemId: any, modalName: string) {
+  /*
+  openModal()
+    Functionality:  open the selected model
+    Returns:        No values are returned from this funcion.
+    Inputs:         itemId: 
+                    modalName:  Name of the modal to be displayed
+  */
+  openModal(expense: any, modalName: string) {
     if (modalName == 'addModal') {
       this.addExpenseForm = new FormGroup({
         'purpose': new FormControl('', Validators.required),
@@ -73,36 +66,58 @@ export class ExpenseComponent implements OnInit {
         this.addExpenseForm.value.forWhom.push(this.membersList[i].email);
       }
       this.addDisplay = true;
-    } else {
-      this.updateDisplay = 'block';
-      this.UpdateItem(itemId);
+    }
+    else {
+      this.updateExpenseForm = new FormGroup({
+        'purpose' : new FormControl(expense.purpose,Validators.required),
+        'dateOfPurchase': new FormControl(expense.dateOfPurchase, Validators.required),
+        'amount': new FormControl(expense.amount, Validators.required),
+        'description': new FormControl(expense.description),
+        'forWhom' : new FormControl(expense.forWhom,Validators.required),
+        'expenseId' : new FormControl(expense._id,Validators.required)
+      });
+      this.updateDisplay = true;
     }
   }
+  /*
+  onCloseHandled()
+    Functionality:  close the selected model
+    Returns:        No values are returned from this funcion.
+    Inputs:         modalName:  Name of the modal to be displayed
+  */
   onCloseHandled(name: string) {
     if (name === 'addModal') {
     this.addDisplay = false;
     } else {
-      this.updateDisplay = 'none';
+      this.updateDisplay = false;
     }
   }
-
-  MemberFunction(index: any) {
-    this.currentUserId = index;
-    console.log('memberfunction id:' + this.currentUserId,this.membersList[index].email);
+  /*
+  MemberFunction()
+    Functionality:  To fetch the current user for expense component.
+    Returns:        No values are returned from this funcion.
+    Inputs:         Index of MemberList and type of function to be executed name/email
+                    name: calls the getexpense function
+                    email:  sets the current user-email
+  */
+  MemberFunction(index: any,type:String) {
     this.welcomeFlag = true;
     this.memberFlag = true;
-    this.membersList[this.previousUserId].background = false;
-    this.membersList[index].background = true;
-    this.previousUserId = this.currentUserId;
     this.currentUserName = this.membersList[index].name;
-    this.GetUserValues(this.membersList[index].name);
+    this.currentUserEmail= this.membersList[index].email;
+    if(type==='name'){
+      this.GetUserValues(this.membersList[index].email);
+    }
   }
-
-  GetUserValues(id: string) {
+  /*
+  GetUserValues()
+    Functionality:  To fetch the expense for selected user.
+    Returns:        No values are returned from this funcion.
+    Inputs:         email:  email of the selected user
+  */
+  GetUserValues(email: string) {
     this.itemList = [];
-    console.log(id);
-    this.expenseService.getExpenses(id).subscribe(doc => {
-      console.log(doc);
+    this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
       this.welcomeFlag = false;
     });
@@ -152,17 +167,31 @@ export class ExpenseComponent implements OnInit {
       });
     }
   }
-
-  AddItem() {
-    this.additemflag = true;
-  }
-  UpdateItem(itemId: any) {
-
-  }
-
-  updateItem(item: FormControl) {
-
-
+  /*
+  updateItem()
+    Functionality:  Update a expense for the specified user.
+    Returns:        No values are returned from this funcion.
+    Inputs:         Take the form value of Add Expense form.
+  */
+  updateExpense(expensedata: FormControl) {
+    const expense = {
+      purpose: expensedata.value.purpose,
+      amount: expensedata.value.amount,
+      dateOfPurchase: expensedata.value.dateOfPurchase,
+      description: expensedata.value.description,
+      forWhom : expensedata.value.forWhom
+    };
+    var expenseId = expensedata.value.expenseId;
+    console.log("id:"+expenseId,"data"+expensedata.value)
+    this.expenseService.updateExpense(expense,this.currentUserEmail,expenseId).subscribe(response =>{
+      if(response.message === 'successfully updated'){
+        alert('Expense successfully updated');
+        // this.itemList.find(expenseUpdated => expenseUpdated._id === expenseId).then(()=>)
+      } else{
+        alert('some error occurred while adding the expense. Error: ' +
+        response.erroe)
+      }
+    })
   }
   /*
   addExpense()
@@ -171,7 +200,6 @@ export class ExpenseComponent implements OnInit {
     Inputs:         Take the form value of Add Expense form.
   */
   addExpense(item: FormGroup) {
-    console.log(item.value);
     const expense = {
       purpose: item.value.purpose,
       amount: item.value.amount,
@@ -180,9 +208,8 @@ export class ExpenseComponent implements OnInit {
       forWhom : item.value.forWhom
     };
 
-    this.expenseService.addExpenses(expense,"shubham.shukla").subscribe(response => {
+    this.expenseService.addExpenses(expense,this.currentUserEmail).subscribe(response => {
       this.addDisplay = false;
-      alert("message"+response.message);
       if (response.message === 'successful') {
         alert('Expense added successfully');
         this.itemList.push(expense);
@@ -199,30 +226,61 @@ export class ExpenseComponent implements OnInit {
   changeforUser()
     Functionality:  Update the for User list of expense form. A expense user is added or removed based on the select criteria
     Returns:        No values are returned from this funcion.
-    Inputs:         take the index of the user.
+    Inputs:         index:take the index of the user.
+                    modalName:take the modal name for which the operation to be executed
   */
-  changeforUser(index:any){
-    var memberemail = this.membersList[index].email;
-    if(this.addExpenseForm.value.forWhom.indexOf(memberemail) >=0){
-      this.addExpenseForm.value.forWhom.splice(memberemail,1);
+  changeforUser(index:any,modalName:String){
+    if(modalName === 'addExpense'){
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex >=0){
+        this.addExpenseForm.value.forWhom.splice(memberIndex,1);
+      }
+      else{
+        this.addExpenseForm.value.forWhom.push(memberemail);
+      }
     }
-    else{
-      this.addExpenseForm.value.forWhom.push(memberemail);
+    else
+    {
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex >=0){
+        this.updateExpenseForm.value.forWhom.splice(memberIndex,1);
+      }
+      else{
+        this.updateExpenseForm.value.forWhom.push(memberemail);
+      }
     }
+    
   }
   /*
   checkforUser()
     Functionality:  to update the checkbox based on the user is selected or not.
     Returns:        return boolean. True if user is seleced, False if not selected.
-    Inputs:         take the index of the user.
+    Inputs:         index:take the index of the user.
+                    modalName:take the modal name for which the operation to be executed
   */
-  checkforUser(index:any){
-    var memberemail = this.membersList[index].email;
-    if(this.addExpenseForm.value.forWhom.indexOf(memberemail) >=0){
-      return true;
+  checkforUser(index:any,modalName:String){
+    if(modalName === 'addExpense'){
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex>=0){
+        return true;
+      }
+      else{
+        return false;
+      }
     }
     else{
-      return false;
+      var memberemail = this.membersList[index].email;
+      var memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
+      if(memberIndex>=0){
+        return true;
+      }
+      else{
+        return false;
+      }
     }
+    
   }
 }
