@@ -22,8 +22,6 @@ export class GroceryComponent implements OnInit {
     'date' : new FormControl('', [Validators.required, this.dateValidator.bind(this)]),
     'price' : new FormControl('', Validators.required),
     'quantity' : new FormControl('', Validators.required )
-
-
   });
   public modelHidden: boolean;
   groupId: string;
@@ -111,6 +109,13 @@ export class GroceryComponent implements OnInit {
 
   }
   openAddModal() {
+    this.addItemForm = new FormGroup({
+      'name' : new FormControl('', Validators.required),
+      'date' : new FormControl(Date.now, Validators.required),
+      'price' : new FormControl('', Validators.required),
+      'consumptionPerDay' : new FormControl('', Validators.required),
+      'quantity': new FormControl('', Validators.required)
+    });
     this.addDisplay = 'block';
   }
   onCloseHandled(modalName: String) {
