@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject, Observable } from 'rxjs';
+import { delay } from 'rxjs/internal/operators';
 import { Router } from '@angular/router';
 import { environment as env} from '../../../environments/environment';
 import { Users } from '../../../../backend/models/user';
@@ -22,6 +23,7 @@ export  class  AuthService {
   getToken() {
     return this.token;
   }
+
   addUsers(user: {email: string , password: string, name: string, groupId: string, profilePicId: Number }){
     return this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user);
  }
@@ -99,6 +101,10 @@ export  class  AuthService {
  getUserDetails(email: string):Observable<Users>{
    return this.http.get<Users[]>(env.apiUrl + '/auth/getUserDetails/' + email);
  }
+
+ checkEmailExists(email: string){
+   return this.http.get(env.apiUrl + '/auth/checkEmailExists/' + email);
+}
 
 
 }

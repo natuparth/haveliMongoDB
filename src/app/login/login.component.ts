@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../Services/authService/auth.service';
 import { Router } from '@angular/router';
 import { CrudService } from 'src/app/Services/crudService/crud.service';
-import { Subject, BehaviorSubject } from 'rxjs';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { FormGroup, FormControl, Validators, FormBuilder, ValidationErrors } from '@angular/forms';
+import { map } from 'rxjs/internal/operators';
 
 @Component({
   selector: 'app-login',
@@ -11,16 +12,14 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  private username: string;
-  private password: string;
   addDisplayBlankGroupId: String = 'none';
   addDisplayNewGroupId: String = 'none';
   loadingFlag: String = 'none';
   newGroupId: Number = null;
   searchForm: FormGroup;
   registerUserForm: FormGroup;
-  public isAuthenticated: boolean;
-  constructor(private crudService: CrudService, private authService: AuthService, private router: Router) {
+  isAuthenticated: boolean;
+  constructor( private authService: AuthService, private router: Router) {
     this.authService.userAuthListener = new Subject<string>();
 
   }
@@ -53,8 +52,8 @@ export class LoginComponent implements OnInit {
     }
     else
     {
-      this.authService.searchGroup(item.value.groupId).subscribe(doc => {
-        if (doc.users.length == 0)
+      this.authService.searchGroup(item.value.groupId).subscribe(value => {
+        if (value.numberOfUsers === 0)
         {
           this.addDisplayNewGroupId = 'block';
         }
@@ -75,20 +74,14 @@ export class LoginComponent implements OnInit {
 
   addUserWithNewGroup()
   {
-    this.username = " ";
-    this.password = " ";
     this.addDisplayNewGroupId = 'none';
     this.addDisplayBlankGroupId = 'none';
     this.loadingFlag = 'block';
     this.authService.searchMaxGroupId().subscribe(doc => {
-     // this.newGroupId = doc.users[0].groupId + 1;
-      alert("new group created with group Id " + this.newGroupId);
-      this.loadingFlag = 'block';
-    //  this.registerUserForm.value.groupId = this.newGroupId;
-      console.log(this.registerUserForm.value);
-      this.authService.addUsers(this.registerUserForm.value).subscribe( res => {
-        console.log(res);
-        this.loadingFlag = 'none';
+      alert('new group created with group Id ' + this.newGroupId);
+    this.loadingFlag = 'block';
+    this.authService.addUsers(this.registerUserForm.value).subscribe( res => {
+    this.loadingFlag = 'none';
       });
     });
   }
@@ -97,12 +90,23 @@ export class LoginComponent implements OnInit {
   {
     this.addDisplayBlankGroupId = 'none';
     this.loadingFlag = 'block';
-    alert("No Group Id is assigned you can update you profile later");
+    alert('No Group Id is assigned you can update you profile later');
     this.authService.addUsers(this.registerUserForm.value).subscribe(res => {
       alert(res.message);
       this.loadingFlag = 'none';
     });
 
   }
+
+  logform(email: string){
+    if(email !== ''){
+    this.authService.checkEmailExists(email).subscribe(value => {
+      if(value === true){
+       this.registerUserForm.controls['email'].setErrors({'alreadyExists': true});
+      }
+    });
+  }
+
+}
 
 }
