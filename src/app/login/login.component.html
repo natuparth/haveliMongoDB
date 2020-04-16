@@ -58,14 +58,21 @@
                     Please enter your name
                   </p>
                   <label for="quantity">Email</label>
-                  <input name="email" class="form-control" formControlName="email" type="email" />
-                  <p class="help-block text-danger" *ngIf="
-                      !registerUserForm.get('email').valid &&
+                  <input #emailValue name="email" class="form-control" formControlName="email" type="email" (blur)="logform(emailValue.value)"/>
+                  <span *ngIf = "!registerUserForm.get('email').valid && registerUserForm.get('email').touched">
+                    <p class="help-block text-danger" *ngIf="
+                      registerUserForm.get('email').errors['required'] &&
                       registerUserForm.get('email').touched
                     ">
                     Please enter a valid Email id
                   </p>
-
+                  <p class="help-block text-danger" *ngIf="
+                      registerUserForm.get('email').errors['alreadyExists'] &&
+                      registerUserForm.get('email').touched
+                    ">
+                    This email already exists
+                  </p>
+                  </span>
                   <label for="price">Password</label>
                   <input name="password" class="form-control" formControlName="password" type="password" />
                   <p class="help-block text-danger" *ngIf="
@@ -75,7 +82,7 @@
                     Please enter login Password
                   </p>
                   <label for="groupId">Group ID</label>
-                  <input name="groupId" class="form-control" formControlName="groupId" type="number" placeholder="Leave it balnk for new group"/>
+                  <input name="groupId" class="form-control" formControlName="groupId" type="text" placeholder="Leave it balnk for new group"/>
                   <p class="help-block text-danger" *ngIf="
                       !registerUserForm.get('groupId').valid &&
                       registerUserForm.get('groupId').touched

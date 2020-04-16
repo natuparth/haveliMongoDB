@@ -22,14 +22,23 @@ router.get("/getUsersByGroupId/:groupId", (req, res, next) => {
 });
 
 router.get("/searchGroup/:groupId", (req, res, next) => {
-  User.find({ groupId: req.params.groupId }).then((doc) => {
-    res.status(200).json({ users: doc })
+  Group.find({ groupId: req.params.groupId }).then((doc) => {
+    res.status(200).json({ numberOfUsers: doc.length })
   })
 });
 
 router.get("/getUserDetails/:email", (req, res, next) => {
   User.find({ email: req.params.email }).then((doc) => {
     res.status(200).json({ users: doc })
+  })
+});
+
+router.get("/checkEmailExists/:email", (req, res, next) => {
+  User.find({ email: req.params.email }).then((doc) => {
+    if(doc.length >0)
+    res.status(200).json(true)
+    else
+    res.json(false);
   })
 });
 
@@ -67,13 +76,13 @@ router.post("/addUser", (req, res, next) => {
           message: 'some error occurred in adding group ' + err,
           result: err
         });
-      }).catch((err)=>{
-        res.json({
-          message: 'some error occurred in adding user ' + err,
-          result: err
-        });
       })
 
+    }).catch((err)=>{
+      res.json({
+        message: 'some error occurred in adding user ' + err,
+        result: err
+      });
     });
   });
 });

@@ -102,8 +102,8 @@ export class CrudService {
     return this.itemsUpdated.asObservable();
   }
 
-  getShoppingList(): Observable<Item[]> {
-      return this.http.get<Item[]>(env.apiUrl + '/item/getItems');
+  getShoppingList(groupId: string): Observable<Item[]> {
+      return this.http.get<Item[]>(env.apiUrl + '/item/getItems/' + groupId);
 
 
   }
