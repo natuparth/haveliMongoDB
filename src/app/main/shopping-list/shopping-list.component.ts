@@ -17,7 +17,7 @@ export class ShoppingListComponent implements OnInit {
 
   ngOnInit() {
     this.showSpinner = true;
-    this.crudService.getShoppingList().subscribe(data => {
+    this.crudService.getShoppingList(localStorage.getItem('groupId')).subscribe(data => {
       this.items = data;
       this.getShoppingListUpdated(5);
     });
