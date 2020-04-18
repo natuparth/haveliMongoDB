@@ -25,6 +25,8 @@ export class ExpenseComponent implements OnInit {
   welcomeFlag = true;
   sideBarExpand = true;
   updateitemflag = false;
+  expenseGraphToggle = false;
+  graphDataColumns: any[];
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
   constructor(
@@ -115,13 +117,18 @@ export class ExpenseComponent implements OnInit {
     Inputs:         email:  email of the selected user
   */
   GetUserValues(email: string) {
+    this.expenseGraphToggle = false;
     this.welcomeFlag = true;
     this.itemList = [];
     this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
       this.welcomeFlag = false;
+      var purpose = '';
+      if(this.itemList.length > 0){
+        purpose = this.itemList[0].purpose;
+      }
+      this.displayExpenseDetails(purpose);
     });
-    
   }
   /*
   GetUsers()
@@ -215,6 +222,7 @@ export class ExpenseComponent implements OnInit {
         alert('Expense added successfully');
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);
+        this.GetUserValues(this.currentUserEmail);
       } else {
         alert(
           'some error occurred while adding the expense. Error: ' +
@@ -302,5 +310,11 @@ export class ExpenseComponent implements OnInit {
         return false;
       }
     }
+  }
+
+  displayExpenseDetails(itemName:any = '')
+  {
+    this.graphDataColumns = ['purpose','amount',itemName];
+    this.expenseGraphToggle = true;
   }
 }

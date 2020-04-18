@@ -22,7 +22,6 @@ export class MainComponent implements OnInit {
     }
 });
     this.router.navigate(['main/grocery']);
-    // this.router.navigate(['main/profilelogo']);
   }
 
   logout(){

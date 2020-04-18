@@ -8,10 +8,11 @@ import { CalculateexpenseComponent } from './calculateexpense/calculateexpense.c
 import { MainRouting } from './main-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileLogoComponent } from './profile/profile-logo/profile-logo.component';
+import { DoughnutComponent } from './graphs/doughnut/doughnut.component';
 
 
 @NgModule({
-  declarations : [MainComponent, ExpenseComponent, GroceryComponent, ShoppingListComponent, CalculateexpenseComponent, ProfileComponent, ProfileLogoComponent ],
+  declarations : [MainComponent, ExpenseComponent, GroceryComponent, ShoppingListComponent, CalculateexpenseComponent, ProfileComponent, ProfileLogoComponent, DoughnutComponent ],
   imports : [SharedModule, MainRouting]
 })
 
