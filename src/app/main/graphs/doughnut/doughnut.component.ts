@@ -16,7 +16,6 @@ export class DoughnutComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log("doughnut",this.graphDataList,this.graphDataColumns)
     let dataPoints = [];
   let y = 0;
   
@@ -28,19 +27,15 @@ export class DoughnutComponent implements OnInit {
   }
   else{
     for ( var i = 0; i < this.graphDataList.length; i++ ) {
-      let exploded = false;
-      if(this.graphDataList[i][this.graphDataColumns[0]]==this.graphDataColumns[2]){
-        exploded = true;
-      }
       dataPoints.push({ y     : this.graphDataList[i][this.graphDataColumns[1]],
                         label1: this.graphDataList[i][this.graphDataColumns[0]],
-                        exploded: exploded});
+                        exploded: i==0});
     }
   }
 	
     var chart = new CanvasJS.Chart("chartContainer", {
       animationEnabled: true,
-      
+      theme: "light2",      
       // title:{
       //   text: this.Categories,
       //   horizontalAlign: "center",

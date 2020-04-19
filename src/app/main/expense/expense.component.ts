@@ -26,6 +26,7 @@ export class ExpenseComponent implements OnInit {
   sideBarExpand = true;
   updateitemflag = false;
   expenseGraphToggle = false;
+  expenseDetailsToggle = false;
   graphDataColumns: any[];
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
@@ -123,11 +124,9 @@ export class ExpenseComponent implements OnInit {
     this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
       this.welcomeFlag = false;
-      var purpose = '';
-      if(this.itemList.length > 0){
-        purpose = this.itemList[0].purpose;
-      }
-      this.displayExpenseDetails(purpose);
+      this.graphDataColumns = ['purpose','amount'];
+      this.expenseGraphToggle = this.itemList.length > 0;
+      this.expenseDetailsToggle = false;
     });
   }
   /*
@@ -310,11 +309,5 @@ export class ExpenseComponent implements OnInit {
         return false;
       }
     }
-  }
-
-  displayExpenseDetails(itemName:any = '')
-  {
-    this.graphDataColumns = ['purpose','amount',itemName];
-    this.expenseGraphToggle = true;
   }
 }

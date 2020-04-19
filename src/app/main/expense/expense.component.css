@@ -256,3 +256,9 @@ label
 {
     font-weight: bold;
 }
+.expenseDetailsContainer{
+    width: 100%;
+    border-radius: 10px;
+    text-align: left;
+    overflow: auto;
+}

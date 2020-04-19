@@ -84,7 +84,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of itemList ;let i = index" (click)='displayExpenseDetails(item.purpose)'>
+                                    <tr *ngFor="let item of itemList ;let i = index" (click)='expenseDetails = item;expenseDetailsToggle = true;'>
                                         <th scope="row">{{i}}</th>
                                         <td>{{item.purpose}}</td>
                                         <td>{{item.amount}}</td>
@@ -99,13 +99,48 @@
                     
                 </div>
             </div>
-            <div class="col-md-3 graphContainer container" *ngIf='expenseGraphToggle'>
+            <div class="col-md-3 container" *ngIf='expenseGraphToggle'>
                 <br>
                 <br>
-                <button type="button" class="close" aria-label="Close" (click)="expenseGraphToggle=false"><span
-                    aria-hidden="true">&times;</span></button>
-                <h3 style="text-align: center;">{{graphDataColumns[0]}}</h3>
-                <app-doughnut [graphDataList]="itemList" [graphDataColumns]="graphDataColumns"></app-doughnut>
+                <div class="graphContainer">
+                    <button type="button" class="close" aria-label="Close" (click)="expenseGraphToggle=false"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 style="text-align: center;">{{graphDataColumns[0]}}</h3>
+                    <app-doughnut [graphDataList]="itemList" [graphDataColumns]="graphDataColumns"></app-doughnut>
+                </div>
+                <br>
+                <br>
+                <div class="container border border-info expenseDetailsContainer" *ngIf='expenseDetailsToggle'>
+                    <div class="row">
+                        <div class="col-sm-4" style="font-weight: bold;">Purpose</div>
+                        <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseDetails.purpose}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4" style="font-weight: bold;">Amount</div>
+                        <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseDetails.amount}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4" style="font-weight: bold;">Date</div>
+                        <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseDetails.dateOfPurchase}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4" style="font-weight: bold;">Description</div>
+                        <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseDetails.description}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4" style="font-weight: bold;">For Whom</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg foruserbox" *ngFor='let member of expenseDetails.forWhom'>
+                            <div class="card boxuser foruser">
+                                <div class="card-img-top" style="height:40px">
+                                    <app-profile-logo [userName]="member"></app-profile-logo>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
             </div>
         </div>
     </div>
