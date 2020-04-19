@@ -7,6 +7,7 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { NgModule } from '@angular/core';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileLogoComponent } from './profile/profile-logo/profile-logo.component';
+import { DoughnutComponent } from './graphs/doughnut/doughnut.component';
 
 
 const routes: Routes = [
@@ -41,6 +42,10 @@ const routes: Routes = [
       {
         path: 'profilelogo',
         component:  ProfileLogoComponent
+      },
+      {
+        path: 'doughnut',
+        component:  DoughnutComponent
       }
     ]
   }

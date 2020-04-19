@@ -102,7 +102,7 @@
 .Itemscontainer
 {
     height: 100%;
-    width: 100%;
+    width: 94%;
     position: absolute;
     left: 2%;
     top: 55px;
@@ -255,4 +255,10 @@ input
 label
 {
     font-weight: bold;
+}
+.expenseDetailsContainer{
+    width: 100%;
+    border-radius: 10px;
+    text-align: left;
+    overflow: auto;
 }

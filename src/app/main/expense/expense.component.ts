@@ -25,6 +25,9 @@ export class ExpenseComponent implements OnInit {
   welcomeFlag = true;
   sideBarExpand = true;
   updateitemflag = false;
+  expenseGraphToggle = false;
+  expenseDetailsToggle = false;
+  graphDataColumns: any[];
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
   constructor(
@@ -115,13 +118,16 @@ export class ExpenseComponent implements OnInit {
     Inputs:         email:  email of the selected user
   */
   GetUserValues(email: string) {
+    this.expenseGraphToggle = false;
     this.welcomeFlag = true;
     this.itemList = [];
     this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
       this.welcomeFlag = false;
+      this.graphDataColumns = ['purpose','amount'];
+      this.expenseGraphToggle = this.itemList.length > 0;
+      this.expenseDetailsToggle = false;
     });
-    
   }
   /*
   GetUsers()
@@ -215,6 +221,7 @@ export class ExpenseComponent implements OnInit {
         alert('Expense added successfully');
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);
+        this.GetUserValues(this.currentUserEmail);
       } else {
         alert(
           'some error occurred while adding the expense. Error: ' +
