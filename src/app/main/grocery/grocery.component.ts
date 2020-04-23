@@ -69,6 +69,8 @@ export class GroceryComponent implements OnInit {
     this.addItemForm = new FormGroup({
        'name' : new FormControl('', Validators.required),
        'date' : new FormControl(Date.now, Validators.required),
+       'type' : new FormControl('', Validators.required),
+       'measurementUnit' : new FormControl('', Validators.required),
        'price' : new FormControl('', Validators.required),
        'consumptionPerDay' : new FormControl('', Validators.required),
        'quantity': new FormControl('', Validators.required)
@@ -112,6 +114,8 @@ export class GroceryComponent implements OnInit {
     this.addItemForm = new FormGroup({
       'name' : new FormControl('', Validators.required),
       'date' : new FormControl(Date.now, Validators.required),
+      'type' : new FormControl('', Validators.required),
+      'measurementUnit' : new FormControl('', Validators.required),
       'price' : new FormControl('', Validators.required),
       'consumptionPerDay' : new FormControl('', Validators.required),
       'quantity': new FormControl('', Validators.required)

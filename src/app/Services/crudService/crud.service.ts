@@ -23,6 +23,8 @@ export class CrudService {
     const itemAdded: Item = {
        name: item.name,
        date : item.date,
+       type : item.type,
+       measurementUnit: item.measurementUnit,
        quantity : item.quantity,
        consumptionPerDay : item.consumptionPerDay,
        price : item.price
@@ -35,7 +37,7 @@ export class CrudService {
         if (data.message === 'successful') {
         this.items.push(itemAdded);
         this.itemsUpdated.next([...this.items]);
-      }else {
+      } else {
       alert('error adding the item to the database');
     }
       });
