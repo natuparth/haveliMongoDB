@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../Services/authService/auth.service';
 import { Router } from '@angular/router';
 import { CrudService } from 'src/app/Services/crudService/crud.service';
-import { Subject, BehaviorSubject, Observable } from 'rxjs';
-import { FormGroup, FormControl, Validators, FormBuilder, ValidationErrors } from '@angular/forms';
-import { map } from 'rxjs/internal/operators';
+import { Subject } from 'rxjs';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +18,8 @@ export class LoginComponent implements OnInit {
   searchForm: FormGroup;
   registerUserForm: FormGroup;
   isAuthenticated: boolean;
+  message:String;
+  login_flag:boolean;
   constructor( private authService: AuthService, private router: Router) {
     this.authService.userAuthListener = new Subject<string>();
 
@@ -35,12 +36,15 @@ export class LoginComponent implements OnInit {
   }
   validateCredentials(values: any){
     this.authService.login(values);
-    this.authService.getUserAuthListener().subscribe((res) => {
-      if (res !== ' ') {
-       this.router.navigate(['main']);
+        this.authService.getUserAuthListener().subscribe((message) => {
+      this.login_flag=false;
+      if (message === 'user signed in successfully') {
+             this.router.navigate(['main']);
       } else   {
-         this.router.navigate(['login']);
-      }
+        this.login_flag=true;
+        this.message = message;
+        
+        }
     });
   }
 

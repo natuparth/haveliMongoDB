@@ -30,6 +30,9 @@
               <hr>
               <div class="form-group">
               <form action="post" #inputForm="ngForm" (submit)="validateCredentials(inputForm.value)">
+                <div *ngIf='login_flag'>
+                  <p class="text-danger">{{message}}</p>
+                </div>
                   <label for="username">Username:</label>
                   <input class="form-control" name="username" type="text" [(ngModel)]="username"> <br>
                   <label for="password">Password:</label>
