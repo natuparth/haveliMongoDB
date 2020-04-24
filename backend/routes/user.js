@@ -87,26 +87,21 @@ router.post("/addUser", (req, res, next) => {
   });
 });
 
+
 router.post("/login", (req, res, next) => {
   let fetchedUser;
   User.findOne({
     email: req.body.email
   }).then((user) => {
     if (!user) {
-      return res.status(401).json({
+      return res.json({
         message: 'user not found'
       });
     }
     fetchedUser = user;
-    return bcrypt.compare(req.body.password,user.password);
-  }).then((result)=>{
-      console.log(result);
-           if(!result){
-          return  res.status(401).json({
-              message: 'user not found'
-            });
-           }
-         const token = jwt.sign({email: fetchedUser.email, user_id: fetchedUser._id},"this_is_the_secret_message",{expiresIn: "1h"});
+   bcrypt.compare(req.body.password,user.password,(val, same)=>{
+     if(same == true){
+      const token = jwt.sign({email: fetchedUser.email, user_id: fetchedUser._id},"this_is_the_secret_message",{expiresIn: "1h"});
          res.status(200).json({
            token : token,
            message : 'user signed in successfully',
@@ -118,15 +113,22 @@ router.post("/login", (req, res, next) => {
            expiresIn: 3600
 
          })
-  }).catch(()=>{
-   return res.status(401).json({
+     }
+     else
+     {
+      return res.json({
+             message: 'some unknown error occurred'
+          });
+     }
+   });
+  }).catch((err)=>{
+    console.log('it came here'+ err);
+    return res.status(401).json({
        message: 'user not found'
      });
-
-  })
+  });
 
 })
-
 
 
 

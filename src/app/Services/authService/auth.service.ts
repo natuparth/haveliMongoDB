@@ -48,16 +48,13 @@ export  class  AuthService {
      this.token = token;
      console.log(res.expiresIn);
      if (res.message === 'user signed in successfully') {
-       console.log('true');
-       this.userAuthenticated = true;
-       console.log(res.user);
-     this.userAuthListener.next(res.user);
+      this.userAuthenticated = true;
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
      this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId);
-     this.router.navigate(['main']);
+     this.userAuthListener.next(res.user);
      } else {
-       this.userAuthListener.next(' ');
+        this.userAuthListener.next(' ');
      }
    });
  }

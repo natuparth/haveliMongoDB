@@ -37,9 +37,9 @@ export class LoginComponent implements OnInit {
     this.authService.login(values);
     this.authService.getUserAuthListener().subscribe((res) => {
       if (res !== ' ') {
-        this.router.navigate(['main']);
+       this.router.navigate(['main']);
       } else   {
-        this.router.navigate(['login']);
+         this.router.navigate(['login']);
       }
     });
   }
