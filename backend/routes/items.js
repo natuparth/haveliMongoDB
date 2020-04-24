@@ -8,6 +8,8 @@ router.post("/postItem/:groupId",(req,res,next)=>{
   const item = new Item({
     name : req.body.name,
   quantity:req.body.quantity,
+  type: req.body.type,
+  measurementUnit: req.body.measurementUnit,
   date:new Date(req.body.date.split('T')[0]),
   consumptionPerDay: req.body.consumptionPerDay,
   price:req.body.price,

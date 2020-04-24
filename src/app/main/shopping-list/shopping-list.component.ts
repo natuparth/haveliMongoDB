@@ -10,12 +10,14 @@ import { Item } from 'src/app/models/item.model';
 })
 export class ShoppingListComponent implements OnInit {
   Items: Observable<Item[]>;
+  dropdownButton : String;
   items: any[] = [];
   itemsList: any[] = [];
   showSpinner: boolean;
   constructor(private crudService: CrudService) {}
 
   ngOnInit() {
+    this.dropdownButton = 'less than 5 days';
     this.showSpinner = true;
     this.crudService.getShoppingList(localStorage.getItem('groupId')).subscribe(data => {
       this.items = data;
@@ -24,6 +26,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   getShoppingListUpdated(noOfDays: number = 5) {
+    this.dropdownButton = 'less than '+ noOfDays.toString() +' days';
     this.itemsList = [];
     this.items.forEach(data => {
     const cutOffDays = (new Date(new Date().getTime() + noOfDays * 1000 * 3600 * 24)) ;

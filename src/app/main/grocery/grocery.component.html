@@ -41,7 +41,18 @@
                 ">
                 Please select a date
               </p>
-
+              <label for="type">Type </label>
+              <select class="form-control" formControlName="type" name="type" required>
+               <option value="cereals">Cereals/Grains</option>
+               <option value="cleaning">HouseHold cleaning</option>
+               <option value="spices">Spices</option>
+               <option value="miscelleneous">Miscelleneous</option>
+              </select>
+              <label for="measurementUnit" >Measurement Unit</label>
+              <select class="form-control" formControlName="measurementUnit" name="measurementUnit" required>
+               <option value="units">units</option>
+               <option value="grams">grams</option>
+              </select>
               <label for="quantity">Quantity(in gms)</label>
               <input name="quantity" class="form-control" formControlName="quantity" type="number" />
               <p class="help-block text-danger" *ngIf="
@@ -93,15 +104,17 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
+        <th scope="col">Type</th>
         <th scope="col">Quantity</th>
-        <th scope="col">dateOfLastPurchase</th>
+        <th scope="col">Last Purchased On</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of itemsList; let i = index">
         <th scope="row">{{ i }}</th>
         <td>{{ item.name }}</td>
-        <td>{{ item.quantity }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.quantity }}{{item.measurementUnit ==='grams'?' g':' U'}}</td>
         <td>{{ item.date | date: "MM/dd/yyyy" }}</td>
         <button class="btn btn-info" (click)="openModal(item.name, item.date)">
           Update
