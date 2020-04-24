@@ -122,8 +122,7 @@ router.post("/login", (req, res, next) => {
      }
    });
   }).catch((err)=>{
-    console.log('it came here'+ err);
-    return res.json({
+        return res.json({
        message: 'some error occured!! please try again'
      });
   });
