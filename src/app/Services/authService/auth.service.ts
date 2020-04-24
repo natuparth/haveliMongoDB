@@ -52,11 +52,10 @@ export  class  AuthService {
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
      this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId);
-     this.userAuthListener.next(res.user);
-     } else {
-      localStorage.setItem('message',res.message);
-        this.userAuthListener.next(' ');
+    
      }
+       //this message will be retrieved there
+     this.userAuthListener.next(res.message);
    });
  }
 

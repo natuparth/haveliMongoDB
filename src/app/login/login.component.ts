@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../Services/authService/auth.service';
 import { Router } from '@angular/router';
 import { CrudService } from 'src/app/Services/crudService/crud.service';
-import { Subject, BehaviorSubject, Observable } from 'rxjs';
-import { FormGroup, FormControl, Validators, FormBuilder, ValidationErrors } from '@angular/forms';
-import { map } from 'rxjs/internal/operators';
+import { Subject } from 'rxjs';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +26,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    localStorage.removeItem('message');
    this.registerUserForm = new FormGroup({
     'name' : new FormControl('', Validators.required),
     'email' : new FormControl('', Validators.required),
@@ -38,15 +36,15 @@ export class LoginComponent implements OnInit {
   }
   validateCredentials(values: any){
     this.authService.login(values);
-    this.authService.getUserAuthListener().subscribe((res) => {
+        this.authService.getUserAuthListener().subscribe((message) => {
       this.login_flag=false;
-      if (res !== ' ') {
-       this.router.navigate(['main']);
+      if (message === 'user signed in successfully') {
+             this.router.navigate(['main']);
       } else   {
         this.login_flag=true;
-        this.message=localStorage.getItem('message');
-         this.router.navigate(['login']);
-      }
+        this.message = message;
+        
+        }
     });
   }
 
