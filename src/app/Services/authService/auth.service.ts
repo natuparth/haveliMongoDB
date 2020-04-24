@@ -54,6 +54,7 @@ export  class  AuthService {
      this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId);
      this.userAuthListener.next(res.user);
      } else {
+      localStorage.setItem('message',res.message);
         this.userAuthListener.next(' ');
      }
    });

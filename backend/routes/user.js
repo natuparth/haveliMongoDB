@@ -95,7 +95,7 @@ router.post("/login", (req, res, next) => {
   }).then((user) => {
     if (!user) {
       return res.json({
-        message: 'user not found'
+        message: 'invalid username'
       });
     }
     fetchedUser = user;
@@ -117,14 +117,14 @@ router.post("/login", (req, res, next) => {
      else
      {
       return res.json({
-             message: 'some unknown error occurred'
+             message: 'invalid password'
           });
      }
    });
   }).catch((err)=>{
     console.log('it came here'+ err);
-    return res.status(401).json({
-       message: 'user not found'
+    return res.json({
+       message: 'some error occured!! please try again'
      });
   });
 

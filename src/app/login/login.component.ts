@@ -19,12 +19,15 @@ export class LoginComponent implements OnInit {
   searchForm: FormGroup;
   registerUserForm: FormGroup;
   isAuthenticated: boolean;
+  message:String;
+  login_flag:boolean;
   constructor( private authService: AuthService, private router: Router) {
     this.authService.userAuthListener = new Subject<string>();
 
   }
 
   ngOnInit() {
+    localStorage.removeItem('message');
    this.registerUserForm = new FormGroup({
     'name' : new FormControl('', Validators.required),
     'email' : new FormControl('', Validators.required),
@@ -36,9 +39,12 @@ export class LoginComponent implements OnInit {
   validateCredentials(values: any){
     this.authService.login(values);
     this.authService.getUserAuthListener().subscribe((res) => {
+      this.login_flag=false;
       if (res !== ' ') {
        this.router.navigate(['main']);
       } else   {
+        this.login_flag=true;
+        this.message=localStorage.getItem('message');
          this.router.navigate(['login']);
       }
     });
