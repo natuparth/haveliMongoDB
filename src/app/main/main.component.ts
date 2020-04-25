@@ -25,12 +25,14 @@ export class MainComponent implements OnInit {
   }
 
   logout(){
-    this.authService.logout();
+  this.authService.logout(); 
   }
 
 
   ngOnInit() {
-    console.log(localStorage.getItem('expiresAt'));
+   if(localStorage.getItem('userName')===null)
+    this.router.navigate(['login']);
+   // console.log(localStorage.getItem('expiresAt'));
     this.user = localStorage.getItem('userLogged');
     this.userName = localStorage.getItem('userName');
     this.userImg = '../assets/' + this.user.split(' ')[0].toLocaleLowerCase() + '.jpg';
@@ -41,6 +43,7 @@ export class MainComponent implements OnInit {
     if(a1 < a2) {
          this.router.navigate(['home']);
       }
+
    /* this.authService.getUserAuthListener().subscribe((res) => {
       console.log('response is' + res);
       this.user = res;

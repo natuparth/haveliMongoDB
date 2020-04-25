@@ -69,8 +69,8 @@ export  class  AuthService {
     localStorage.setItem('userLogged', user);
   }
 
-  logout() {
-     this.router.navigate(['/home']);
+  logout() { 
+   this.router.navigate(['/home']);
   }
 
    getUsers(): Observable<any> {
