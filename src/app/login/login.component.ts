@@ -26,6 +26,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(localStorage.getItem('userName') != null)
+       this.router.navigate(['main/grocery']);
    this.registerUserForm = new FormGroup({
     'name' : new FormControl('', Validators.required),
     'email' : new FormControl('', Validators.required),
@@ -43,7 +45,7 @@ export class LoginComponent implements OnInit {
       } else   {
         this.login_flag=true;
         this.message = message;
-        
+
         }
     });
   }

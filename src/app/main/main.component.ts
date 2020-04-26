@@ -15,22 +15,25 @@ export class MainComponent implements OnInit {
   subscription: Subscription;
   constructor(private router: Router, private authService: AuthService) {
     console.log('main constructor called and added');
-
+    
   this.subscription = router.events.subscribe((event) => {
     if (event instanceof NavigationStart) {
      //  browserRefresh = !router.navigated;
     }
 });
+
     this.router.navigate(['main/grocery']);
   }
 
   logout(){
-    this.authService.logout();
+   
+  this.authService.logout(); 
   }
 
 
   ngOnInit() {
-    console.log(localStorage.getItem('expiresAt'));
+
+   // console.log(localStorage.getItem('expiresAt'));
     this.user = localStorage.getItem('userLogged');
     this.userName = localStorage.getItem('userName');
     this.userImg = '../assets/' + this.user.split(' ')[0].toLocaleLowerCase() + '.jpg';
@@ -41,6 +44,7 @@ export class MainComponent implements OnInit {
     if(a1 < a2) {
          this.router.navigate(['home']);
       }
+
    /* this.authService.getUserAuthListener().subscribe((res) => {
       console.log('response is' + res);
       this.user = res;
