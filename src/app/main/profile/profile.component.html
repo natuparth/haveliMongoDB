@@ -1,1 +1,27 @@
-<p>PR</p>
+<div class="profileContainer">
+    <div class="profileHead">
+        <div class="profileBackground h-75">
+            <h2 class="text-capitalize nameText">{{userName}}</h2>
+        </div>
+        <div class="profileImage">
+            <app-profile-logo [userName]="userEmail"></app-profile-logo>
+        </div>
+    </div>
+    <div class="card-deck tabsDiv">
+        <div class="tabs rounded" [ngClass]="{'border-bottom border-success': !status}" (click)="status=!status">
+            <div>
+                <p>Profile</p>
+            </div>
+        </div>
+        <div class="tabs rounded" [ngClass]="{'border-bottom border-success': status}" (click)="status=!status">
+            <div>
+                <p>Group</p>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        z
+    </div>
+    <div class="profileFooter">Footer</div>
+</div>

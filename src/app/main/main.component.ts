@@ -21,7 +21,9 @@ export class MainComponent implements OnInit {
      //  browserRefresh = !router.navigated;
     }
 });
-    this.router.navigate(['main/grocery']);
+    // this.router.navigate(['main/grocery']);
+    this.router.navigate(['main/profile']);
+
   }
 
   logout(){

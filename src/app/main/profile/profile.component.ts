@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
+  userEmail:  string = null;
+  userName:  string = null;
+
   constructor() { }
 
   ngOnInit() {
+    this.userEmail = localStorage.getItem('userEmail');
+    this.userName = localStorage.getItem('userName');
   }
 
 }
