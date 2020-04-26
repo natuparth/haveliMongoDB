@@ -28,9 +28,8 @@ export  class  AuthService {
  }
 
  getUserAuthenticated() {
-  return localStorage.getItem('userName') !== null ? true : false;
+  return localStorage.getItem('userName') != null ? true : this.router.navigate(['login']) ;
  }
-
 
   getUserAuthListener() {
     return this.userAuthListener.asObservable();
