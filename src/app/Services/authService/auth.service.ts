@@ -28,7 +28,7 @@ export  class  AuthService {
  }
 
  getUserAuthenticated() {
-   return this.userAuthenticated;
+  return localStorage.getItem('userName') !== null ? true : false;
  }
 
 
@@ -52,9 +52,8 @@ export  class  AuthService {
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
      this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId);
-    
+
      }
-       //this message will be retrieved there
      this.userAuthListener.next(res.message);
    });
  }
@@ -69,7 +68,7 @@ export  class  AuthService {
     localStorage.setItem('userLogged', user);
   }
 
-  logout() { 
+  logout() {
     localStorage.clear();
    this.router.navigate(['/home']);
   }
