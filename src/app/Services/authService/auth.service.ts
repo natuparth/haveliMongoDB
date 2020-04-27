@@ -51,7 +51,7 @@ export  class  AuthService {
       this.userAuthenticated = true;
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
-     this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId);
+     this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId, res.userEmail);
     
      }
        //this message will be retrieved there
@@ -59,9 +59,9 @@ export  class  AuthService {
    });
  }
 
-  private saveAuth(token: string, expiresAt: string, user: string, userName:  string, groupId: string, profilePicId: string) {
+  private saveAuth(token: string, expiresAt: string, user: string, userName:  string, groupId: string, profilePicId: string, userEmail: string) {
     localStorage.setItem('userName', userName);
-    localStorage.setItem('userEmail', userName);
+    localStorage.setItem('userEmail', userEmail);
     localStorage.setItem('groupId', groupId);
     localStorage.setItem('profilePicId', profilePicId);
     localStorage.setItem('token', token);
@@ -98,6 +98,17 @@ export  class  AuthService {
 
  checkEmailExists(email: string) {
    return this.http.get(env.apiUrl + '/auth/checkEmailExists/' + email);
+}
+
+public updateProfile(profile : any, email : string): Observable<any>{
+  const profileData :  Users = {
+    name : profile.name,
+    email :  profile.email,
+    password : profile.password,
+    groupId : profile.groupId,
+    profilePicId : profile.profilePicId
+  };
+  return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfile/'+ email + '/' , profileData);
 }
 
 

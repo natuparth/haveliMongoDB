@@ -129,7 +129,40 @@ router.post("/login", (req, res, next) => {
 
 })
 
-
-
+router.put("/updateProfile/:email",(req,res,next)=>{
+  const profile = new User({
+    name : req.body.name,
+    email :  req.body.email,
+    password : req.body.password,
+    groupId : req.body.groupId,
+    profilePicId : req.body.profilePicId
+  });
+  User.updateOne({email : req.params.email},
+                  {'$set' : {'name' : profile.name,
+                              'password' : profile.password,
+                              'groupId' : profile.groupId,
+                              'profilePicId' : profile.profilePicId}},
+                  {useFindAndModify : false},
+                  function(err,doc){
+                    if(err) return  res.status(500).send({error:err,message:'something went wrong'});
+                    return res.send({error : 'none', message : 'successfully updated'});
+                  })
+});
+// router.put("/updateProfile/:email/",checkAuth,(req,res,next)=>{
+//   const profile = new Expense({
+//     purpose : req.body.purpose,
+//     amount :  req.body.amount,
+//     dateOfPurchase : req.body.dateOfPurchase,
+//     description : req.body.description,
+//     forWhom : req.body.forWhom
+//   });
+//   User.updateOne({$and : [{email : req.params.email},{'expenses._id' : req.params._id}]},
+//                   {'$set' : {'expenses.$' : expense}},
+//                   {useFindAndModify : false},
+//                   function(err,doc){
+//                     if(err) return  res.status(500).send({error:err,message:'something went wrong'});
+//                     return res.send({error : 'none', message : 'successfully updated'});
+//                   })
+// });
 
 module.exports = router;
