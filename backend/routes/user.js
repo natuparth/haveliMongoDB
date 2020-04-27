@@ -130,10 +130,11 @@ router.post("/login", (req, res, next) => {
 })
 
 router.put("/updateProfile/:email",(req,res,next)=>{
+  bcrypt.hash(req.body.password, 10).then((hash) => {
   const profile = new User({
     name : req.body.name,
     email :  req.body.email,
-    password : req.body.password,
+    password : hash,
     groupId : req.body.groupId,
     profilePicId : req.body.profilePicId
   });
@@ -147,6 +148,7 @@ router.put("/updateProfile/:email",(req,res,next)=>{
                     if(err) return  res.status(500).send({error:err,message:'something went wrong'});
                     return res.send({error : 'none', message : 'successfully updated'});
                   })
+  });
 });
 // router.put("/updateProfile/:email/",checkAuth,(req,res,next)=>{
 //   const profile = new Expense({

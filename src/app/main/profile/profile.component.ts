@@ -54,7 +54,7 @@ export class ProfileComponent implements OnInit {
     this.updatePofileForm = new FormGroup({
       'name' : new FormControl(this.userData.value.name,Validators.required),
       'email': new FormControl(this.userData.value.email, Validators.required),
-      'password': new FormControl("****", Validators.required),
+      'password': new FormControl(this.userData.value.password, Validators.required),
       'groupId': new FormControl(this.userData.value.groupId),
       'profilePicId' : new FormControl(this.userData.value.profilePicId)
     });
