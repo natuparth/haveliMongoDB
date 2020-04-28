@@ -28,9 +28,8 @@ export  class  AuthService {
  }
 
  getUserAuthenticated() {
-   return this.userAuthenticated;
+  return localStorage.getItem('userName') != null ? true : this.router.navigate(['login']) ;
  }
-
 
   getUserAuthListener() {
     return this.userAuthListener.asObservable();
@@ -52,9 +51,8 @@ export  class  AuthService {
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
      this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId, res.userEmail);
-    
+
      }
-       //this message will be retrieved there
      this.userAuthListener.next(res.message);
    });
  }
@@ -70,7 +68,8 @@ export  class  AuthService {
   }
 
   logout() {
-     this.router.navigate(['/home']);
+    localStorage.clear();
+   this.router.navigate(['/home']);
   }
 
    getUsers(): Observable<any> {
@@ -109,7 +108,7 @@ public updateProfile(profile : any, email : string): Observable<any>{
     profilePicId : profile.profilePicId
   };
   if(profile.updatePassword){
-    return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfile/'+ email + '/' , profileData);  
+    return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfile/'+ email + '/' , profileData);
   }
   return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfileWithoutpassword/'+ email + '/' , profileData);
 }
