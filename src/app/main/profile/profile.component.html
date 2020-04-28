@@ -87,14 +87,19 @@
                     Please enter email</p>
 
                 <label for="password">Password</label>
-                <input name="password" class="form-control"
-                    formControlName='password' type="password" placeholder="Enter your password"/>
-                <p class="help-block text-danger"
-                    *ngIf="!updatePofileForm.get('password').valid &&
-                    updatePofileForm.get('password').touched">
-                    Please enter your password</p>
+                <div class="form-inline">
+                    <input name="password" class="form-control"
+                        formControlName='password' type="password" placeholder="Enter your password"/>
+                    &nbsp;<p>update Password?</p>&nbsp;
+                    <input  [ngStyle]="{'align-item':'right'}" name="updatePassword" formControlName="updatePassword" type="checkbox">
+                    <p class="help-block text-danger"
+                        *ngIf="!updatePofileForm.get('password').valid &&
+                        updatePofileForm.get('password').touched">
+                        Please enter your password</p>
                     
-                <label for="profilePicId">profilePicId</label>
+                </div>
+                    
+                <label for="profilePicId">Profile Pic Id</label>
                 <input name="profilePicId" class="form-control"
                     formControlName='profilePicId' type="text" placeholder="Description on the expense *not required"/>
                 <br>

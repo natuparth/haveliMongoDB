@@ -135,7 +135,7 @@
     height: auto;
     padding: 5px 40px;
     /* margin: 0 0 0 10px; */
-    background: linear-gradient(141deg, #F50057 25%, #e0306b 51%, #F50057 75%);
+    background: linear-gradient(141deg, rgba(245, 0, 86, 0.726) 25%, #e0306bb9 51%, rgba(245, 0, 86, 0.692) 75%);
     text-align: center;
     position: relative;
     left: 50%;
@@ -172,10 +172,10 @@
 
 @keyframes rotateAnimation { 
     from {
-				transform: rotateX(0deg);
+				transform: rotateX(180deg);
 		}
 		to {
-				transform: rotateX(359deg);
+				transform: rotateX(360deg);
 		}
 }
 
@@ -197,4 +197,13 @@
     left:0;
     width:100%;
     height:100vh;
+}
+
+input
+{
+    color: #1d1c1c;
+}
+label
+{
+    font-weight: bold;
 }

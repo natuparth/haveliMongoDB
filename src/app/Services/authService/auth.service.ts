@@ -108,7 +108,10 @@ public updateProfile(profile : any, email : string): Observable<any>{
     groupId : profile.groupId,
     profilePicId : profile.profilePicId
   };
-  return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfile/'+ email + '/' , profileData);
+  if(profile.updatePassword){
+    return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfile/'+ email + '/' , profileData);  
+  }
+  return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfileWithoutpassword/'+ email + '/' , profileData);
 }
 
 

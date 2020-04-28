@@ -54,9 +54,10 @@ export class ProfileComponent implements OnInit {
     this.updatePofileForm = new FormGroup({
       'name' : new FormControl(this.userData.value.name,Validators.required),
       'email': new FormControl(this.userData.value.email, Validators.required),
-      'password': new FormControl(this.userData.value.password, Validators.required),
+      'password': new FormControl('', Validators.required),
       'groupId': new FormControl(this.userData.value.groupId),
-      'profilePicId' : new FormControl(this.userData.value.profilePicId)
+      'profilePicId' : new FormControl(this.userData.value.profilePicId),
+      'updatePassword': new FormControl(false)
     });
     this.updateProfileDisplay = true;
   }
@@ -68,7 +69,8 @@ export class ProfileComponent implements OnInit {
       email: profiledata.value.email,
       password: profiledata.value.password,
       groupId: profiledata.value.groupId,
-      profilePicId : profiledata.value.profilePicId
+      profilePicId : profiledata.value.profilePicId,
+      updatePassword : profiledata.value.updatePassword
     };
     this.authService.updateProfile(profile,profiledata.value.email).subscribe(response =>{
       if(response.message === 'successfully updated'){
