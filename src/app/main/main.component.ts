@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
-import { Subject, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../Services/authService/auth.service';
+
 
 @Component({
   selector: 'app-main',
@@ -11,32 +12,29 @@ import { AuthService } from '../Services/authService/auth.service';
 export class MainComponent implements OnInit {
   user = ' ';
   userImg = ' ';
-  userName: string = '';
+  userName = '';
   subscription: Subscription;
   constructor(private router: Router, private authService: AuthService) {
     console.log('main constructor called and added');
-    
-  this.subscription = router.events.subscribe((event) => {
-    if (event instanceof NavigationStart) {
-     //  browserRefresh = !router.navigated;
-    }
-});
-
     this.router.navigate(['main/grocery']);
+
   }
 
   logout(){
-   
-  this.authService.logout(); 
+
+  this.authService.logout();
   }
 
 
   ngOnInit() {
+    this.authService.getNameObservable().subscribe(name => {
+      console.log('observable called');
+      this.user = name.split(' ')[0];
+    this.userImg = '../assets/' + this.user.toLocaleLowerCase() + '.jpg';
 
-   // console.log(localStorage.getItem('expiresAt'));
-    this.user = localStorage.getItem('userLogged');
-    this.userName = localStorage.getItem('userName');
-    this.userImg = '../assets/' + this.user.split(' ')[0].toLocaleLowerCase() + '.jpg';
+    });
+      this.user = localStorage.getItem('userName').split(' ')[0];
+     console.log(this.user);
     const a1 = new Date(localStorage.getItem('expiresAt')).getTime();
     const a2 = new Date().getTime();
     console.log(a1);

@@ -1,1 +1,123 @@
-<p>PR</p>
+<div class="profileContainer">
+    <div class="profileHead">
+        <div class="profileBackground h-75">
+            <h2 class="text-capitalize nameText">{{userName}}</h2>
+        </div>
+        <div class="profileImage">
+            <app-profile-logo [userName]="userEmail"></app-profile-logo>
+        </div>
+    </div>
+    <div class="card-deck tabsDiv">
+        <div class="tabs rounded" [ngClass]="{'border-bottom border-success': !status}" (click)="status=!status">
+            <div>
+                <p>Profile</p>
+            </div>
+        </div>
+        <div class="tabs rounded" [ngClass]="{'border-bottom border-success': status}" (click)="status=!status">
+            <div>
+                <p>Group</p>
+            </div>
+        </div>
+    </div>
+    <br>
+    <!-- Profile div -->
+    <div *ngIf='!status && userData.value!=null' class="container profileDetailsDiv">
+        <div class="dataDetailsDiv">
+            <span class="nameSpanTrue"><i class="fa fa-user-circle" aria-hidden="true"></i><b> Name</b></span>
+            <span class="nameSpanFalse"><b>{{userData.value.name}}</b></span>
+        </div>
+        <div class="emailPasswordDiv">
+            <div class="dataDetailsDiv">
+                <span class="nameSpanTrue"><i class="fa fa-envelope" aria-hidden="true"></i><b> Email</b></span>
+                <span class="nameSpanFalse"><b>{{userData.value.email}}</b></span>
+            </div>
+            <div class="dataDetailsDiv">
+                <span class="nameSpanTrue"><i class="fa fa-key" aria-hidden="true"></i><b> Password</b></span>
+                <span class="nameSpanFalse"><b>********</b></span>
+            </div>
+        </div>
+        <div class="groupProfileIdDiv">
+            <div class="dataDetailsDiv">
+                <span class="nameSpanTrue"><i class="fa fa-users" aria-hidden="true"></i><b> Group</b></span>
+                <span class="nameSpanFalse"><b>{{userData.value.groupId}}</b></span>
+            </div>
+            <div class="dataDetailsDiv">
+                <span class="nameSpanTrue"><i class="fa fa-camera-retro" aria-hidden="true"></i><b> Profile</b></span>
+                <span class="nameSpanFalse"><b>{{userData.value.profilePicId}}</b></span>
+            </div>
+        </div>
+        <div class="dataDetailsDiv btn" [ngStyle]="{'max-width':'130px',
+                    'background': 'linear-gradient(45deg,#f05a4f,#f4c030)'}" (click)="updateProfileOpen()">
+            <span class="nameSpanFalse"><b> Edit</b></span>
+            <span class="nameSpanTrue"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+        </div>
+    </div>
+    <!-- Group Div -->
+    <div *ngIf='status' class="container profileDetailsDiv"></div>
+    <!-- <div class="profileFooter">Footer</div> -->
+</div>
+
+<!-- Update Modal and form -->
+<div class="backdrop" *ngIf='updateProfileDisplay'></div>
+<div class="modal" tabindex="-1" role="dialog" *ngIf='updateProfileDisplay' [ngStyle]="{'display':'block'}">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Update Profile</h4>
+            <button type="button" class="close" aria-label="Close" (click)="updateProfileclose()">
+                <span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="updatePofileForm" class="form form-group" (ngSubmit)="updateProfile(updatePofileForm)">
+                <label for="name">Name</label>
+                <input name="name" class="form-control"
+                    formControlName="name" type="text" placeholder="Enter your name"/>
+                <p class="help-block text-danger"
+                    *ngIf="!updatePofileForm.get('name').valid &&
+                    updatePofileForm.get('name').touched">
+                    Please enter your name</p>
+
+                <label for="email"> Email</label>
+                <input name="email" class="form-control"
+                    formControlName='email'
+                    type="email" placeholder="Enter your email" disabled/>
+                <p class="help-block text-danger"
+                    *ngIf="!updatePofileForm.get('email').valid &&
+                    updatePofileForm.get('email').touched">
+                    Please enter email</p>
+
+                <label for="password">Password</label>
+                <div class="form-inline">
+                    <input name="password" class="form-control"
+                        formControlName='password' type="password" placeholder="Enter your password"/>
+                    &nbsp;<p>update Password?</p>&nbsp;
+                    <input  [ngStyle]="{'align-item':'right'}" name="updatePassword" formControlName="updatePassword" type="checkbox">
+                    <p class="help-block text-danger"
+                        *ngIf="!updatePofileForm.get('password').valid &&
+                        updatePofileForm.get('password').touched">
+                        Please enter your password</p>
+
+                </div>
+
+                <label for="profilePicId">Profile Pic Id</label>
+                <input name="profilePicId" class="form-control"
+                    formControlName='profilePicId' type="text" placeholder="Description on the expense *not required"/>
+                <br>
+
+                <div class="modal-footer text-center">
+                    <button type="submit" class="btn btn-danger" [disabled]="!updatePofileForm.valid">
+                        <span *ngIf='!loadingFlad'>Update Profile</span>
+                        <div *ngIf='loadingFlad' class="loader" [ngStyle]="{'width':'20px','height':'20px'}"><app-circle-load></app-circle-load></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- [ngStyle]="{'animation-name':'Loadinganimation',
+                    'animation-duration':'3s',
+                    'animation-iteration-count': 'infinite',
+                    'animation-direction':'alternate',
+                    'animation-delay':i/5+'s'}"
+                    *ngFor='let i of [0,1,2,3,4]' app-circle-load-->
