@@ -11,7 +11,7 @@ export  class  AuthService {
   private token: string;
   private userAuthenticated: boolean;
 
-  public nameSubject = new BehaviorSubject(localStorage.getItem('userName'));
+  public nameSubject = new BehaviorSubject<string>(' ');
 
   constructor(private http: HttpClient, private router: Router) {
   }
@@ -57,6 +57,7 @@ export  class  AuthService {
      this.saveAuth(token, expiresAt.toLocaleString(), res.userName, res.groupId, res.profilePicId, res.userEmail);
 
      }
+     this.nameSubject.next(res.userName);
      this.userAuthListener.next(res.message);
    });
  }
