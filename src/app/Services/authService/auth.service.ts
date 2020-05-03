@@ -24,6 +24,7 @@ export  class  AuthService {
   }
 
   addUsers(user: {email: string , password: string, name: string, groupId: string, profilePicId: Number }) {
+    console.log('service',user)
     return this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user);
  }
 

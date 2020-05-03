@@ -45,7 +45,7 @@
     </div>
 
     <div *ngIf='registerPageToggle' class="container loginContainer card box">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md text-center">
               <br>
               <span> <p class="signintext"> Create your Account </p></span>
@@ -92,17 +92,18 @@
                     ">
                     Please enter valid Group ID
                   </p>
-                  <!-- <p class="help-block text-danger" *ngIf="
+                  <p class="help-block text-danger" *ngIf="
                       registerUserForm.get('groupId').touched
                     ">
                     If you dont know the group id, leave it blank. You can update it later
-                  </p> -->
+                  </p>
                   <br>
                   <button type="submit" class="btn btn-secondary" [disabled]="!registerUserForm.valid">Register</button>
                 </form>
             </div>
         </div>
-      </div>
+      </div> -->
+      <app-register></app-register>
     </div>
 
     <div class="container moreOptionContainer card box" *ngIf='loginPageToggle || registerPageToggle'>
