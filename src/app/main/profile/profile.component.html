@@ -73,10 +73,10 @@
                 <input name="name" class="form-control"
                     formControlName="name" type="text" placeholder="Enter your name"/>
                 <p class="help-block text-danger"
-                    *ngIf="!updatePofileForm.get('name').valid && 
+                    *ngIf="!updatePofileForm.get('name').valid &&
                     updatePofileForm.get('name').touched">
                     Please enter your name</p>
-                
+
                 <label for="email"> Email</label>
                 <input name="email" class="form-control"
                     formControlName='email'
@@ -96,14 +96,14 @@
                         *ngIf="!updatePofileForm.get('password').valid &&
                         updatePofileForm.get('password').touched">
                         Please enter your password</p>
-                    
+
                 </div>
-                    
+
                 <label for="profilePicId">Profile Pic Id</label>
                 <input name="profilePicId" class="form-control"
                     formControlName='profilePicId' type="text" placeholder="Description on the expense *not required"/>
                 <br>
-            
+
                 <div class="modal-footer text-center">
                     <button type="submit" class="btn btn-danger" [disabled]="!updatePofileForm.valid">
                         <span *ngIf='!loadingFlad'>Update Profile</span>

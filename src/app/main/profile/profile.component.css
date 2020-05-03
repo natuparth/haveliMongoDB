@@ -12,30 +12,30 @@
     /* background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%); */
     background: linear-gradient(141deg, #F50057 25%, #e0306b 51%, #F50057 75%);
     animation: fadeInAnimation ease 1s ;
-    animation-iteration-count: 1; 
-    animation-fill-mode: forwards; 
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 }
 
-@keyframes fadeInAnimation { 
-    0% { 
-        opacity: 0; 
-    } 
-    100% { 
-        opacity: 1; 
-     } 
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+     }
 }
 
-@keyframes fadeAndDropInAnimation { 
-    0% { 
+@keyframes fadeAndDropInAnimation {
+    0% {
         opacity: 0;
         transform: translate(-50%,-100%);
     }
     40%{
         opacity: 1;
     }
-    100% { 
+    100% {
         transform: translate(-50%,-80%);
-     } 
+     }
 }
 .profileImage{
     position: relative;
@@ -49,7 +49,7 @@
     width: 80px;
     transition: 0.4s;
     animation: fadeAndDropInAnimation ease 2s ;
-    animation-iteration-count: 1; 
+    animation-iteration-count: 1;
     animation-fill-mode: forwards;
 }
 
@@ -80,7 +80,7 @@
     margin: auto;
     text-align: center;
     animation: fadeInAnimation ease 1.5s ;
-    animation-iteration-count: 1; 
+    animation-iteration-count: 1;
     animation-fill-mode: forwards;
 }
 
@@ -113,7 +113,7 @@
     padding: 0 15px 0 5px;
     text-align: center;
     animation: fadeAndJumpInAnimation ease 1s ;
-    animation-iteration-count: 1; 
+    animation-iteration-count: 1;
     animation-fill-mode: forwards
 }
 
@@ -130,8 +130,8 @@
 }
 
 .dataDetailsDiv{
-    width: 100%;
-    max-width: 300px;
+    width: fit-content;
+   /* max-width: 300px; */
     height: auto;
     padding: 5px 40px;
     /* margin: 0 0 0 10px; */
@@ -154,23 +154,25 @@
     display: none;
     transition: 0.3s;
     animation: rotateAnimation ease 0.5s ;
-    animation-iteration-count: 1; 
+    animation-iteration-count: 1;
     animation-fill-mode: forwards
 }
 .nameSpanFalse{
     display: none;
     transition: 0.3s;
     position: relative;
+    width: 100%;
+
 }
 .dataDetailsDiv:hover .nameSpanFalse{
     display: block;
     transition: 0.8s;
     animation: rotateAnimation ease 0.5s ;
-    animation-iteration-count: 1; 
+    animation-iteration-count: 1;
     animation-fill-mode: forwards
 }
 
-@keyframes rotateAnimation { 
+@keyframes rotateAnimation {
     from {
 				transform: rotateX(180deg);
 		}
@@ -179,7 +181,7 @@
 		}
 }
 
-@keyframes fadeAndJumpInAnimation { 
+@keyframes fadeAndJumpInAnimation {
     from {
             transform: translateY(20px);
             opacity: 0;
@@ -190,7 +192,7 @@
     }
 }
 
-.backdrop{ 
+.backdrop{
     background-color:rgba(0,0,0,0.6);
     position:fixed;
     top:0;

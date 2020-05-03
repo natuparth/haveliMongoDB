@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/Services/authService/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -9,15 +10,18 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class ProfileComponent implements OnInit {
 
-  
+
   userData: FormGroup;
   userEmail:  string = null;
   userName:  string = null;
-  updateProfileDisplay: boolean = false;
+  updateProfileDisplay = false;
   updatePofileForm: FormGroup;
-  loadingFlad: boolean = false;
+  loadingFlad = false;
+  nameObservable: Observable<string>;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {
+
+  }
 
   ngOnInit() {
     this.userData = new FormGroup({
@@ -42,7 +46,10 @@ export class ProfileComponent implements OnInit {
         this.userData.value.groupId = user.groupId;
         this.userData.value.profilePicId = user.profilePicId;
       });
-      console.log(this.userData.value)
+      console.log(this.userData.value);
+      this.userName = this.userData.value.name;
+      this.authService.nameSubject.next(this.userName);
+      localStorage.setItem('userName', this.userName);
     });
   }
 
@@ -75,6 +82,7 @@ export class ProfileComponent implements OnInit {
     this.authService.updateProfile(profile,profiledata.value.email).subscribe(response =>{
       if(response.message === 'successfully updated'){
         alert('Profile successfully updated');
+
       } else{
         alert('some error occurred while adding the expense. Error: ' +
         response.error)
