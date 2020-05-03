@@ -1,11 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-profile-logo',
   templateUrl: './profile-logo.component.html',
   styleUrls: ['./profile-logo.component.css']
 })
-export class ProfileLogoComponent implements OnInit {
+export class ProfileLogoComponent implements OnInit , OnChanges{
 
   @ViewChild('mainScreen', {static:true}) elementView: ElementRef;
   @Input() userName: string;
@@ -37,6 +37,11 @@ export class ProfileLogoComponent implements OnInit {
       this.abbrName();
       this.profilePicId = '../../../../assets' + this.profilePicId + '.jpg';
     }
+  }
+
+  ngOnChanges(){
+    console.log('data changed');
+    this.abbrName();
   }
 
   abbrName()
