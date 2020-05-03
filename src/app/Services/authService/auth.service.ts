@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment as env} from '../../../environments/environment';
 import { Users } from '../../../../backend/models/user';
@@ -10,14 +10,17 @@ import { Users } from '../../../../backend/models/user';
 export  class  AuthService {
   private token: string;
   private userAuthenticated: boolean;
-  private user: Users;
-  private loginSubject: Subject<string>;
+
+  public nameSubject = new BehaviorSubject(localStorage.getItem('userName'));
+
   constructor(private http: HttpClient, private router: Router) {
   }
 
   public userAuthListener: Subject<string>;
 
-
+  getNameObservable(){
+    return this.nameSubject.asObservable();
+  }
 
   getToken() {
     return this.token;
@@ -41,7 +44,7 @@ export  class  AuthService {
      password : values.password
    };
    console.log(authData);
-   this.http.post<{token?: string, message: string, user?: string, userName: string,
+   this.http.post<{token?: string, message: string, userName: string,
                     userEmail: string, groupId: string, profilePicId: string, expiresIn?: number}>
                     (env.apiUrl + '/auth/login', authData).subscribe(res => {
      const token = res.token;
@@ -51,21 +54,20 @@ export  class  AuthService {
       this.userAuthenticated = true;
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
-     this.saveAuth(token, expiresAt.toLocaleString(), res.user, res.userName, res.groupId, res.profilePicId);
+     this.saveAuth(token, expiresAt.toLocaleString(), res.userName, res.groupId, res.profilePicId, res.userEmail);
 
      }
      this.userAuthListener.next(res.message);
    });
  }
 
-  private saveAuth(token: string, expiresAt: string, user: string, userName:  string, groupId: string, profilePicId: string) {
+  private saveAuth(token: string, expiresAt: string,  userName:  string, groupId: string, profilePicId: string, userEmail: string) {
     localStorage.setItem('userName', userName);
-    localStorage.setItem('userEmail', userName);
+    localStorage.setItem('userEmail', userEmail);
     localStorage.setItem('groupId', groupId);
     localStorage.setItem('profilePicId', profilePicId);
     localStorage.setItem('token', token);
     localStorage.setItem('expiresAt', expiresAt.toString());
-    localStorage.setItem('userLogged', user);
   }
 
   logout() {
@@ -98,6 +100,20 @@ export  class  AuthService {
 
  checkEmailExists(email: string) {
    return this.http.get(env.apiUrl + '/auth/checkEmailExists/' + email);
+}
+
+public updateProfile(profile : any, email : string): Observable<any>{
+  const profileData :  Users = {
+    name : profile.name,
+    email :  profile.email,
+    password : profile.password,
+    groupId : profile.groupId,
+    profilePicId : profile.profilePicId
+  };
+  if(profile.updatePassword){
+    return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfile/'+ email + '/' , profileData);
+  }
+  return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfileWithoutpassword/'+ email + '/' , profileData);
 }
 
 
