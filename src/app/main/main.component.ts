@@ -21,7 +21,6 @@ export class MainComponent implements OnInit {
   }
 
   logout(){
-
   this.authService.logout();
   }
 
