@@ -14,11 +14,15 @@ export class ProfileLogoComponent implements OnInit {
   name: string = '.?.';
   profilePicId: string = 'null';
   isProfilePic: boolean = false;
-  profilePicLocation: string = '../../../../assets/0.jpg'
+  profilePicLocation: string = '../../../../assets/0.jpg';
+  colorPaletteDark: string[]  = ['#036eb7','#086d35','#f05a4f','#e91e63'];
+  colorPaletteLight: string[] = ['#64eaff','#00ff72','#f4c030','#ed55ff'];
+  colorIndex: number = 0;
 
   constructor() { }
 
   ngOnInit() {
+    this.colorIndex = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
     this.divSize = this.elementView.nativeElement.offsetHeight;
     this.nameSize = this.divSize / 2;
     this.profilePicId = localStorage.getItem('profilePicId');
