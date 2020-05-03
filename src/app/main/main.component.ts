@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from '../Services/authService/auth.service';
 
 
@@ -12,12 +12,13 @@ import { AuthService } from '../Services/authService/auth.service';
 export class MainComponent implements OnInit {
   user = ' ';
   userImg = ' ';
-  userName = '';
-  subscription: Subscription;
+  userName = ' ';
+  nameObservable: Observable<string>;
   constructor(private router: Router, private authService: AuthService) {
     console.log('main constructor called and added');
     this.router.navigate(['main/grocery']);
-
+    this.nameObservable = authService.getNameObservable();
+    authService.nameSubject.next(localStorage.getItem('userName'));
   }
 
   logout(){
@@ -27,14 +28,15 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit() {
-    this.authService.getNameObservable().subscribe(name => {
+    this.nameObservable.subscribe(name => {
       console.log('observable called');
+      this.userName = name;
       this.user = name.split(' ')[0];
     this.userImg = '../assets/' + this.user.toLocaleLowerCase() + '.jpg';
 
     });
-      this.user = localStorage.getItem('userName').split(' ')[0];
-     console.log(this.user);
+    //  this.user = localStorage.getItem('userName').split(' ')[0];
+    // console.log(this.user);
     const a1 = new Date(localStorage.getItem('expiresAt')).getTime();
     const a2 = new Date().getTime();
     console.log(a1);
@@ -43,10 +45,7 @@ export class MainComponent implements OnInit {
          this.router.navigate(['home']);
       }
 
-   /* this.authService.getUserAuthListener().subscribe((res) => {
-      console.log('response is' + res);
-      this.user = res;
-    });*/
+
   }
 
 }
