@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
         this.authService.getUserAuthListener().subscribe((message) => {
       this.login_flag=false;
       if (message === 'user signed in successfully') {
-             this.router.navigate(['main']);
+             this.router.navigate(['main/grocery']);
       } else   {
         this.login_flag=true;
         this.message = message;
