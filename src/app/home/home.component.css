@@ -1,0 +1,82 @@
+.homeContainer{
+    width: 80%;
+    /* background: #afec06; */
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    align-items: center;
+    min-width: 400px;
+}
+.linkContainer{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: auto;
+    grid-gap: 20px;
+    align-items: center;
+    padding: 20px;
+    /* text-align: center;
+    animation: fadeAndJumpInAnimation ease 1s ;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards */
+}
+.linkDescription{
+    /* background: #23ddee; */
+    /* background: linear-gradient(135deg,#ec2424,#11014e); */
+    justify-self: center;
+    width: 120px;
+    height: 150px;
+    /* border-radius: 50%; */
+    text-align: center;
+    justify-content: center;
+    text-decoration: none;
+    /* border: 5px solid rgba(0, 0, 0, 0.5); */
+    /* box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.9); */
+    /* color: linear-gradient(135deg,#ec2424,#11014e); */
+    
+}
+.linkLogo{
+    width: 90px;
+    height: 90px;
+    text-align: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.432);
+    transform: translateY(0%);
+    margin: auto;
+    transition: 0.4s;
+}
+.linkLogo i{
+    text-align: center;
+    justify-content: center;
+    transform: translateY(20%);
+    color: #991527;
+    transition: 0.4s;
+}
+.linkDescription p{
+    text-align: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    transform: translateY(30%);
+    transition: 0.4s;
+    color: black;
+}
+.linkDescription:hover .linkLogo{
+    transition: 0.4s;
+    transform: translateY(-10px);
+}
+.linkDescription:hover p{
+    transition: 0.4s;
+    transform: translateY(10px);
+}
+@media only screen and (max-width: 1080px) {
+    .linkContainer{
+        grid-template-columns: auto auto auto;
+    }
+}
+@media only screen and (max-width: 700px) {
+    .linkContainer{
+        grid-template-columns: auto auto;
+    }
+}

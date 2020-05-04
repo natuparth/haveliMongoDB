@@ -23,8 +23,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('userName') != null && !localStorage.getItem('serverDown')) {
-       this.router.navigate(['main/grocery']);
+    if(localStorage.getItem('userName') != null && localStorage.getItem('serverDown')!=null) {
+       this.router.navigate(['home']);
     }
   }
   validateCredentials(values: any){
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
         this.authService.getUserAuthListener().subscribe((message) => {
       this.login_flag = false;
       if (message === 'user signed in successfully') {
-             this.router.navigate(['main/grocery']);
+             this.router.navigate(['home']);
       } else   {
         this.login_flag = true;
         this.message = message;
