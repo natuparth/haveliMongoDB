@@ -1,8 +1,8 @@
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse} from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { retry, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
 
 @Injectable()
 
@@ -10,15 +10,17 @@ export class AuthInterceptor implements HttpInterceptor{
   constructor(private router: Router) {
   }
   intercept(req: HttpRequest<any>, next: HttpHandler){
+  //  const authToken = this.authService.getToken();
     const authToken = localStorage.getItem('token');
-    const authRequest = req.clone({
+  const authRequest = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + authToken)
     });
 return next.handle(authRequest).pipe(
   retry(1),
   catchError( (error: HttpErrorResponse) =>{
     let errorMessage = '';
-    if(error.status === 0){
+    if (error.status === 0){
+      localStorage.setItem('serverDown', 'true');
       errorMessage = 'Server is down';
     } else if (error.error.message.message.contains('jwt')){
       localStorage.clear();
@@ -26,7 +28,8 @@ return next.handle(authRequest).pipe(
     } else {
       errorMessage = error.error.message.message;
     }
-     this.router.navigate(['error'], { state: {message: errorMessage}} );
+
+    this.router.navigate(['error'], { state: {message: errorMessage}} );
     return throwError(errorMessage);
   })
 )

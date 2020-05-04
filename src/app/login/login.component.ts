@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('userName') != null){
+    if(localStorage.getItem('userName') != null && !localStorage.getItem('serverDown')) {
        this.router.navigate(['main/grocery']);
     }
   }
