@@ -18,7 +18,8 @@ return next.handle(authRequest).pipe(
   retry(1),
   catchError( (error: HttpErrorResponse) =>{
     let errorMessage = '';
-    if(error.status === 0){
+    if (error.status === 0){
+      localStorage.setItem('serverDown', 'true');
       errorMessage = 'Server is down';
     } else if (error.error.message.message.contains('jwt')){
       localStorage.clear();
@@ -26,7 +27,8 @@ return next.handle(authRequest).pipe(
     } else {
       errorMessage = error.error.message.message;
     }
-     this.router.navigate(['error'], { state: {message: errorMessage}} );
+
+    this.router.navigate(['error'], { state: {message: errorMessage}} );
     return throwError(errorMessage);
   })
 )
