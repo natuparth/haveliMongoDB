@@ -1,0 +1,32 @@
+.signintext{
+    font-size: 40px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 500;
+    margin-bottom: -20px;
+}
+input{
+    border-radius: 25px;
+    width: 75%;
+    min-width: 130px;
+    background-color: white;
+    transition:0.5s;margin: auto;
+}
+input:hover{
+    width: 90%;
+    background-color: rgba(193, 218, 218, 0.925);;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.9);
+    transition:0.5s;
+
+}
+button{
+    border-radius: 25px;
+    width: 25%;
+    transition:0.5s;
+    min-width: 90px;
+}
+button:hover{
+    background-color: #343a40;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.9);
+    width: 50%;
+    transition:0.5s;
+}

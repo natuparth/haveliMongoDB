@@ -43,8 +43,9 @@ router.get("/checkEmailExists/:email", (req, res, next) => {
 });
 
 router.get("/searchMaxGroupId", (req, res, next) => {
-  User.find().sort({ groupId: -1 }).limit(1).then((doc) => {
-    res.status(200).json({ users: doc })
+  Group.find().sort({ groupId: -1 }).limit(1).
+  then((doc) => {
+    res.status(200).json({ group: doc[0].groupId })
   })
 });
 
@@ -57,32 +58,12 @@ router.post("/addUser", (req, res, next) => {
       profilePicId: req.body.profilePicId,
       groupId: req.body.groupId
     });
-
-    const group = new Group({
-      groupId: req.body.groupId
-    })
-
-
-    user.save().then((result) => {
-      console.log('it added user');
-      group.save().then(() => {
-        res.status(201).json({
-          message: 'user added successfully',
-          result: result
-        });
-        console.log('it came here');
-      }).catch((err) => {
-        res.json({
-          message: 'some error occurred in adding group ' + err,
-          result: err
-        });
-      })
-
+    User.insertMany(user).then((doc)=>{
+      res.json({message:'user added successfully',
+                  result:doc})
     }).catch((err)=>{
-      res.json({
-        message: 'some error occurred in adding user ' + err,
-        result: err
-      });
+      res.json({message: 'some error occurred in adding user ' + err,
+                result: err})
     });
   });
 });

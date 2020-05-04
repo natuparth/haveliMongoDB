@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Item = require('./item').schema;
 const uniqueValidator = require('mongoose-unique-validator');
 const groupSchema = mongoose.Schema({
-  groupId : { type : String, required: true, unique: true},
+  groupId : { type : Number, required: true, unique: true},
+  groupName : { type : String},
   items : [Item]
 
 });
