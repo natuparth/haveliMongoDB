@@ -7,14 +7,12 @@ import { environment } from '../environments/environment';
 import { ItemFilterPipe } from './item-filter.pipe';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './Services/authService/auth-interceptor';
-import { ErrorComponent } from './error/error.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ItemFilterPipe,
-    ErrorComponent
+    ItemFilterPipe
   ],
   imports: [
     BrowserModule,
