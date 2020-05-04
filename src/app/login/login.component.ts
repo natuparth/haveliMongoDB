@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('userName') != null && !localStorage.getItem('serverDown')){
+    if(localStorage.getItem('userName') != null && !localStorage.getItem('serverDown')) {
        this.router.navigate(['main/grocery']);
     }
    this.registerUserForm = new FormGroup({
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
     'groupId' : new FormControl(''),
     'profilePicId' : new FormControl('')
   });
-  }
+}
   validateCredentials(values: any){
     this.authService.login(values);
         this.authService.getUserAuthListener().subscribe((message) => {
