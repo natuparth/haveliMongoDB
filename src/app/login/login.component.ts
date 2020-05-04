@@ -26,9 +26,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('userName') != null){
+    if(localStorage.getItem('userName') != null)
        this.router.navigate(['main/grocery']);
-    }
    this.registerUserForm = new FormGroup({
     'name' : new FormControl('', Validators.required),
     'email' : new FormControl('', Validators.required),
@@ -40,11 +39,11 @@ export class LoginComponent implements OnInit {
   validateCredentials(values: any){
     this.authService.login(values);
         this.authService.getUserAuthListener().subscribe((message) => {
-      this.login_flag = false;
+      this.login_flag=false;
       if (message === 'user signed in successfully') {
              this.router.navigate(['main/grocery']);
       } else   {
-        this.login_flag = true;
+        this.login_flag=true;
         this.message = message;
 
         }
