@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
   nameObservable: Observable<string>;
   constructor(private router: Router, private authService: AuthService) {
     console.log('main constructor called and added');
-    this.router.navigate(['main/grocery']);
+   // this.router.navigate(['main/grocery']);
     this.nameObservable = authService.getNameObservable();
     authService.nameSubject.next(localStorage.getItem('userName'));
   }
