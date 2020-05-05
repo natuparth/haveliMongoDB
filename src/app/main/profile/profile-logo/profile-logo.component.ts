@@ -40,7 +40,7 @@ export class ProfileLogoComponent implements OnInit , OnChanges{
   }
 
   ngOnChanges(){
-    console.log('data changed');
+    // console.log('data changed');
     this.abbrName();
   }
 

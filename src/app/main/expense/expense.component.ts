@@ -42,7 +42,7 @@ export class ExpenseComponent implements OnInit {
     this.itemSubject.subscribe(doc => {
       this.itemList = doc;
     });
-    console.log('inside expense management component');
+    // console.log('inside expense management component');
     this.GetUsers().then(() => {
     });
     this.addExpenseForm = new FormGroup({});
@@ -139,7 +139,7 @@ export class ExpenseComponent implements OnInit {
   async GetUsers() {
     this.membersList = [];
     var groupId = localStorage.getItem('groupId');//data strored in string
-    console.log("sart");
+    // console.log("sart",groupId);
     if(groupId == 'null')//string comparision => if group id is not assigned pull the user details only 
     {
       this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
@@ -158,7 +158,7 @@ export class ExpenseComponent implements OnInit {
       });
     }
     else{
-      this.authService.getUsersByGroupId(groupId.toString()).subscribe(doc => {
+      this.authService.getUsersByGroupId(+groupId).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
           this.membersList.push({

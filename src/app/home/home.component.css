@@ -70,12 +70,12 @@
     transition: 0.4s;
     transform: translateY(10px);
 }
-@media only screen and (max-width: 1080px) {
+@media only screen and (max-width: 900px) {
     .linkContainer{
         grid-template-columns: auto auto auto;
     }
 }
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 600px) {
     .linkContainer{
         grid-template-columns: auto auto;
     }
