@@ -22,7 +22,6 @@ export class MainComponent implements OnInit {
   }
 
   logout(){
-
   this.authService.logout();
   }
 
@@ -39,10 +38,10 @@ export class MainComponent implements OnInit {
     // console.log(this.user);
     const a1 = new Date(localStorage.getItem('expiresAt')).getTime();
     const a2 = new Date().getTime();
-    console.log(a1);
-    console.log(a2);
+    // console.log(a1);
+    // console.log(a2);
     if(a1 < a2) {
-         this.router.navigate(['home']);
+        //  this.router.navigate(['home']);
       }
 
 

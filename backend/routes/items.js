@@ -28,7 +28,6 @@ router.post("/postItem/:groupId",(req,res,next)=>{
 
     router.get('/getItems/:groupId',checkAuth,(req,res,next)=>{
       group.find({groupId : req.params.groupId}).then((documents)=>{
-    //   console.log(documents[0].items);
         res.send(documents[0].items);
       })
     });
