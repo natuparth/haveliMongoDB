@@ -22,7 +22,7 @@ return next.handle(authRequest).pipe(
     if (error.status === 0){
       localStorage.setItem('serverDown', 'true');
       errorMessage = 'Server is down';
-    } else if (error.error.message.message.contains('jwt')){
+    } else if (error.error.message.message.includes('jwt')){
       localStorage.clear();
       errorMessage = 'Your Authentication Token has expired';
     } else {
