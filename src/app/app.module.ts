@@ -15,8 +15,7 @@ import { HomeComponent } from './home/home.component';
   declarations: [
     AppComponent,
     ItemFilterPipe,
-    ErrorComponent,
-    HomeComponent
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
