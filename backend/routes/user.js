@@ -176,7 +176,7 @@ async function sendMail(user,callback) {
   let mailOptions = {
     from: '"HMS Team"<example.gimail.com>',
     to: user.email,
-    subject: "Wellcome to HMS",
+    subject: "Welcome to HMS",
     html: `<h1>Hi ${user.name}</h1><br>
     <h4>Your OTP </h4><h1>${user.otp}</h1><br>
     <h4>Thanks for joining us</h4>`
