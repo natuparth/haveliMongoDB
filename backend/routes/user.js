@@ -4,7 +4,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Group = require('../models/group');
-
+const globalData = require('../models/globalData');
 
 router.get("/getUsers", (req, res, next) => {
   User.find().then((doc) => {
@@ -48,6 +48,30 @@ router.get("/searchMaxGroupId", (req, res, next) => {
     res.status(200).json({ group: doc[0].groupId })
   })
 });
+
+router.post("/addGroup", (req,res,next)=>{
+ console.log(req.body.groupName);
+  globalData.find({}, (err,docs)=>{
+  const group = new Group({
+    groupId: docs[0].latestGroupNumber + 1,
+    groupName: req.body.groupName ,
+    items:[]
+  })
+
+  Group.insertMany(group).then(()=>{
+    updateGroupId(group.groupId);
+    res.status(200).json({message: 'group added successfully'})
+
+  }).catch((err)=>{
+    console.log(err);
+    res.status(400).json({message: 'some error occurred in adding group'})
+  });
+
+ });
+
+
+
+})
 
 router.post("/addUser", (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
@@ -153,4 +177,16 @@ router.put("/updateProfileWithoutpassword/:email",(req,res,next)=>{
   });
 });
 
+function updateGroupId(groupId)
+{
+  globalData.updateOne({},{
+    '$set' : { 'latestGroupNumber' : groupId}
+  },
+  {useFindAndModify : false},
+   function(err,doc){
+       if(err) return  res.status(500).send({error:err,message:'something went wrong'});
+      }
+  )
+
+}
 module.exports = router;

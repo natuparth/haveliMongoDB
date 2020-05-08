@@ -19,6 +19,12 @@ export  class  AuthService {
 
   public userAuthListener: Subject<string>;
 
+  addGroup(groupName: string){
+    console.log(groupName);
+    return this.http.post(env.apiUrl + '/auth/addGroup', {groupName}).subscribe(doc=>{
+      console.log(doc);
+    });
+  }
   getNameObservable(){
     return this.nameSubject.asObservable();
   }
