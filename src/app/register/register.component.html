@@ -3,8 +3,8 @@
         <br>
         <span> <p class="signintext"> Create your Account </p></span>
         <hr>
-        <div class="form-group">
-            <form class="form-group" [formGroup]="registerUserForm" (ngSubmit)="addUser(registerUserForm)">
+        <div *ngIf="registerFormToggle" class="registerForm form-group">
+            <form class="form-group" [formGroup]="registerUserForm" (ngSubmit)="sendOtpByMail()">
                 <label for="name">Name</label>
                 <input name="name" class="form-control" formControlName="name" type="text" />
                 <p class="help-block text-danger" *ngIf="
@@ -39,6 +39,25 @@
                 </p>
                 <br>
                 <button type="submit" class="btn btn-secondary" [disabled]="!registerUserForm.valid">Register</button>
+            </form>
+        </div>
+
+        <div *ngIf="!registerFormToggle" class="otpCheckForm form-group">
+            <i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true" (click)="registerFormToggle=true;resendOtpFlag=false"></i> <h3>Enter your OTP</h3>
+            <p>OTP has been send to {{registerUserForm.value.email}}</p>
+            <form class="form-group" [formGroup]="otpCheck">
+                <input name="otp" class="form-control" formControlName="otp" type="text" />
+                <p class="help-block text-danger" *ngIf="
+                    !otpCheck.get('otp').valid &&
+                    otpCheck.get('otp').touched
+                ">
+                Please enter your OTP
+                </p>
+                <br>
+                <div>
+                    <button type="menu" class="btn btn-secondary" (click)="resendOtp()">Resend</button>
+                    <button type="submit" class="btn btn-secondary" (click)="checkOtp()" [disabled]="!otpCheck.valid">Proceed</button>
+                </div>
             </form>
         </div>
     </div>

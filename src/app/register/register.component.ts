@@ -10,7 +10,11 @@ import { AuthService } from '../Services/authService/auth.service';
 export class RegisterComponent implements OnInit {
 
   registerUserForm: FormGroup;
+  otpCheck: FormGroup;
   loadingFlag: String = 'none';
+  registerFormToggle:boolean = true;
+  currentOtp = '';
+  resendOtpFlag:boolean = false;
 
   constructor(private authService: AuthService) { }
 
@@ -22,6 +26,9 @@ export class RegisterComponent implements OnInit {
       'groupId' : new FormControl(''),
       'profilePicId' : new FormControl('')
     });
+    this.otpCheck = new FormGroup({
+      'otp' : new FormControl('', Validators.required)
+    });
   }
 
   addUser(item: any) {
@@ -29,6 +36,52 @@ export class RegisterComponent implements OnInit {
     this.authService.addUsers(item.value).subscribe(res => {
       alert(res.message);
     });
+  }
+
+  sendOtpByMail(){
+    console.log('send OTP called');
+    this.currentOtp = this.generateOtp();
+    const userdata = {
+      email:this.registerUserForm.value.email,
+      otp:this.currentOtp,
+      name:this.registerUserForm.value.name
+    }
+    this.authService.sendOtp(userdata).subscribe((doc)=>{
+      if(doc.accepted.length > 0 && !this.resendOtpFlag){
+        this.registerFormToggle = !this.registerFormToggle;
+        this.resendOtpFlag = true;
+      }
+    });
+  }
+
+  generateOtp(){
+    console.log('generate OTP called');
+    let charsList ='0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ'.split('');
+    let randomOtp = '';
+    let maxindex = charsList.length-1;
+    for(let i=0;i<6;i++){
+      let randomNo = Math.floor(Math.random() * (maxindex - 0 + 1));
+      randomOtp += charsList[randomNo];
+    }
+    return randomOtp;
+  }
+
+  checkOtp(){
+    console.log('OTP matched called');
+    if(this.currentOtp == this.otpCheck.value.otp){
+      console.log('OTP Matched');
+      // this.addUser(this.registerUserForm);
+    }
+    else{
+      alert("INVALID OTP");
+    }
+  }
+
+  resendOtp(){
+    console.log('resend OTP called');
+    if(confirm("Do you want to resent OTP??")){
+      this.sendOtpByMail();
+    }
   }
 
   logform(email: string){

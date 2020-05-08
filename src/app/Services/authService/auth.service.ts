@@ -118,6 +118,10 @@ public updateProfile(profile : any, email : string): Observable<any>{
   return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfileWithoutpassword/'+ email + '/' , profileData);
 }
 
+public sendOtp(userData:any):Observable<any>{
+  return this.http.post<any>(env.apiUrl + '/auth/sendOtp',userData);
+}
+
 
 }
 

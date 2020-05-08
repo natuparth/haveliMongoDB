@@ -4,6 +4,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Group = require('../models/group');
+const nodemailer = require("nodemailer");
 
 
 router.get("/getUsers", (req, res, next) => {
@@ -153,4 +154,37 @@ router.put("/updateProfileWithoutpassword/:email",(req,res,next)=>{
   });
 });
 
+router.post("/sendOtp", (req, res,next) => {
+  // console.log("request came",req.body);
+  let user = req.body;
+  sendMail(user, info => {
+    res.send(info);
+  });
+});
+
+async function sendMail(user,callback) {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'rahultest10111@gmail.com',
+      pass: 'rahultest@135'
+    }
+  });
+
+  let mailOptions = {
+    from: '"HMS Team"<example.gimail.com>',
+    to: user.email,
+    subject: "Wellcome to HMS",
+    html: `<h1>Hi ${user.name}</h1><br>
+    <h4>Your OTP </h4><h1>${user.otp}</h1><br>
+    <h4>Thanks for joining us</h4>`
+  };
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail(mailOptions);
+
+  callback(info);
+}
 module.exports = router;
