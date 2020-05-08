@@ -23,8 +23,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('userName') != null && localStorage.getItem('serverDown')!=null) {
-       this.router.navigate(['home']);
+    if(localStorage.getItem('userName') != null && !localStorage.getItem('serverDown')) {
+       this.router.navigate(['main/home']);
     }
   }
   validateCredentials(values: any){
