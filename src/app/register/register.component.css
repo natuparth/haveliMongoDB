@@ -59,3 +59,8 @@ button:hover{
         transform: translateY(-20%);
     }
 }
+.loading{
+    width:30px;
+    height:30px;
+    transform: translateX(50%);
+}

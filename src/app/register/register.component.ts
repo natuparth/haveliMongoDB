@@ -11,7 +11,7 @@ export class RegisterComponent implements OnInit {
 
   registerUserForm: FormGroup;
   otpCheck: FormGroup;
-  loadingFlag: String = 'none';
+  loadingFlag: boolean = false;
   registerFormToggle:boolean = true;
   currentOtp = '';
   resendOtpFlag:boolean = false;
@@ -32,14 +32,17 @@ export class RegisterComponent implements OnInit {
   }
 
   addUser(item: any) {
-    console.log('add user',item);
+    // console.log('add user',item);
+    this.loadingFlag = true;
     this.authService.addUsers(item.value).subscribe(res => {
       alert(res.message);
+      this.loadingFlag = false;
     });
   }
 
   sendOtpByMail(){
-    console.log('send OTP called');
+    this.loadingFlag = true;
+    // console.log('send OTP called');
     this.currentOtp = this.generateOtp();
     const userdata = {
       email:this.registerUserForm.value.email,
@@ -51,11 +54,12 @@ export class RegisterComponent implements OnInit {
         this.registerFormToggle = !this.registerFormToggle;
         this.resendOtpFlag = true;
       }
+      this.loadingFlag = false;
     });
   }
 
   generateOtp(){
-    console.log('generate OTP called');
+    // console.log('generate OTP called');
     let charsList ='0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ'.split('');
     let randomOtp = '';
     let maxindex = charsList.length-1;
@@ -67,10 +71,10 @@ export class RegisterComponent implements OnInit {
   }
 
   checkOtp(){
-    console.log('OTP matched called');
+    // console.log('OTP matched called');
     if(this.currentOtp == this.otpCheck.value.otp){
-      console.log('OTP Matched');
-      // this.addUser(this.registerUserForm);
+      // console.log('OTP Matched');
+      this.addUser(this.registerUserForm);
     }
     else{
       alert("INVALID OTP");
@@ -78,7 +82,7 @@ export class RegisterComponent implements OnInit {
   }
 
   resendOtp(){
-    console.log('resend OTP called');
+    // console.log('resend OTP called');
     if(confirm("Do you want to resent OTP??")){
       this.sendOtpByMail();
     }

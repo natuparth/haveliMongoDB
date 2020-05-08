@@ -1,0 +1,8 @@
+<div class="dotJumpContainer">
+    <div class="dots" *ngFor="let i of [0,1,2]"
+        [ngStyle]="{'animation-name':'Loadinganimation',
+        'animation-duration':'1s',
+        'animation-iteration-count': 'infinite',
+        'animation-direction':'alternate',
+        'animation-delay':i/3+'s'}"></div>
+</div>

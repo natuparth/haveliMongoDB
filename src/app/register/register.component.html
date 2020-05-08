@@ -38,7 +38,10 @@
                 Please enter login Password
                 </p>
                 <br>
-                <button type="submit" class="btn btn-secondary" [disabled]="!registerUserForm.valid">Register</button>
+                <button type="submit" class="btn btn-secondary" [disabled]="!registerUserForm.valid">
+                    <p *ngIf="!loadingFlag" [ngStyle]="{'padding':'0px','margin':'0px'}">Register</p>
+                    <div class="loading" *ngIf="loadingFlag"><app-dot-jump></app-dot-jump></div>
+                </button>
             </form>
         </div>
 
@@ -55,8 +58,14 @@
                 </p>
                 <br>
                 <div>
-                    <button type="menu" class="btn btn-secondary" (click)="resendOtp()">Resend</button>
-                    <button type="submit" class="btn btn-secondary" (click)="checkOtp()" [disabled]="!otpCheck.valid">Proceed</button>
+                    <button type="menu" class="btn btn-secondary" (click)="resendOtp()">
+                        <p *ngIf="!loadingFlag" [ngStyle]="{'padding':'0px','margin':'0px'}">Resend</p>
+                        <div class="loading" *ngIf="loadingFlag"><app-dot-jump></app-dot-jump></div>
+                    </button>
+                    <button type="submit" class="btn btn-secondary" (click)="checkOtp()" [disabled]="!otpCheck.valid">
+                        <p *ngIf="!loadingFlag" [ngStyle]="{'padding':'0px','margin':'0px'}">Proceed</p>
+                        <div class="loading" *ngIf="loadingFlag"><app-dot-jump></app-dot-jump></div>
+                    </button>
                 </div>
             </form>
         </div>
