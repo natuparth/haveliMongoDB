@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   in_max = [0, 0];
   out_min = [-50,-40];
   out_max = [50,40];
-  rotateAnimationValue = [0,0,0,0];
+  rotateAnimationValue = [0,0,0,0,0,0];
   screenHeight: number;
   screenWidth: number;
   constructor( private authService: AuthService, private router: Router) {
@@ -56,6 +56,8 @@ export class LoginComponent implements OnInit {
     this.rotateAnimationValue[1]= Math.round((cursoPosY - this.in_min[1]) * (this.out_max[0] - this.out_min[0]) / (this.in_max[1] - this.in_min[1]) + this.out_min[0]);
     this.rotateAnimationValue[2]= Math.round((cursoPosX - this.in_min[0]) * (this.out_max[1] - this.out_min[0]) / (this.in_max[0] - this.in_min[0]) + this.out_min[1]);
     this.rotateAnimationValue[3]= Math.round((cursoPosY - this.in_min[1]) * (this.out_max[1] - this.out_min[0]) / (this.in_max[1] - this.in_min[1]) + this.out_min[1]);
+    this.rotateAnimationValue[4]= ((cursoPosX - this.in_min[1]) * (-2 - 2) / (this.in_max[1] - this.in_min[1]) + 2);
+    this.rotateAnimationValue[5]= ((cursoPosY - this.in_min[1]) * (-2 - 2) / (this.in_max[1] - this.in_min[1]) + 2);
     // console.log(this.rotateAnimationValue);
   }
 
