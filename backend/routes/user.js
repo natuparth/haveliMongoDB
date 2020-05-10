@@ -256,7 +256,7 @@ function updateGroupId(groupId)
        if(err) return  res.status(500).send({error:err,message:'something went wrong'});
       }
   )
-
+}
 router.post("/sendOtp", (req, res,next) => {
   // console.log("request came",req.body);
   let user = req.body;
@@ -323,4 +323,5 @@ async function sendMessageByMail(user,callback) {
 
   callback(info);
 }
+
 module.exports = router;

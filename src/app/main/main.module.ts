@@ -11,13 +11,13 @@ import { ProfileLogoComponent } from './profile/profile-logo/profile-logo.compon
 import { DoughnutComponent } from './graphs/doughnut/doughnut.component';
 import { HomeComponent } from '../home/home.component';
 import { MatCardModule } from '@angular/material/card';
-import { CircleLoadComponent } from 'src/shared/LoadingBar/circle-load/circle-load.component';
+
 
 
 @NgModule({
   declarations : [MainComponent, ExpenseComponent, GroceryComponent,
     ShoppingListComponent, CalculateexpenseComponent, ProfileComponent,
-    ProfileLogoComponent, DoughnutComponent, CircleLoadComponent, HomeComponent ],
+    ProfileLogoComponent, DoughnutComponent,HomeComponent ],
   imports : [SharedModule, MainRouting, MatCardModule]
 })
 
