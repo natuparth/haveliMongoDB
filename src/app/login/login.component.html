@@ -40,7 +40,7 @@
                   <input class="form-control" name="password" type="password" [(ngModel)]="password"><br>
                   <button class="btn btn-secondary" type="submit">Login</button> <br><br>
               </form>
-              <a (click)="forgotPasswordFlag=true">Forgot Password?</a>
+              <a class="forgotpasswordlink" (click)="forgotPasswordFlag=true">Forgot Password?</a>
             </div>
         </div>
 
@@ -67,13 +67,14 @@
               ">
               Please enter your OTP
               </p>
-              <label *ngIf="updatePasswordFlag" for="password">Password</label>
+              <br>
+              <label *ngIf="updatePasswordFlag" for="password">New Password</label>
               <input *ngIf="updatePasswordFlag" name="password" class="form-control" formControlName="password" type="password" />
               <p class="help-block text-danger" *ngIf="
                   !otpCheckForm.get('password').valid &&
                   otpCheckForm.get('password').touched
               ">
-              Please enter your OTP
+              Please enter new Password
               </p>
               <br>
               <div *ngIf="!resendOtpFlag && !updatePasswordFlag">

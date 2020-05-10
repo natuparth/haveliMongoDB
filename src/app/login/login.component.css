@@ -162,6 +162,15 @@
     height:30px;
     transform: translateX(50%);
 }
+
+.forgotpasswordlink{
+    color: rgb(29, 75, 202);
+}
+.forgotpasswordlink:hover{
+    color: rgb(29, 75, 202);
+    text-decoration: underline;
+}
+
 @keyframes Loadinganimation
 {
     0%
