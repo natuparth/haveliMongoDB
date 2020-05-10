@@ -99,7 +99,8 @@
 }
 
 .example-header-image {
-  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  width: 40px;
+  height: 40px;
   /* background-size: cover; */
   float: left;
 }
@@ -107,4 +108,9 @@
   background-color: #fafafa;
   color: rgba(0,0,0,0.87);
 }
-
+ul {
+  display: table-cell;
+}
+li {
+  list-style-type: none;
+}
