@@ -46,25 +46,22 @@
       <input #groupName class="form-control" name="groupName" type="text"><br>
       <button class="btn btn-secondary" (click) = "addGroup(groupName.value)" >Add Group</button> <br><br>
 </div>
-<div class="mat-app-background" style="padding: 30px;">
-<div *ngFor="let group of groupMap | keyvalue" style="background-color:;float: left;">
+<div style="padding: 30px;">
+<div *ngFor="let group of groupMap | keyvalue" style="float: left;">
 <mat-card class="example-card mat-card mat-focus-indicator">
-  <mat-card-header>
 
-    <mat-card-title>{{group.value.name|titlecase}}</mat-card-title>
-
-  </mat-card-header>
-
-  <mat-card-content>
-    <div *ngFor="let user of group.value.users" class=".user-row">
-    <img mat-card-image src="../../assets/1.jpg" class=".example-header-image" alt="Photo of Group">
+ <div style="text-align: center;">
+  <h3>{{group.value.name|titlecase}}</h3>
+</div>
+<hr>
+   <ul>
+    <li *ngFor="let user of group.value.users" class=".user-row">
+    <div>
+    <img src="../../assets/1.jpg" class=".example-header-image" style="width: 40px;height: 40px;" alt="Photo of Group">
     <h4 style="float: left;">{{user}}</h4>
   </div>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>LIKE</button>
-    <button mat-button>SHARE</button>
-  </mat-card-actions>
-</mat-card>
+  </li>
+  </ul>
+  </mat-card>
 </div>
 </div>
