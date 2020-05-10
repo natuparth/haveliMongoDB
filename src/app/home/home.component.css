@@ -1,3 +1,5 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
 .homeContainer{
     width: 80%;
     /* background: #afec06; */
@@ -86,3 +88,23 @@
         grid-template-columns: auto auto;
     }
 }
+.example-card {
+  max-width: 400px;
+  margin-left:20px ;
+}
+
+.user-row{
+  width: auto;
+  height: 30px;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  /* background-size: cover; */
+  float: left;
+}
+.mat-app-background {
+  background-color: #fafafa;
+  color: rgba(0,0,0,0.87);
+}
+

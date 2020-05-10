@@ -42,12 +42,57 @@ router.get("/checkEmailExists/:email", (req, res, next) => {
   })
 });
 
+/*
 router.get("/searchMaxGroupId", (req, res, next) => {
   Group.find().sort({ groupId: -1 }).limit(1).
   then((doc) => {
     res.status(200).json({ group: doc[0].groupId })
   })
 });
+*/
+
+router.get("/getGroupMembers", (req,res,next)=>{
+  var groupArray = req.query.groupList.split(',');
+  for(var i=0;i<groupArray.length;i++){
+
+    groupArray[i] = parseInt(groupArray[i]);
+    console.log(groupArray[i]);
+  }
+
+   User.aggregate([
+     {
+       $match: { 'groups': { $in : groupArray } }
+     },
+     {
+       $unwind : { path:"$groups"}
+     },
+     {
+       $project : { email: 1, groups: 1, name:1}
+     }
+    ],
+     (err, doc)=>{
+       if(err)
+         next(err);
+        else
+         res.status(200).json({users: doc, message: 'users fetched'});
+       }
+  )
+
+
+})
+
+router.get("/getGroups/:email", (req,res,next)=>{
+  User.findOne({email: req.params.email}).then(doc => {
+    console.log(doc.groups);
+     Group.find({groupId: { $in : doc.groups }},{ groupId: 1, groupName: 1},(err,doc)=>{
+       res.status(200).json({items:doc, message: "groups fetched for a user"});
+     })
+
+     }).catch(err => {
+       res.status(400).json({items:null, message: "groups fetched for a user"});
+     })
+})
+
 
 router.post("/addGroup", (req,res,next)=>{
  console.log(req.body.groupName);
@@ -59,6 +104,12 @@ router.post("/addGroup", (req,res,next)=>{
   })
 
   Group.insertMany(group).then(()=>{
+    User.findOne({ email: req.body.userEmail}, (err,doc) => {
+      doc.groups.push(group.groupId);
+      doc.save().then().catch( err => {
+        res.status(500).json({message: 'some error occurred in adding group to the user:' + err});
+      })
+    })
     updateGroupId(group.groupId);
     res.status(200).json({message: 'group added successfully'})
 

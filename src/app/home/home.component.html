@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
     <div class="homeContainer">
         <div class="linkContainer">
             <div class="linkDescription" [routerLink]="['/main/grocery']">
@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="btn btn-primary">
 <button (click)="showAddForm()">Add Group</button>
@@ -45,4 +45,26 @@
       <label for="password">Group Name</label>
       <input #groupName class="form-control" name="groupName" type="text"><br>
       <button class="btn btn-secondary" (click) = "addGroup(groupName.value)" >Add Group</button> <br><br>
+</div>
+<div class="mat-app-background" style="padding: 30px;">
+<div *ngFor="let group of groupMap | keyvalue" style="background-color:;float: left;">
+<mat-card class="example-card mat-card mat-focus-indicator">
+  <mat-card-header>
+
+    <mat-card-title>{{group.value.name|titlecase}}</mat-card-title>
+
+  </mat-card-header>
+
+  <mat-card-content>
+    <div *ngFor="let user of group.value.users" class=".user-row">
+    <img mat-card-image src="../../assets/1.jpg" class=".example-header-image" alt="Photo of Group">
+    <h4 style="float: left;">{{user}}</h4>
+  </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button>LIKE</button>
+    <button mat-button>SHARE</button>
+  </mat-card-actions>
+</mat-card>
+</div>
 </div>
