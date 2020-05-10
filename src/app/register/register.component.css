@@ -3,6 +3,7 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-weight: 500;
     margin-bottom: -20px;
+    animation: sinkDownandappear ease-in-out 1s;
 }
 input{
     border-radius: 25px;
@@ -29,4 +30,37 @@ button:hover{
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.9);
     width: 50%;
     transition:0.5s;
+}
+.registerForm{
+    animation: sinkDownandappear ease-in-out 1s;
+    transition: 0.5s;
+}
+.otpCheckForm{
+    animation: riseUpandappear ease-in-out 1s;
+    transition: 0.5s;
+}
+@keyframes riseUpandappear{
+    to{
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    from{
+        transform: translateY(20%);
+        opacity: 0;
+    }
+}
+@keyframes sinkDownandappear{
+    to{
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    from{
+        opacity: 0;
+        transform: translateY(-20%);
+    }
+}
+.loading{
+    width:30px;
+    height:30px;
+    transform: translateX(50%);
 }

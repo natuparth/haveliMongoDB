@@ -9,14 +9,13 @@ import { MainRouting } from './main-routing.module';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileLogoComponent } from './profile/profile-logo/profile-logo.component';
 import { DoughnutComponent } from './graphs/doughnut/doughnut.component';
-import { CircleLoadComponent } from './LoadingBar/circle-load/circle-load.component';
 import { HomeComponent } from '../home/home.component';
 
 
 @NgModule({
   declarations : [MainComponent, ExpenseComponent, GroceryComponent,
     ShoppingListComponent, CalculateexpenseComponent, ProfileComponent,
-    ProfileLogoComponent, DoughnutComponent, CircleLoadComponent, HomeComponent ],
+    ProfileLogoComponent, DoughnutComponent, HomeComponent ],
   imports : [SharedModule, MainRouting]
 })
 

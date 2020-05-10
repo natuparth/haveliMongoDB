@@ -22,6 +22,22 @@
        min-width: 400px;
    
    }
+   #leaf,#LeafRightSmall,#LeafRightBig,#Background{
+       transform-origin: center;
+       transform-box: fill-box;
+       /* transform: rotateY(-70deg); */
+   }
+   .test2 svg
+   {
+       position: fixed;
+       left: 1em;
+       top: 5em;
+       height: 60%;
+       width: 60%;
+       min-width: 200px;
+       z-index: -1;
+   
+   }
    .welcomefont
    {
        font-size: 80px;
@@ -141,16 +157,20 @@
     color: white;
 }
 
-.Loading
-{
-    width: 10px;
-    height: 10px;
-    border-radius: 100%;
-    position:absolute;
-    top:50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+.loading{
+    width:30px;
+    height:30px;
+    transform: translateX(50%);
 }
+
+.forgotpasswordlink{
+    color: rgb(29, 75, 202);
+}
+.forgotpasswordlink:hover{
+    color: rgb(29, 75, 202);
+    text-decoration: underline;
+}
+
 @keyframes Loadinganimation
 {
     0%
