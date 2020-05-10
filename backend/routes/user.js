@@ -133,6 +133,22 @@ router.put("/updateProfile/:email",(req,res,next)=>{
   });
 });
 
+router.put("/updatePassword",(req,res,next)=>{
+  bcrypt.hash(req.body.password, 10).then((hash) => {
+  const profile = new User({
+    email :  req.body.email,
+    password : hash
+  });
+  User.updateOne({email : profile.email},
+                  {'$set' : { 'password' : profile.password}},
+                  {useFindAndModify : false},
+                  function(err,doc){
+                    if(err) return  res.status(500).send({error:err,message:'something went wrong'});
+                    return res.send({error : 'none', message : 'successfully updated'});
+                  })
+  });
+});
+
 router.put("/updateProfileWithoutpassword/:email",(req,res,next)=>{
   bcrypt.hash(req.body.password, 10).then((hash) => {
   const profile = new User({
@@ -157,12 +173,20 @@ router.put("/updateProfileWithoutpassword/:email",(req,res,next)=>{
 router.post("/sendOtp", (req, res,next) => {
   // console.log("request came",req.body);
   let user = req.body;
-  sendMail(user, info => {
+  sendOtpByMail(user, info => {
     res.send(info);
   });
 });
 
-async function sendMail(user,callback) {
+router.post("/sendMessage", (req, res,next) => {
+  // console.log("request came",req.body);
+  let user = req.body;
+  sendMessageByMail(user, info => {
+    res.send(info);
+  });
+});
+
+async function sendOtpByMail(user,callback) {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -180,6 +204,31 @@ async function sendMail(user,callback) {
     html: `<h1>Hi ${user.name}</h1><br>
     <h4>Your OTP </h4><h1>${user.otp}</h1><br>
     <h4>Thanks for joining us</h4>`
+  };
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail(mailOptions);
+
+  callback(info);
+}
+
+async function sendMessageByMail(user,callback) {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'rahultest10111@gmail.com',
+      pass: 'rahultest@135'
+    }
+  });
+
+  let mailOptions = {
+    from: '"HMS Team"<example.gimail.com>',
+    to: user.email,
+    subject: user.subject,
+    html: `<h3>${user.message}</h3><br>
+    <h2>Thank You</h2>`
   };
 
   // send mail with defined transport object

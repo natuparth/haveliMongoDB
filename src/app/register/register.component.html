@@ -13,7 +13,7 @@
                 ">
                 Please enter your name
                 </p>
-                <label for="quantity">Email</label>
+                <label for="email">Email</label>
                 <input #emailValue name="email" class="form-control" formControlName="email" type="email" (blur)="logform(emailValue.value)"/>
                 <span *ngIf = "!registerUserForm.get('email').valid && registerUserForm.get('email').touched">
                 <p class="help-block text-danger" *ngIf="
@@ -29,7 +29,7 @@
                 This email already exists
                 </p>
                 </span>
-                <label for="price">Password</label>
+                <label for="Password">Password</label>
                 <input name="password" class="form-control" formControlName="password" type="password" />
                 <p class="help-block text-danger" *ngIf="
                     !registerUserForm.get('password').valid &&

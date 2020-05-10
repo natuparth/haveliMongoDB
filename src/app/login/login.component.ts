@@ -12,7 +12,7 @@ import { HostListener } from "@angular/core";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  loadingFlag: String = 'none';
+  loadingFlag: boolean = false;
   newGroupId: Number = null;
   searchForm: FormGroup;
   isAuthenticated: boolean;
@@ -25,6 +25,11 @@ export class LoginComponent implements OnInit {
   rotateAnimationValue = [0,0,0,0,0,0];
   screenHeight: number;
   screenWidth: number;
+  otpCheckForm: FormGroup;
+  currentOtp: string = '';
+  resendOtpFlag:boolean = false;
+  forgotPasswordFlag: boolean = false;
+  updatePasswordFlag: boolean = false;
   constructor( private authService: AuthService, private router: Router) {
     this.authService.userAuthListener = new Subject<string>();
 
@@ -35,6 +40,11 @@ export class LoginComponent implements OnInit {
        this.router.navigate(['home']);
     }
     this.getScreenSize();
+    this.otpCheckForm = new FormGroup({
+      'email' : new FormControl('', Validators.required),
+      'otp' : new FormControl(''),
+      'password' : new FormControl('')
+    });
   }
   validateCredentials(values: any){
     this.authService.login(values);
@@ -49,6 +59,76 @@ export class LoginComponent implements OnInit {
         }
     });
   }
+
+  sendOtpByMail(){
+    this.loadingFlag = true;
+    this.currentOtp = this.generateOtp();
+    // console.log('send OTP called',this.currentOtp);
+    const userdata = {
+      email:this.otpCheckForm.value.email,
+      subject: 'Restore your account',
+      message:  'Your OTP to restore '+this.otpCheckForm.value.email+' is '+this.currentOtp
+    }
+    this.authService.sendMessageByMail(userdata).subscribe((doc)=>{
+      if(doc.accepted.length > 0 && !this.resendOtpFlag){
+        this.resendOtpFlag = true;
+      }
+      this.loadingFlag = false;
+    });
+  }
+
+  generateOtp(){
+    // console.log('generate OTP called');
+    let charsList ='0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ'.split('');
+    let randomOtp = '';
+    let maxindex = charsList.length-1;
+    for(let i=0;i<6;i++){
+      let randomNo = Math.floor(Math.random() * (maxindex - 0 + 1));
+      randomOtp += charsList[randomNo];
+    }
+    return randomOtp;
+  }
+
+  checkOtp(){
+    // console.log('OTP matched called');
+    if(this.currentOtp == this.otpCheckForm.value.otp){
+      this.resendOtpFlag=false;
+      alert("Correct OTP");
+      this.updatePasswordFlag = true;
+    }
+    else{
+      alert("INVALID OTP");
+    }
+  }
+
+  resendOtp(){
+    // console.log('resend OTP called');
+    if(confirm("Do you want to resent OTP??")){
+      this.sendOtpByMail();
+    }
+  }
+
+  updatePassword(){
+    if(this.otpCheckForm.value.password==''){
+      alert('Password cannot be blank');
+    }
+    else{
+      const userdata = {
+        email:this.otpCheckForm.value.email,
+        password:this.otpCheckForm.value.password
+      }
+      this.authService.updatePassword(userdata).subscribe(response =>{
+        if(response.message === 'successfully updated'){
+          alert('Password successfully updated');
+          this.forgotPasswordFlag=false;
+        } else{
+          alert('some error occurred while adding the expense. Error: ' +
+          response.error)
+        }
+      });
+    }
+  }
+
   @HostListener('mousemove', ['$event'])onhover(e?){
     let cursoPosX = (e.pageX+1)-this.screenWidth/2;
     let cursoPosY = (e.pageY+1)-this.screenHeight/2;

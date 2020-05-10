@@ -24,7 +24,8 @@
 
     <div *ngIf='loginPageToggle' class="container loginContainer card box">
       <div class="row">
-        <div class="col-md text-center">
+
+        <div *ngIf="!forgotPasswordFlag" class="col-md text-center">
               <br>
               <span> <p class="signintext"> Welcome Back! </p></span>
               <hr>
@@ -39,8 +40,68 @@
                   <input class="form-control" name="password" type="password" [(ngModel)]="password"><br>
                   <button class="btn btn-secondary" type="submit">Login</button> <br><br>
               </form>
+              <a (click)="forgotPasswordFlag=true">Forgot Password?</a>
             </div>
         </div>
+
+        <div *ngIf="forgotPasswordFlag" class="col-md text-center">
+          <br>
+          <i class="fa fa-chevron-circle-left fa-2x" (click)="forgotPasswordFlag=false;resendOtpFlag=false;" aria-hidden="true"></i>
+          <span> <p class="signintext"> Recover your Account </p></span>
+          <hr>
+          <div class="form-group">
+            <form class="form-group" [formGroup]="otpCheckForm">
+              <label for="email">Email</label>
+              <input name="email" class="form-control" formControlName="email" type="text" />
+              <p class="help-block text-danger" *ngIf="
+                  !otpCheckForm.get('email').valid &&
+                  otpCheckForm.get('email').touched
+              ">
+              Please enter your email
+              </p>
+              <label *ngIf="resendOtpFlag && !updatePasswordFlag" for="otp">OTP</label>
+              <input *ngIf="resendOtpFlag && !updatePasswordFlag" name="otp" class="form-control" formControlName="otp" type="text" />
+              <p class="help-block text-danger" *ngIf="
+                  !otpCheckForm.get('otp').valid &&
+                  otpCheckForm.get('otp').touched
+              ">
+              Please enter your OTP
+              </p>
+              <label *ngIf="updatePasswordFlag" for="password">Password</label>
+              <input *ngIf="updatePasswordFlag" name="password" class="form-control" formControlName="password" type="password" />
+              <p class="help-block text-danger" *ngIf="
+                  !otpCheckForm.get('password').valid &&
+                  otpCheckForm.get('password').touched
+              ">
+              Please enter your OTP
+              </p>
+              <br>
+              <div *ngIf="!resendOtpFlag && !updatePasswordFlag">
+                  <button type="submit" class="btn btn-secondary" (click)="sendOtpByMail()" [disabled]="!otpCheckForm.valid || loadingFlag">
+                      <p *ngIf="!loadingFlag" [ngStyle]="{'padding':'0px','margin':'0px'}">Proceed</p>
+                      <div class="loading" *ngIf="loadingFlag"><app-dot-jump></app-dot-jump></div>
+                  </button>
+              </div>
+              <div *ngIf="resendOtpFlag && !updatePasswordFlag">
+                <button type="menu" class="btn btn-secondary" (click)="resendOtp()" [disabled]="!otpCheckForm.valid || loadingFlag">
+                    <p *ngIf="!loadingFlag" [ngStyle]="{'padding':'0px','margin':'0px'}">Resend</p>
+                    <div class="loading" *ngIf="loadingFlag"><app-dot-jump></app-dot-jump></div>
+                </button>
+                <button type="menu" class="btn btn-secondary" (click)="checkOtp()" [disabled]="loadingFlag">
+                  <p *ngIf="!loadingFlag" [ngStyle]="{'padding':'0px','margin':'0px'}">Proceed</p>
+                  <div class="loading" *ngIf="loadingFlag"><app-dot-jump></app-dot-jump></div>
+                </button>
+              </div>
+              <div *ngIf="updatePasswordFlag">
+                <button type="submit" class="btn btn-secondary" (click)="updatePassword()" [disabled]="!otpCheckForm.valid || loadingFlag">
+                    <p *ngIf="!loadingFlag" [ngStyle]="{'padding':'0px','margin':'0px'}">Update</p>
+                    <div class="loading" *ngIf="loadingFlag"><app-dot-jump></app-dot-jump></div>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
       </div>
     </div>
 

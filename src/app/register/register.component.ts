@@ -77,7 +77,7 @@ export class RegisterComponent implements OnInit {
       this.addUser(this.registerUserForm);
     }
     else{
-      alert("INVALID OTP");
+      alert("INVALID OTP!!!!1");
     }
   }
 
