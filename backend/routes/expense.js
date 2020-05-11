@@ -7,10 +7,16 @@ const checkAuth = require('../middleware/check-auth');
 
 router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
   User.find({email: req.params.email}).then((doc)=>{
+      if(doc[0].expenses[0]!=null)
        res.send(doc[0].expenses);
-  })
+       else
+       res.send({message:"you have no Expenses yet!!"});
+  }).catch((e)=>{
+    res.json({message: 'error occured '});
+  });
 });
 
+ 
 router.post("/addExpenses/:email",checkAuth, (req,res,next)=>{
   console.log("reqbody",req.body);
   const expense = new Expense({
@@ -44,7 +50,9 @@ router.put("/updateExpense/:email/:_id",checkAuth,(req,res,next)=>{
                   function(err,doc){
                     if(err) return  res.status(500).send({error:err,message:'something went wrong'});
                     return res.send({error : 'none', message : 'successfully updated'});
-                  })
+                  }).catch((err)=>{
+                    return res.json({message: 'some error occured!! please try again'});
+              });
 });
 
 router.delete('/deleteExpense',checkAuth,(req,res,next)=>{
@@ -53,7 +61,9 @@ router.delete('/deleteExpense',checkAuth,(req,res,next)=>{
                           function(err,doc){
                             if(err) return  res.status(500).send({error:err,message:'something went wrong'});
                             return res.send({error : 'none', message : 'successfully deleted'});
-                          });
+                          }).catch((err)=>{
+                            return res.json({message: 'some error occured!! please try again'});
+                      });
 });
 module.exports = router;
 

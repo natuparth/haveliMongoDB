@@ -33,6 +33,8 @@ export class GroceryComponent implements OnInit {
   itemDate: Date;
   itemsArray: any[] = [];
   welcomeFlag = true;
+    errMessage:String;
+  errFlag:Boolean=false;
 
   constructor(private crudService: CrudService, private formBuilder: FormBuilder, private authService: AuthService) {
      this.groupId = localStorage.getItem('groupId');
@@ -61,8 +63,17 @@ export class GroceryComponent implements OnInit {
     this.crudService.getList(groupId);
     this.crudService.getListUpdated().subscribe((items) => {
       console.log('subscription got called');
-      this.itemsList = items;
+        this.itemsList = items;
+        if(this.itemsList.length==0)
+        location.reload();
+        if(this.crudService.getItemListKey(this.itemsList)!=""){
+        this.errMessage=this.crudService.getItemListKey(this.itemsList);
+        this.errFlag=true;
+      }
+      else{
+      this.errFlag=false;
       this.itemsArray = items;
+      }
       this.welcomeFlag = false;
     });
 

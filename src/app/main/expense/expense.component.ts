@@ -27,6 +27,8 @@ export class ExpenseComponent implements OnInit {
   updateitemflag = false;
   expenseGraphToggle = false;
   expenseDetailsToggle = false;
+  errMessage:String;
+  errFlag:Boolean=false;
   graphDataColumns: any[];
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
@@ -123,10 +125,17 @@ export class ExpenseComponent implements OnInit {
     this.itemList = [];
     this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
-      this.welcomeFlag = false;
+      if(this.crudService.getItemListKey(this.itemList)!=""){
+      this.errMessage=this.crudService.getItemListKey(this.itemList);
+      this.errFlag=true;
+    }
+    else{
       this.graphDataColumns = ['purpose','amount'];
       this.expenseGraphToggle = this.itemList.length > 0;
       this.expenseDetailsToggle = false;
+      this.errFlag=false;
+    }
+      this.welcomeFlag = false;
     });
   }
   /*
@@ -139,9 +148,11 @@ export class ExpenseComponent implements OnInit {
   async GetUsers() {
     this.membersList = [];
     var groupId = localStorage.getItem('groupId');//data strored in string
+   
     // console.log("sart",groupId);
-    if(groupId == 'null')//string comparision => if group id is not assigned pull the user details only 
+    if(groupId=="undefined")//string comparision => if group id is not assigned pull the user details only 
     {
+      console.log(groupId)
       this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
@@ -219,6 +230,8 @@ export class ExpenseComponent implements OnInit {
       this.onCloseHandled('addModal')
       if (response.message === 'successful') {
         alert('Expense added successfully');
+        if(this.crudService.getItemListKey(this.itemList)!="")
+              this.itemList=[];
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);
         this.GetUserValues(this.currentUserEmail);

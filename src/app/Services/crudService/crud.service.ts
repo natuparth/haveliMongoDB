@@ -35,6 +35,8 @@ export class CrudService {
       .post<{message: string}>(env.apiUrl + '/item/postItem/' + groupId, itemAdded)
       .subscribe(data => {
         if (data.message === 'successful') {
+          if(this.getItemListKey(this.items)!="")
+              this.items=[];
         this.items.push(itemAdded);
         this.itemsUpdated.next([...this.items]);
       } else {
@@ -92,7 +94,6 @@ export class CrudService {
   getList(groupId: string) {
     this.http.get<Item[]>(env.apiUrl + '/item/getItems/' + groupId ).subscribe(
       data => {
-        console.log(data);
         this.items = data;
         this.itemsUpdated.next(this.items);
       },
@@ -110,4 +111,16 @@ export class CrudService {
 
   }
 
+
+
+ getItemListKey(itemsList: Array<any>):string{
+    
+  let keys = Object.keys(itemsList)
+  let values = keys.map(k => itemsList[k])
+  if(keys[0]=="message")
+    return values[0];
+  else
+   return "";
  }
+
+}

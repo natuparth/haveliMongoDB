@@ -14,6 +14,8 @@ export class ShoppingListComponent implements OnInit {
   items: any[] = [];
   itemsList: any[] = [];
   showSpinner: boolean;
+  errMessage:String;
+  errFlag:Boolean=false;
   constructor(private crudService: CrudService) {}
 
   ngOnInit() {
@@ -35,6 +37,17 @@ export class ShoppingListComponent implements OnInit {
           data.quantity - ( data.consumptionPerDay * (cutOffDays.getTime() - (new Date(data.date).getTime())) / (1000 * 3600 * 24)) <= 0
        ) {
         this.itemsList.push(data);
+      }
+      if(this.crudService.getItemListKey(this.items)!=""){
+        this.errMessage=this.crudService.getItemListKey(this.items);
+        this.errFlag=true;
+      }
+      else if(this.itemsList.length==0){
+        this.errMessage="your haveli is full!! nothing to purchase in "+noOfDays.toString()+" days";
+        this.errFlag=true;
+      }
+      else{
+        this.errFlag=false;
       }
     });
 
