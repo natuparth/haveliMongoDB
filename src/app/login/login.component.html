@@ -51,14 +51,16 @@
           <hr>
           <div class="form-group">
             <form class="form-group" [formGroup]="otpCheckForm">
-              <label for="email">Email</label>
-              <input name="email" class="form-control" formControlName="email" type="text" />
-              <p class="help-block text-danger" *ngIf="
-                  !otpCheckForm.get('email').valid &&
-                  otpCheckForm.get('email').touched
-              ">
-              Please enter your email
-              </p>
+              <label *ngIf="!resendOtpFlag && !updatePasswordFlag" for="email">Email</label>
+              <input *ngIf="!resendOtpFlag && !updatePasswordFlag" name="email" class="form-control" formControlName="email" type="email" />
+              <span *ngIf = "!otpCheckForm.get('email').valid && otpCheckForm.get('email').touched">
+                <p class="help-block text-danger" *ngIf="
+                    otpCheckForm.get('email').errors['alreadyDoesNotExists'] &&
+                    otpCheckForm.get('email').touched
+                ">
+                This email already exists
+                </p>
+                </span>
               <label *ngIf="resendOtpFlag && !updatePasswordFlag" for="otp">OTP</label>
               <input *ngIf="resendOtpFlag && !updatePasswordFlag" name="otp" class="form-control" formControlName="otp" type="text" />
               <p class="help-block text-danger" *ngIf="

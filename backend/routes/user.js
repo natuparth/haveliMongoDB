@@ -261,7 +261,15 @@ router.post("/sendOtp", (req, res,next) => {
   // console.log("request came",req.body);
   let user = req.body;
   sendOtpByMail(user, info => {
-    res.send(info);
+    // res.send(info);
+    return res.json({
+      message: 'Mail sent successfully'
+    });
+  }).catch((err)=>{
+    // console.log('err',err)
+    return res.json({
+      message: 'some error occured!! please try again'
+    });
   });
 });
 
@@ -269,7 +277,16 @@ router.post("/sendMessage", (req, res,next) => {
   // console.log("request came",req.body);
   let user = req.body;
   sendMessageByMail(user, info => {
-    res.send(info);
+    // console.log(info)
+    // res.send(info);
+    return res.json({
+      message: 'Mail sent successfully'
+    });
+  }).catch((err)=>{
+    // console.log('err',err)
+    return res.json({
+      message: 'some error occured!! please try again'
+    });
   });
 });
 
@@ -309,9 +326,9 @@ async function sendMessageByMail(user,callback) {
       pass: 'rahultest@135'
     }
   });
-
+  // console.log(user)
   let mailOptions = {
-    from: '"HMS Team"<example.gimail.com>',
+    from: '"HMS Team"<example.gmail.com>',
     to: user.email,
     subject: user.subject,
     html: `<h3>${user.message}</h3><br>
