@@ -30,6 +30,7 @@ export class ExpenseComponent implements OnInit {
   graphDataColumns: any[];
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
+  groupId: string = null;
   constructor(
     private crudService: CrudService,
     private expenseService: ExpenseService,
@@ -138,9 +139,9 @@ export class ExpenseComponent implements OnInit {
   */
   async GetUsers() {
     this.membersList = [];
-    var groupId = localStorage.getItem('groupId');//data strored in string
-    // console.log("sart",groupId);
-    if(groupId == 'null')//string comparision => if group id is not assigned pull the user details only 
+    this.groupId = localStorage.getItem('groupId');//data strored in string
+    console.log("sart",this.groupId);
+    if(this.groupId == 'null')//string comparision => if group id is not assigned pull the user details only 
     {
       this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
         let count = 0;
@@ -158,8 +159,9 @@ export class ExpenseComponent implements OnInit {
       });
     }
     else{
-      this.authService.getUsersByGroupId(+groupId).subscribe(doc => {
+      this.authService.getUsersByGroupId(+this.groupId).subscribe(doc => {
         let count = 0;
+        // console.log('users',doc);
         doc.users.forEach(user => {
           this.membersList.push({
             index: count++,
@@ -212,7 +214,8 @@ export class ExpenseComponent implements OnInit {
       amount: item.value.amount,
       dateOfPurchase: item.value.dateOfPurchase,
       description: item.value.description,
-      forWhom : item.value.forWhom
+      forWhom : item.value.forWhom,
+      groupId : +this.groupId
     };
 
     this.expenseService.addExpenses(expense,this.currentUserEmail).subscribe(response => {

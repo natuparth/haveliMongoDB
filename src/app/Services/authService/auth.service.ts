@@ -65,7 +65,7 @@ export  class  AuthService {
    };
    console.log(authData);
    this.http.post<{token?: string, message: string, userName: string,
-                    userEmail: string, groupId: string, profilePicId: string, expiresIn?: number}>
+                    userEmail: string, groups: [Number], profilePicId: string, expiresIn?: number}>
                     (env.apiUrl + '/auth/login', authData).subscribe(res => {
      const token = res.token;
      this.token = token;
@@ -74,7 +74,7 @@ export  class  AuthService {
       this.userAuthenticated = true;
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
-     this.saveAuth(token, expiresAt.toLocaleString(), res.userName, res.groupId, res.profilePicId, res.userEmail);
+     this.saveAuth(token, expiresAt.toLocaleString(), res.userName, res.groups, res.profilePicId, res.userEmail);
 
      }
      localStorage.removeItem('serverDown');
@@ -83,13 +83,18 @@ export  class  AuthService {
    });
  }
 
-  private saveAuth(token: string, expiresAt: string,  userName:  string, groupId: string, profilePicId: string, userEmail: string) {
+  private saveAuth(token: string, expiresAt: string,  userName:  string, groups: [Number], profilePicId: string, userEmail: string) {
+    localStorage.clear();
     localStorage.setItem('userName', userName);
     localStorage.setItem('userEmail', userEmail);
-    localStorage.setItem('groupId', groupId);
+    localStorage.setItem('groups', groups.join(','));
     localStorage.setItem('profilePicId', profilePicId);
     localStorage.setItem('token', token);
     localStorage.setItem('expiresAt', expiresAt.toString());
+    if(groups.length>0){
+      localStorage.setItem('groupId', '100');
+    }
+    console.log(localStorage.getItem('groupId'))
   }
 
   logout() {
@@ -107,6 +112,10 @@ export  class  AuthService {
     return this.http.get<Users[]>(env.apiUrl + '/auth/getUsersByGroupId/' + groupId);
   }
 
+  // getUsersByGroupId(groupId: Number): Observable<Users> {
+  //   const params = new HttpParams().set('groupList', groupId.toString());
+  //   return this.http.get<{users: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupMembers' , {params: params});
+  // }
 
   searchGroup(query: Number): Observable<Users> {
     return this.http.get<Users[]>(env.apiUrl + '/auth/searchGroup/' + query);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, pipe } from 'rxjs';
-import { Expense } from '../../models/expense.model';
+import { Expense } from '../../../../backend/models/expense.js';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, debounceTime } from 'rxjs/operators';
 import { environment as env } from '../../../environments/environment';
@@ -25,7 +25,8 @@ export class ExpenseService {
       amount :  expense.amount,
       dateOfPurchase : expense.dateOfPurchase,
       description : expense.description,
-      forWhom : expense.forWhom
+      forWhom : expense.forWhom,
+      groupId : expense.groupId
     };
     return this.http.post<{message: string}>(env.apiUrl + '/expense/addExpenses/'+ email, expenseItem);
   }

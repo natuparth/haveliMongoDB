@@ -18,9 +18,25 @@ router.get("/getUsers", (req, res, next) => {
 });
 
 router.get("/getUsersByGroupId/:groupId", (req, res, next) => {
-  User.find({ groupId: req.params.groupId }).then((doc) => {
-    res.status(200).json({ users: doc })
-  })
+  // User.find({ groupId: req.params.groupId }).then((doc) => {
+  //   res.status(200).json({ users: doc })
+  // })
+  var groupArray = req.params.groupId.split(',');
+  for(var i=0;i<groupArray.length;i++){
+    groupArray[i] = parseInt(groupArray[i]);
+  }
+  console.log('gparray',groupArray);
+  User.aggregate([
+      {  $match: { 'groups': { $in : groupArray } }  },
+      {  $project : { email: 1, name:1} }
+    ],
+     (err, doc)=>{
+       if(err)
+         next(err);
+        else
+         res.status(200).json({users: doc, message: 'users fetched'});
+       }
+  )
 });
 
 router.get("/searchGroup/:groupId", (req, res, next) => {
@@ -58,7 +74,7 @@ router.get("/getGroupMembers", (req,res,next)=>{
   for(var i=0;i<groupArray.length;i++){
 
     groupArray[i] = parseInt(groupArray[i]);
-    console.log(groupArray[i]);
+    console.log('gparray',groupArray[i]);
   }
 
    User.aggregate([
@@ -165,7 +181,7 @@ router.post("/login", (req, res, next) => {
            message : 'user signed in successfully',
            userName : fetchedUser.name,
            userEmail : fetchedUser.email,
-           groupId : fetchedUser.groupId,
+           groups : fetchedUser.groups,
            profilePicId : fetchedUser.profilePicId,
            expiresIn: 3600
 

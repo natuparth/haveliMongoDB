@@ -17,20 +17,17 @@ export class HomeComponent implements OnInit {
   groups: Group[] = [];
   ngOnInit() {
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
-        const size = doc.items.length;
-        console.log(doc);
-        for (let i = 0; i < size; i++) {
-          this.groupMap.set(doc.items[i].groupId, { name: doc.items[i].groupName, users: []});
-        }
-        console.log(this.groupMap);
-        this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
+      const size = doc.items.length;
+      for (let i = 0; i < size; i++) {
+        this.groupMap.set(doc.items[i].groupId, { name: doc.items[i].groupName, users: []});
+      }
+      this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
         data.users.forEach((user) => {
-        const usersArray = this.groupMap.get(user.groups).users;
-        usersArray.push(user.name);
-        this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
-       });
-       });
-
+          const usersArray = this.groupMap.get(user.groups).users;
+          usersArray.push(user.name);
+          this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
+        });
+      });
     });
   }
 
@@ -48,5 +45,4 @@ export class HomeComponent implements OnInit {
 interface Group{
   name: string;
   users: Array<any>;
-
 }
