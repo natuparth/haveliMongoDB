@@ -81,12 +81,14 @@
     </div>
     <div *ngIf="addGroupFlag || joinGroupFlag" class="groupButtonContainer">
         <i class="fa fa-chevron-circle-left fa-2x" (click)="joinGroupFlag=false;addGroupFlag=false" aria-hidden="true"></i>
+        <h4 *ngIf="addGroupFlag">Group Name</h4>
         <div *ngIf="addGroupFlag" class="groupButtonContainer">
-            <input #groupName class="form-control" name="groupName" type="text">
+            <input #groupName class="form-control" name="groupName" type="text" placeholder="Fantastic 4">
             <button class="btn btn-secondary" (click) = "addGroup(groupName.value)" >Add Group</button>
         </div>
+        <h4 *ngIf="joinGroupFlag">Group Id</h4>
         <div *ngIf="joinGroupFlag" class="groupButtonContainer">
-            <input #groupId class="form-control" name="groupId" type="number">
+            <input #groupId class="form-control" name="groupId" type="number" placeholder="Id of the existing group">
             <button class="btn btn-secondary" (click) = "joinGroup(groupId.value)" >Join Group</button>
         </div>
     </div>

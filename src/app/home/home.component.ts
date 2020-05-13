@@ -32,10 +32,11 @@ export class HomeComponent implements OnInit {
   }
 
   addGroup(groupName: string){
+    console.log('add group',groupName);
     this.authService.addGroup(groupName);
   }
   joinGroup(groupId: Number){
-
+    console.log('Join group',groupId);
   }
   showAddForm(){
     this.addFormFlag = true;

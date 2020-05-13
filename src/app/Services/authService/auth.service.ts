@@ -92,8 +92,7 @@ export  class  AuthService {
     localStorage.setItem('token', token);
     localStorage.setItem('expiresAt', expiresAt.toString());
     if(groups.length>0){
-      localStorage.setItem('groupId', '100');
-      // localStorage.setItem('groupId', groups[0].toString());
+      localStorage.setItem('groupId', groups[0].toString());
     }
     console.log(localStorage.getItem('groupId'))
   }
