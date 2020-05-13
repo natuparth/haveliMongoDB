@@ -1,3 +1,5 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
 .homeContainer{
     width: 80%;
     /* background: #afec06; */
@@ -85,4 +87,30 @@
     .linkContainer{
         grid-template-columns: auto auto;
     }
+}
+.example-card {
+  max-width: 400px;
+  margin-left:20px ;
+}
+
+.user-row{
+  width: auto;
+  height: 30px;
+}
+
+.example-header-image {
+  width: 40px;
+  height: 40px;
+  /* background-size: cover; */
+  float: left;
+}
+.mat-app-background {
+  background-color: #fafafa;
+  color: rgba(0,0,0,0.87);
+}
+ul {
+  display: table-cell;
+}
+li {
+  list-style-type: none;
 }

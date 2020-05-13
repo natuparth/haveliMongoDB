@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment as env} from '../../../environments/environment';
@@ -19,6 +19,26 @@ export  class  AuthService {
 
   public userAuthListener: Subject<string>;
 
+  getGroupMembers(groupList: Array<Number>){
+    console.log(groupList);
+   const params = new HttpParams().set('groupList', groupList.join(','));
+    return this.http.get<{users: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupMembers' , {params: params});
+  }
+
+  getGroups(email: string): Observable<{items: Array<any>, message: string}> {
+    return this.http.get<{items: Array<any>, message: string}>(env.apiUrl + '/auth/getGroups/' + email);
+  }
+
+  addGroup(groupName: string){
+    console.log(groupName);
+    const groupObj = {
+      userEmail: localStorage.getItem('userEmail'),
+      groupName: groupName
+    }
+    return this.http.post(env.apiUrl + '/auth/addGroup', groupObj).subscribe(doc => {
+      console.log(doc);
+    });
+  }
   getNameObservable(){
     return this.nameSubject.asObservable();
   }
