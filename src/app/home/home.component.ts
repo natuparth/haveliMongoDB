@@ -34,11 +34,15 @@ export class HomeComponent implements OnInit {
   addGroup(groupName: string){
     this.authService.addGroup(groupName);
   }
-  joinGroup(){
+  joinGroup(groupId: Number){
 
   }
   showAddForm(){
     this.addFormFlag = true;
+  }
+  setFocusGroup(group:any){
+    // console.log(group.key)
+    localStorage.setItem('groupId', group.key.toString());
   }
 
 }

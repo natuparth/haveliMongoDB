@@ -49,6 +49,8 @@ export class ProfileLogoComponent implements OnInit , OnChanges{
     var nameList;
     if(this.userName.indexOf('.') >= 0){
       nameList = this.userName.split('.');
+    }else if(this.userName.indexOf('_')>=0){
+      nameList = this.userName.split('_');
     }
     else{
       nameList = this.userName.split(' ');
