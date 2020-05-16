@@ -7,8 +7,10 @@ const userSchema = mongoose.Schema({
   name : { type : String , required : true},
   profilePicId : { type : Number },
   groups : [Number],
-  expenses: [expense]
-
+  expenses: [expense],
+},
+{
+  versionKey: false // You should be aware of the outcome after set to false
 });
 
 userSchema.plugin(uniqueValidator);

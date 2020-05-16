@@ -35,6 +35,8 @@
     </div>
 </div> -->
 
+<!-- Parth Home component -->
+<!-- 
 <div style="padding: 30px;">
 <div *ngFor="let group of groupMap | keyvalue" style="float: left;">
 <mat-card class="example-card mat-card mat-focus-indicator">
@@ -68,4 +70,42 @@
         <label for="password">Group Name</label>
         <input #groupName class="form-control" name="groupName" type="text"><br>
         <button class="btn btn-secondary" (click) = "addGroup(groupName.value)" >Add Group</button> <br><br>
-  </div>
+  </div> -->
+
+  <!-- Parth home component end -->
+
+<div class="container-fluid" [ngStyle]="{'background': ''}">
+    <div *ngIf="!addGroupFlag && !joinGroupFlag" class="groupButtonContainer">
+        <button class="btn btn-secondary" (click)="addGroupFlag=true"> Add Group </button>
+        <button class="btn btn-secondary" (click)="joinGroupFlag=true"> Join Group </button>
+    </div>
+    <div *ngIf="addGroupFlag || joinGroupFlag" class="groupButtonContainer">
+        <i class="fa fa-chevron-circle-left fa-2x" (click)="joinGroupFlag=false;addGroupFlag=false" aria-hidden="true"></i>
+        <h4 *ngIf="addGroupFlag">Group Name</h4>
+        <div *ngIf="addGroupFlag" class="groupButtonContainer">
+            <input #groupName class="form-control" name="groupName" type="text" placeholder="Fantastic 4">
+            <button class="btn btn-secondary" (click) = "addGroup(groupName.value)" >Add Group</button>
+        </div>
+        <h4 *ngIf="joinGroupFlag">Group Id</h4>
+        <div *ngIf="joinGroupFlag" class="groupButtonContainer">
+            <input #groupId class="form-control" name="groupId" type="number" placeholder="Id of the existing group">
+            <button class="btn btn-secondary" (click) = "joinGroup(groupId.value)" >Join Group</button>
+        </div>
+    </div>
+    <div class="allGroupsContainer">
+        <div class="groupDescription" *ngFor="let group of groupMap | keyvalue" (click)="setFocusGroup(group)">
+            <div class="imgBox">
+                <app-profile-logo [userName]="group.value.name"></app-profile-logo>
+                <!-- <img src="../../assets/parth.jpg"> -->
+            </div>
+            <div class="content">
+                <h2>{{group.value.name|titlecase}}</h2>
+                <ul>
+                    <li *ngFor="let user of group.value.users">
+                        <h4>{{user|titlecase}}</h4>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

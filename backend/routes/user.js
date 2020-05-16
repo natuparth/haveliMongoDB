@@ -18,9 +18,25 @@ router.get("/getUsers", (req, res, next) => {
 });
 
 router.get("/getUsersByGroupId/:groupId", (req, res, next) => {
-  User.find({ groupId: req.params.groupId }).then((doc) => {
-    res.status(200).json({ users: doc })
-  })
+  // User.find({ groupId: req.params.groupId }).then((doc) => {
+  //   res.status(200).json({ users: doc })
+  // })
+  var groupArray = req.params.groupId.split(',');
+  for(var i=0;i<groupArray.length;i++){
+    groupArray[i] = parseInt(groupArray[i]);
+  }
+  console.log('gparray',groupArray);
+  User.aggregate([
+      {  $match: { 'groups': { $in : groupArray } }  },
+      {  $project : { email: 1, name:1} }
+    ],
+     (err, doc)=>{
+       if(err)
+         next(err);
+        else
+         res.status(200).json({users: doc, message: 'users fetched'});
+       }
+  )
 });
 
 router.get("/searchGroup/:groupId", (req, res, next) => {
@@ -58,7 +74,7 @@ router.get("/getGroupMembers", (req,res,next)=>{
   for(var i=0;i<groupArray.length;i++){
 
     groupArray[i] = parseInt(groupArray[i]);
-    console.log(groupArray[i]);
+    console.log('gparray',groupArray[i]);
   }
 
    User.aggregate([
@@ -165,7 +181,7 @@ router.post("/login", (req, res, next) => {
            message : 'user signed in successfully',
            userName : fetchedUser.name,
            userEmail : fetchedUser.email,
-           groupId : fetchedUser.groupId,
+           groups : fetchedUser.groups,
            profilePicId : fetchedUser.profilePicId,
            expiresIn: 3600
 
@@ -261,7 +277,15 @@ router.post("/sendOtp", (req, res,next) => {
   // console.log("request came",req.body);
   let user = req.body;
   sendOtpByMail(user, info => {
-    res.send(info);
+    // res.send(info);
+    return res.json({
+      message: 'Mail sent successfully'
+    });
+  }).catch((err)=>{
+    // console.log('err',err)
+    return res.json({
+      message: 'some error occured!! please try again'
+    });
   });
 });
 
@@ -269,7 +293,16 @@ router.post("/sendMessage", (req, res,next) => {
   // console.log("request came",req.body);
   let user = req.body;
   sendMessageByMail(user, info => {
-    res.send(info);
+    // console.log(info)
+    // res.send(info);
+    return res.json({
+      message: 'Mail sent successfully'
+    });
+  }).catch((err)=>{
+    // console.log('err',err)
+    return res.json({
+      message: 'some error occured!! please try again'
+    });
   });
 });
 
@@ -309,9 +342,9 @@ async function sendMessageByMail(user,callback) {
       pass: 'rahultest@135'
     }
   });
-
+  // console.log(user)
   let mailOptions = {
-    from: '"HMS Team"<example.gimail.com>',
+    from: '"HMS Team"<example.gmail.com>',
     to: user.email,
     subject: user.subject,
     html: `<h3>${user.message}</h3><br>

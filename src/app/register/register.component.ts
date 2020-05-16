@@ -50,9 +50,12 @@ export class RegisterComponent implements OnInit {
       name:this.registerUserForm.value.name
     }
     this.authService.sendOtp(userdata).subscribe((doc)=>{
-      if(doc.accepted.length > 0 && !this.resendOtpFlag){
+      if(doc.message=='Mail sent successfully'){
         this.registerFormToggle = !this.registerFormToggle;
         this.resendOtpFlag = true;
+      }
+      else{
+        alert("Coud not send OTP!!!! \nPlease check the email and try again.")
       }
       this.loadingFlag = false;
     });

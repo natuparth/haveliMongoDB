@@ -18,13 +18,15 @@ router.post("/addExpenses/:email",checkAuth, (req,res,next)=>{
     amount :  req.body.amount,
     dateOfPurchase : req.body.dateOfPurchase,
     description : req.body.description,
-    forWhom : req.body.forWhom
+    forWhom : req.body.forWhom,
+    groupId : req.body.groupId
   });
   User.findOne({email : req.params.email},(err,doc)=>{
     doc.expenses.push(expense);
     doc.save().then(()=>{
       res.send({message:'successful'});
     }).catch((err)=>{
+      console.log(err)
       res.send({message:'error occurred: '+err})
     });
   });

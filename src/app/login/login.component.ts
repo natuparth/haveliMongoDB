@@ -62,19 +62,33 @@ export class LoginComponent implements OnInit {
 
   sendOtpByMail(){
     this.loadingFlag = true;
-    this.currentOtp = this.generateOtp();
-    // console.log('send OTP called',this.currentOtp);
-    const userdata = {
-      email:this.otpCheckForm.value.email,
-      subject: 'Restore your account',
-      message:  'Your OTP to restore '+this.otpCheckForm.value.email+' is '+this.currentOtp
-    }
-    this.authService.sendMessageByMail(userdata).subscribe((doc)=>{
-      if(doc.accepted.length > 0 && !this.resendOtpFlag){
-        this.resendOtpFlag = true;
-      }
-      this.loadingFlag = false;
-    });
+
+    if(this.otpCheckForm.value.email !== ''){
+      this.authService.checkEmailExists(this.otpCheckForm.value.email).subscribe(value => {
+        if(value === true){
+          this.currentOtp = this.generateOtp();
+          const userdata = {
+            email:this.otpCheckForm.value.email,
+            subject: 'Restore your account',
+            message:  'Your OTP to restore '+this.otpCheckForm.value.email+' is '+this.currentOtp
+          }
+          this.authService.sendMessageByMail(userdata).subscribe((doc)=>{
+            // console.log(doc.message);
+            if(doc.message=='Mail sent successfully'){
+              this.resendOtpFlag = true;
+            }
+            else{
+              alert("Coud not send OTP!!!! \nPlease check the email and try again.")
+            }
+            this.loadingFlag = false;
+          });
+        }
+        else{
+          this.otpCheckForm.controls['email'].setErrors({'alreadyDoesNotExists': true});
+          this.loadingFlag = false;
+        }
+      });
+    } 
   }
 
   generateOtp(){
@@ -121,6 +135,8 @@ export class LoginComponent implements OnInit {
         if(response.message === 'successfully updated'){
           alert('Password successfully updated');
           this.forgotPasswordFlag=false;
+          this.resendOtpFlag = false;
+          this.updatePasswordFlag = false;
         } else{
           alert('some error occurred while adding the expense. Error: ' +
           response.error)
