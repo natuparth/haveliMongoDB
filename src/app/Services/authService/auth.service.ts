@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment as env} from '../../../environments/environment';
@@ -19,6 +19,26 @@ export  class  AuthService {
 
   public userAuthListener: Subject<string>;
 
+  getGroupMembers(groupList: Array<Number>){
+    console.log(groupList);
+   const params = new HttpParams().set('groupList', groupList.join(','));
+    return this.http.get<{users: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupMembers' , {params: params});
+  }
+
+  getGroups(email: string): Observable<{items: Array<any>, message: string}> {
+    return this.http.get<{items: Array<any>, message: string}>(env.apiUrl + '/auth/getGroups/' + email);
+  }
+
+  addGroup(groupName: string){
+    console.log(groupName);
+    const groupObj = {
+      userEmail: localStorage.getItem('userEmail'),
+      groupName: groupName
+    }
+    return this.http.post(env.apiUrl + '/auth/addGroup', groupObj).subscribe(doc => {
+      console.log(doc);
+    });
+  }
   getNameObservable(){
     return this.nameSubject.asObservable();
   }
@@ -45,7 +65,7 @@ export  class  AuthService {
    };
    console.log(authData);
    this.http.post<{token?: string, message: string, userName: string,
-                    userEmail: string, groupId: string, profilePicId: string, expiresIn?: number}>
+                    userEmail: string, groups: [Number], profilePicId: string, expiresIn?: number}>
                     (env.apiUrl + '/auth/login', authData).subscribe(res => {
      const token = res.token;
      this.token = token;
@@ -54,7 +74,7 @@ export  class  AuthService {
       this.userAuthenticated = true;
      const nowDate = new Date();
      const expiresAt = new Date(nowDate.getTime() + res.expiresIn * 1000);
-     this.saveAuth(token, expiresAt.toLocaleString(), res.userName, res.groupId, res.profilePicId, res.userEmail);
+     this.saveAuth(token, expiresAt.toLocaleString(), res.userName, res.groups, res.profilePicId, res.userEmail);
 
      }
      localStorage.removeItem('serverDown');
@@ -63,13 +83,18 @@ export  class  AuthService {
    });
  }
 
-  private saveAuth(token: string, expiresAt: string,  userName:  string, groupId: string, profilePicId: string, userEmail: string) {
+  private saveAuth(token: string, expiresAt: string,  userName:  string, groups: [Number], profilePicId: string, userEmail: string) {
+    localStorage.clear();
     localStorage.setItem('userName', userName);
     localStorage.setItem('userEmail', userEmail);
-    localStorage.setItem('groupId', groupId);
+    localStorage.setItem('groups', groups.join(','));
     localStorage.setItem('profilePicId', profilePicId);
     localStorage.setItem('token', token);
     localStorage.setItem('expiresAt', expiresAt.toString());
+    if(groups.length>0){
+      localStorage.setItem('groupId', groups[0].toString());
+    }
+    console.log(localStorage.getItem('groupId'))
   }
 
   logout() {
@@ -87,6 +112,10 @@ export  class  AuthService {
     return this.http.get<Users[]>(env.apiUrl + '/auth/getUsersByGroupId/' + groupId);
   }
 
+  // getUsersByGroupId(groupId: Number): Observable<Users> {
+  //   const params = new HttpParams().set('groupList', groupId.toString());
+  //   return this.http.get<{users: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupMembers' , {params: params});
+  // }
 
   searchGroup(query: Number): Observable<Users> {
     return this.http.get<Users[]>(env.apiUrl + '/auth/searchGroup/' + query);
@@ -118,6 +147,21 @@ public updateProfile(profile : any, email : string): Observable<any>{
   return this.http.put<{message: string}>(env.apiUrl + '/auth/updateProfileWithoutpassword/'+ email + '/' , profileData);
 }
 
+public updatePassword(user: any): Observable<any>{
+  const userData :  Users = {
+    email :  user.email,
+    password : user.password
+  };
+  return this.http.put<{message: string}>(env.apiUrl + '/auth/updatePassword', userData);
+}
+
+public sendOtp(userData:any):Observable<any>{
+  return this.http.post<any>(env.apiUrl + '/auth/sendOtp',userData);
+}
+
+public sendMessageByMail(userData:any):Observable<any>{
+  return this.http.post<any>(env.apiUrl + '/auth/sendMessage',userData);
+}
 
 }
 

@@ -5,7 +5,8 @@ const expenseSchema = mongoose.Schema({
   amount :{type: Number, required: true},
   dateOfPurchase : {type : Date, required: true},
   description : {type : String},
-  forWhom : {type:[]}
+  forWhom : {type:[]},
+  groupId : {type:Number, required: true}
 });
 
 module.exports = mongoose.model("expense", expenseSchema);

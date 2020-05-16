@@ -6,9 +6,11 @@ const userSchema = mongoose.Schema({
   password : { type : String , required : true},
   name : { type : String , required : true},
   profilePicId : { type : Number },
-  groupId : {type : Number },
-  expenses: [expense]
-
+  groups : [Number],
+  expenses: [expense],
+},
+{
+  versionKey: false // You should be aware of the outcome after set to false
 });
 
 userSchema.plugin(uniqueValidator);
