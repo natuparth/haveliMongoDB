@@ -76,8 +76,7 @@ router.post("/postItem/:groupId",(req,res,next)=>{
               console.log('deleted object'+ doc);
               res.send({message: 'item deleted successfully', name: req.query.name, error: ''})
               if(err)
-               res.send({message: "couldn
-               't delete item", name: req.query.name, error: err})
+               res.send({message: "couldn't delete item", name: req.query.name, error: err})
         }).catch((e)=>{
           res.json({message: 'some error occured '})
         });
