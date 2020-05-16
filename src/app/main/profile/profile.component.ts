@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit {
         this.userData.value.name = user.name;
         this.userData.value.email = user.email;
         this.userData.value.password = user.password;
-        this.userData.value.groupId = user.groupId;
+        this.userData.value.groupId = localStorage.getItem('groupId');
         this.userData.value.profilePicId = user.profilePicId;
       });
       console.log(this.userData.value);
