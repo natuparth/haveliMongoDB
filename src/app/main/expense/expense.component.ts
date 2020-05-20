@@ -233,7 +233,7 @@ export class ExpenseComponent implements OnInit {
       this.onCloseHandled('addModal')
       if (response.message === 'successful') {
         alert('Expense added successfully');
-        if(this.crudService.getItemListKey(this.itemList)!="")
+        if(this.itemList.length === undefined)
               this.itemList=[];
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);

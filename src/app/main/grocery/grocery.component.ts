@@ -66,7 +66,8 @@ export class GroceryComponent implements OnInit {
         this.itemsList = items;
         if(this.itemsList.length==0)
         location.reload();
-        if(this.crudService.getItemListKey(this.itemsList)!=""){
+        console.log(this.itemsList.length);
+        if(this.itemsList.length === undefined){
         this.errMessage=this.crudService.getItemListKey(this.itemsList);
         this.errFlag=true;
       }

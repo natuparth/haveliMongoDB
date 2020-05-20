@@ -30,7 +30,7 @@ export class ShoppingListComponent implements OnInit {
   getShoppingListUpdated(noOfDays: number = 5) {
     this.dropdownButton = 'less than '+ noOfDays.toString() +' days';
     this.itemsList = [];
-    if(this.crudService.getItemListKey(this.items)!=""){
+    if(this.items.length === undefined){
       this.errMessage=this.crudService.getItemListKey(this.items);
       this.errFlag=true;
     }
