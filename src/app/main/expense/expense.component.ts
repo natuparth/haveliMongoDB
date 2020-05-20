@@ -124,6 +124,7 @@ export class ExpenseComponent implements OnInit {
     this.expenseGraphToggle = false;
     this.welcomeFlag = true;
     this.itemList = [];
+    this.errFlag=false;
     this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
       if(this.crudService.getItemListKey(this.itemList)!=""){
@@ -134,7 +135,7 @@ export class ExpenseComponent implements OnInit {
       this.graphDataColumns = ['purpose','amount'];
       this.expenseGraphToggle = this.itemList.length > 0;
       this.expenseDetailsToggle = false;
-      this.errFlag=false;
+      
     }
       this.welcomeFlag = false;
     });
@@ -153,7 +154,6 @@ export class ExpenseComponent implements OnInit {
     // console.log("sart",groupId);
     if(groupId == "undefined")//string comparision => if group id is not assigned pull the user details only 
     {
-      console.log(groupId)
       this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
@@ -170,7 +170,7 @@ export class ExpenseComponent implements OnInit {
       });
     }
     else{
-      this.authService.getUsersByGroupId(+this.groupId).subscribe(doc => {
+      this.authService.getUsersByGroupId(Number(groupId)).subscribe(doc => {
         let count = 0;
         // console.log('users',doc);
         doc.users.forEach(user => {

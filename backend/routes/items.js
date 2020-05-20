@@ -34,7 +34,7 @@ router.post("/postItem/:groupId",(req,res,next)=>{
         res.send({message:'items not available!! please add'})
       }).catch((err) =>{
         if(err.message.includes("groupId"))
-        res.send({message:'group Id not found'})
+        res.send({message:'group Id not found'}) 
         else
          res.send({message:'some error occured'+err})
       });

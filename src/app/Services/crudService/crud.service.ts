@@ -114,11 +114,11 @@ export class CrudService {
 
 
  getItemListKey(itemsList: Array<any>):string{
-    
   let keys = Object.keys(itemsList)
-  let values = keys.map(k => itemsList[k])
+  //let values = keys.map(k => itemsList[k])
+  //console.log(itemsList[keys[0]]);
   if(keys[0]=="message")
-    return values[0];
+    return itemsList[keys[0]];
   else
    return "";
  }
