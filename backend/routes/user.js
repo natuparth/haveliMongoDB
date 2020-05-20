@@ -5,7 +5,35 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Group = require('../models/group');
 const globalData = require('../models/globalData');
+const Request = require('../models/groupAddRequest');
 const nodemailer = require("nodemailer");
+
+
+router.post("/addRequest", (req,res,next) => {
+ const requestBody = {
+   for: req.body.for,
+   groupId: req.body.groupId,
+   Status: 'Pending'
+ }
+
+  Request.insertMany(requestBody, (err, doc) => {
+    if(!err){
+      res.json({doc: doc, message: 'request successful'})
+    }
+    else
+     {
+       res.json({doc: null, message: 'request failed'})
+     }
+  })
+
+})
+
+
+router.get("/getGroupsByName/:name", (req,res,next)=>{
+Group.find({groupName: { $regex: new RegExp(req.params.name) }}).then(doc=>{
+    res.send({groups: doc})
+});
+})
 
 
 router.get("/getUsers", (req, res, next) => {
@@ -18,14 +46,10 @@ router.get("/getUsers", (req, res, next) => {
 });
 
 router.get("/getUsersByGroupId/:groupId", (req, res, next) => {
-  // User.find({ groupId: req.params.groupId }).then((doc) => {
-  //   res.status(200).json({ users: doc })
-  // })
   var groupArray = req.params.groupId.split(',');
   for(var i=0;i<groupArray.length;i++){
     groupArray[i] = parseInt(groupArray[i]);
   }
-  console.log('gparray',groupArray);
   User.aggregate([
       {  $match: { 'groups': { $in : groupArray } }  },
       {  $project : { email: 1, name:1} }
@@ -60,21 +84,12 @@ router.get("/checkEmailExists/:email", (req, res, next) => {
   })
 });
 
-/*
-router.get("/searchMaxGroupId", (req, res, next) => {
-  Group.find().sort({ groupId: -1 }).limit(1).
-  then((doc) => {
-    res.status(200).json({ group: doc[0].groupId })
-  })
-});
-*/
-
 router.get("/getGroupMembers", (req,res,next)=>{
   var groupArray = req.query.groupList.split(',');
   for(var i=0;i<groupArray.length;i++){
 
     groupArray[i] = parseInt(groupArray[i]);
-    console.log('gparray',groupArray[i]);
+
   }
 
    User.aggregate([
@@ -101,7 +116,6 @@ router.get("/getGroupMembers", (req,res,next)=>{
 
 router.get("/getGroups/:email", (req,res,next)=>{
   User.findOne({email: req.params.email}).then(doc => {
-    console.log(doc.groups);
      Group.find({groupId: { $in : doc.groups }},{ groupId: 1, groupName: 1},(err,doc)=>{
        res.status(200).json({items:doc, message: "groups fetched for a user"});
      })

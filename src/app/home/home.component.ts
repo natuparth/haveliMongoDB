@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../Services/authService/auth.service';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-home',
@@ -11,11 +13,21 @@ import { AuthService } from '../Services/authService/auth.service';
 
 
 export class HomeComponent implements OnInit {
+  display = 'none';
   addFormFlag = false;
   groupMap = new Map<Number, Group>();
+  joinGroupDisplay = 'none';
+  requestedUser: String;
   constructor(private router: Router, private authService: AuthService) { }
   groups: Group[] = [];
+  groupUsersList: String[] = [];
+  searchGroupForm = new FormGroup({
+    search: new FormControl('')
+  })
+  groupList: Group[] = [];
+  expandedIndex = -1 ;
   ngOnInit() {
+    this.registerSearchGroup();
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
       const size = doc.items.length;
       for (let i = 0; i < size; i++) {
@@ -35,8 +47,9 @@ export class HomeComponent implements OnInit {
     console.log('add group',groupName);
     this.authService.addGroup(groupName);
   }
-  joinGroup(groupId: Number){
-    console.log('Join group',groupId);
+  joinGroup(){
+  this.display = 'block';
+  this.joinGroupDisplay = 'inline-block';
   }
   showAddForm(){
     this.addFormFlag = true;
@@ -45,7 +58,49 @@ export class HomeComponent implements OnInit {
     // console.log(group.key)
     localStorage.setItem('groupId', group.key.toString());
   }
+  registerSearchGroup(){
+    this.searchGroupForm.controls.search.valueChanges.pipe(
+      debounceTime(1000),
+      distinctUntilChanged(),
+     map(value => {
+       return this.authService.getGroupsByName(value);
+     }
+    )
+    ).subscribe((groups) => {
+      this.groupList = [];
+     groups.subscribe(value => {
+      console.log(value.groups);
+      this.groupList = value.groups;
+     })
+    })
 
+
+  }
+
+  fetchUsers(groupId: number){
+    this.expandedIndex = groupId === this.expandedIndex ? -1 : groupId;
+    this.groupUsersList = [];
+    this.authService.getUsersByGroupId(groupId).subscribe(value => {
+      this.groupUsersList = value.users;
+      console.log(value);
+    })
+  }
+
+  onSelectionChange(email: String){
+    this.requestedUser = email;
+  }
+
+  sendRequest(groupName: String){
+    const reqBody = {
+      for: localStorage.getItem('userEmail'),
+      groupId: this.expandedIndex
+    };
+   this.authService.createRequest(reqBody).subscribe(val => {
+     if(val.message === "request successful"){
+       alert('you have successfully requested to be a part of the group' + groupName );
+     }
+   })
+  }
 }
 interface Group{
   name: string;

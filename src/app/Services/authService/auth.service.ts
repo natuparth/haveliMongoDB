@@ -19,6 +19,11 @@ export  class  AuthService {
 
   public userAuthListener: Subject<string>;
 
+  getGroupsByName(name: String){
+    return this.http.get<{groups: any}>(env.apiUrl + '/auth/getGroupsByName/' + name);
+
+  }
+
   getGroupMembers(groupList: Array<Number>){
     console.log(groupList);
    const params = new HttpParams().set('groupList', groupList.join(','));
@@ -163,5 +168,8 @@ public sendMessageByMail(userData:any):Observable<any>{
   return this.http.post<any>(env.apiUrl + '/auth/sendMessage',userData);
 }
 
+createRequest(reqBody: any){
+   return this.http.post<{doc: Array<any>, message: String}>(env.apiUrl + '/auth/addRequest', reqBody);
+}
 }
 

@@ -36,7 +36,7 @@
 </div> -->
 
 <!-- Parth Home component -->
-<!-- 
+<!--
 <div style="padding: 30px;">
 <div *ngFor="let group of groupMap | keyvalue" style="float: left;">
 <mat-card class="example-card mat-card mat-focus-indicator">
@@ -72,40 +72,123 @@
         <button class="btn btn-secondary" (click) = "addGroup(groupName.value)" >Add Group</button> <br><br>
   </div> -->
 
-  <!-- Parth home component end -->
+<!-- Parth home component end -->
 
-<div class="container-fluid" [ngStyle]="{'background': ''}">
-    <div *ngIf="!addGroupFlag && !joinGroupFlag" class="groupButtonContainer">
-        <button class="btn btn-secondary" (click)="addGroupFlag=true"> Add Group </button>
-        <button class="btn btn-secondary" (click)="joinGroupFlag=true"> Join Group </button>
+<div class="container-fluid" [ngStyle]="{ background: '' }" style="text-align: center;">
+  <div *ngIf="!addGroupFlag && !joinGroupFlag" class="groupButtonContainer">
+    <button class="btn btn-secondary" (click)="addGroupFlag = true">
+      Add Group
+    </button>
+    <button class="btn btn-secondary" (click)="joinGroup()">
+      Join Group
+    </button>
+  </div>
+  <div *ngIf="addGroupFlag || joinGroupFlag" class="groupButtonContainer">
+    <i
+      class="fa fa-chevron-circle-left fa-2x"
+      (click)="joinGroupFlag = false; addGroupFlag = false"
+      aria-hidden="true"
+    ></i>
+    <h4 *ngIf="addGroupFlag">Group Name</h4>
+    <div *ngIf="addGroupFlag" class="groupButtonContainer">
+      <input
+        #groupName
+        class="form-control"
+        name="groupName"
+        type="text"
+        placeholder="Fantastic 4"
+      />
+      <button class="btn btn-secondary" (click)="addGroup(groupName.value)">
+        Add Group
+      </button>
     </div>
-    <div *ngIf="addGroupFlag || joinGroupFlag" class="groupButtonContainer">
-        <i class="fa fa-chevron-circle-left fa-2x" (click)="joinGroupFlag=false;addGroupFlag=false" aria-hidden="true"></i>
-        <h4 *ngIf="addGroupFlag">Group Name</h4>
-        <div *ngIf="addGroupFlag" class="groupButtonContainer">
-            <input #groupName class="form-control" name="groupName" type="text" placeholder="Fantastic 4">
-            <button class="btn btn-secondary" (click) = "addGroup(groupName.value)" >Add Group</button>
-        </div>
-        <h4 *ngIf="joinGroupFlag">Group Id</h4>
-        <div *ngIf="joinGroupFlag" class="groupButtonContainer">
-            <input #groupId class="form-control" name="groupId" type="number" placeholder="Id of the existing group">
-            <button class="btn btn-secondary" (click) = "joinGroup(groupId.value)" >Join Group</button>
-        </div>
+  </div>
+  <div class="allGroupsContainer">
+    <div
+      class="groupDescription"
+      *ngFor="let group of groupMap | keyvalue"
+      (click)="setFocusGroup(group)"
+    >
+      <div class="imgBox">
+        <app-profile-logo [userName]="group.value.name"></app-profile-logo>
+        <!-- <img src="../../assets/parth.jpg"> -->
+      </div>
+      <div class="content">
+        <h2>{{ group.value.name | titlecase }}</h2>
+        <ul>
+          <li *ngFor="let user of group.value.users">
+            <h4>{{ user | titlecase }}</h4>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="allGroupsContainer">
-        <div class="groupDescription" *ngFor="let group of groupMap | keyvalue" (click)="setFocusGroup(group)">
-            <div class="imgBox">
-                <app-profile-logo [userName]="group.value.name"></app-profile-logo>
-                <!-- <img src="../../assets/parth.jpg"> -->
-            </div>
-            <div class="content">
-                <h2>{{group.value.name|titlecase}}</h2>
-                <ul>
-                    <li *ngFor="let user of group.value.users">
-                        <h4>{{user|titlecase}}</h4>
-                    </li>
+  </div>
+
+
+
+ <!-- Join Group Modal Box -->
+<div>
+ <div class="backdrop" [ngStyle]="{ display: display }"></div>
+  <div class="modal" [ngStyle]="{ display: display }" role="dialog" tabindex="-1" style="margin: auto">
+    <div class="modal-dialog" role="document" style="margin: 0px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Join Group</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <div>
+            <form [formGroup]="searchGroupForm">
+              <input
+                #groupName
+                class="form-control"
+                formControlName="search"
+                name="groupName"
+                type="text"
+                placeholder="name of the existing group"
+              />
+            </form>
+        </div>
+        <hr>
+        <div *ngIf="groupList">
+          <ul *ngFor="let group of groupList" class="list-group">
+            <button class="btn btn-primary" (click)="fetchUsers(group.groupId)" type="button">
+
+              {{ group.groupName }}
+
+            </button>
+
+              <div class="card card-body" *ngIf = "expandedIndex === group.groupId">
+                <ul *ngFor="let user of groupUsersList; let $index = index" class="list-group">
+
+                  <li class="list-group-item" >
+                   <div style="float: left; ">
+                    <!-- <input style="width:fit-content"
+                    type="radio" name="radiobutton" [value]="user.email"
+                    (change)="onSelectionChange(user.email)"> -->
+                    {{user.name}}
+                   </div>
+                  </li>
+
                 </ul>
-            </div>
+                <button class="btn btn-primary" (click) = "sendRequest(group.groupName)" >Send Request</button>
+
+              </div>
+
+          </ul>
         </div>
+        <div *ngIf="groupInfo">
+        </div>
+      </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" (click)= "joinGroupFlag = false" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>
+</div>
+
