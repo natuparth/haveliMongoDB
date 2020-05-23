@@ -28,8 +28,16 @@ router.post("/postItem/:groupId",(req,res,next)=>{
 
     router.get('/getItems/:groupId',checkAuth,(req,res,next)=>{
       group.find({groupId : req.params.groupId}).then((documents)=>{
+        if(documents[0].items[0]!=null)
         res.send(documents[0].items);
-      })
+        else
+        res.send({message:'items not available!! please add'})
+      }).catch((err) =>{
+        if(err.message.includes("groupId"))
+        res.send({message:'group Id not found'}) 
+        else
+         res.send({message:'some error occured'+err})
+      });
     });
 
     router.get('/getItem/:name/:groupId',checkAuth,(req,res,next)=>{
@@ -39,21 +47,26 @@ router.post("/postItem/:groupId",(req,res,next)=>{
           return x.name === req.params.name
         }
         ));
-      })
+      }).catch((e)=>{
+        res.json({message: 'some error occured '})
+      });
     });
 
     router.get('/searchItems/:name/:groupId',checkAuth,(req,res,next)=>{
       if(req.params.name == 'all'){
-        //console.log('inside all part');
         group.findOne({groupId: req.params.groupId}).then((result)=>{
           console.log(result.items);
           res.send(result.items);
-        })
+        }).catch((e)=>{
+          res.json({message: 'some error occured '})
+        });
       }
       else{
       Item.find({name:{$regex: new RegExp(req.params.name)}}).then((result)=>{
         res.send(result);
-      })
+      }).catch((e)=>{
+        res.json({message: 'some error occured '})
+      });
     }
     });
 
@@ -63,7 +76,9 @@ router.post("/postItem/:groupId",(req,res,next)=>{
               console.log('deleted object'+ doc);
               res.send({message: 'item deleted successfully', name: req.query.name, error: ''})
               if(err)
-               res.send({message: 'couldn\'t delete item', name: req.query.name, error: err})
+               res.send({message: "couldn't delete item", name: req.query.name, error: err})
+        }).catch((e)=>{
+          res.json({message: 'some error occured '})
         });
     });
 
@@ -81,7 +96,9 @@ router.post("/postItem/:groupId",(req,res,next)=>{
        }} ,{useFindAndModify: false},function(err,doc) {
         if (err) return res.status(500).send({ error: err , message: 'some Error'});
         return res.send({error: 'no error', message : 'successfully updated the item'});
-      })
+      }).catch((e)=>{
+        res.json({message: 'some error occured '})
+      });
     });
 
 module.exports = router;

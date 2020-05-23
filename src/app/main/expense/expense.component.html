@@ -73,7 +73,9 @@
                         <div class="col">&nbsp;</div>
                     </div>
                     <div class="row">
-                        <div class="col-md-10 offset-1 table-responsive" >
+                        <div *ngIf='errFlag' class="text-danger col text-center"><br><br>{{errMessage}}<br><br></div>
+                    
+                        <div *ngIf='!errFlag' class="col-md-10 offset-1 table-responsive" >
                             <table class="table table-dark table-hover table-sm">
                                 <thead>
                                     <tr>

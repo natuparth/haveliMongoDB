@@ -9,28 +9,30 @@
               *ngFor='let i of [0,1,2,3,4]'>
   </div>
 </div>
+<br>
+<div class="dropdown" style="text-align: center;">
+  <button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{dropdownButton}}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" (click)="getShoppingListUpdated(5)">5</a>
+    <a class="dropdown-item" (click)="getShoppingListUpdated(10)">10</a>
+    <a class="dropdown-item" (click)="getShoppingListUpdated(20)">20</a>
+  </div>
+</div>
+<br>
 
-<table class="table table-dark">
+<div *ngIf='errFlag' class="text-danger text-center"><br><br>{{errMessage}}<br><br></div>
+<table *ngIf='!errFlag' class="table table-dark">
   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
-      <th scope="col"><div class="dropdown" style="text-align: center;">
-        <button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {{dropdownButton}}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" (click)="getShoppingListUpdated(5)">5</a>
-          <a class="dropdown-item" (click)="getShoppingListUpdated(10)">10</a>
-          <a class="dropdown-item" (click)="getShoppingListUpdated(20)">20</a>
-        </div>
-      </div></th>
-
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of itemsList; let i = index">
-      <th scope="row">{{i}}</th>
+      <th scope="row">{{i+1}}</th>
       <td>{{item.name}}</td>
 
 
