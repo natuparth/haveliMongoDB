@@ -10,10 +10,12 @@ const nodemailer = require("nodemailer");
 
 router.get("/getUsers", (req, res, next) => {
   User.find().then((doc) => {
-    res.status(200).json({
+    res.json({
       users: doc
     })
-  });
+  }).catch((err)=>{
+    return res.json({message: 'some error occured!! please try again'});
+});
 
 });
 
@@ -36,36 +38,46 @@ router.get("/getUsersByGroupId/:groupId", (req, res, next) => {
         else
          res.status(200).json({users: doc, message: 'users fetched'});
        }
-  )
+  ).catch(err => {
+    res.status(500).json({users: null, message: 'some error occurred . Error:'+err})
+  })
 });
 
 router.get("/searchGroup/:groupId", (req, res, next) => {
   Group.find({ groupId: req.params.groupId }).then((doc) => {
-    res.status(200).json({ numberOfUsers: doc.length })
-  })
+    res.json({ numberOfUsers: doc.length })
+  }).catch((err)=>{
+    return res.json({message: 'some error occured!! please try again'});
+});
 });
 
 router.get("/getUserDetails/:email", (req, res, next) => {
   User.find({ email: req.params.email }).then((doc) => {
-    res.status(200).json({ users: doc })
-  })
+    res.json({ users: doc })
+  }).catch((err)=>{
+    return res.json({message: 'some error occured!! please try again'});
+});
 });
 
 router.get("/checkEmailExists/:email", (req, res, next) => {
   User.find({ email: req.params.email }).then((doc) => {
     if(doc.length >0)
-    res.status(200).json(true)
+    res.json(true)
     else
     res.json(false);
-  })
+  }).catch((err)=>{
+    return res.json({message: 'some error occured!! please try again'});
+});
 });
 
 /*
 router.get("/searchMaxGroupId", (req, res, next) => {
   Group.find().sort({ groupId: -1 }).limit(1).
   then((doc) => {
-    res.status(200).json({ group: doc[0].groupId })
-  })
+    res.json({ group: doc[0].groupId })
+  }).catch((err)=>{
+    return res.json({message: 'some error occured!! please try again'});
+});
 });
 */
 
@@ -195,9 +207,7 @@ router.post("/login", (req, res, next) => {
      }
    });
   }).catch((err)=>{
-        return res.json({
-       message: 'some error occured!! please try again'
-     });
+        return res.json({message: 'some error occured!! please try again'});
   });
 
 })
@@ -219,9 +229,11 @@ router.put("/updateProfile/:email",(req,res,next)=>{
                               'profilePicId' : profile.profilePicId}},
                   {useFindAndModify : false},
                   function(err,doc){
-                    if(err) return  res.status(500).send({error:err,message:'something went wrong'});
+                    if(err) return  res.send({error:err,message:'something went wrong'});
                     return res.send({error : 'none', message : 'successfully updated'});
-                  })
+                  }).catch((err)=>{
+                    return res.json({message: 'some error occured!! please try again'});
+              });
   });
 });
 
@@ -256,9 +268,11 @@ router.put("/updateProfileWithoutpassword/:email",(req,res,next)=>{
                               'profilePicId' : profile.profilePicId}},
                   {useFindAndModify : false},
                   function(err,doc){
-                    if(err) return  res.status(500).send({error:err,message:'something went wrong'});
+                    if(err) return  res.send({error:err,message:'something went wrong'});
                     return res.send({error : 'none', message : 'successfully updated'});
-                  })
+                  }).catch((err)=>{
+                    return res.json({message: 'some error occured!! please try again'});
+              });
   });
 });
 

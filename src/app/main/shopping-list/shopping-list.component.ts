@@ -14,6 +14,8 @@ export class ShoppingListComponent implements OnInit {
   items: any[] = [];
   itemsList: any[] = [];
   showSpinner: boolean;
+  errMessage:String;
+  errFlag:Boolean=false;
   constructor(private crudService: CrudService) {}
 
   ngOnInit() {
@@ -28,6 +30,11 @@ export class ShoppingListComponent implements OnInit {
   getShoppingListUpdated(noOfDays: number = 5) {
     this.dropdownButton = 'less than '+ noOfDays.toString() +' days';
     this.itemsList = [];
+    if(this.items.length === undefined){
+      this.errMessage=this.crudService.getItemListKey(this.items);
+      this.errFlag=true;
+    }
+    else{
     this.items.forEach(data => {
     const cutOffDays = (new Date(new Date().getTime() + noOfDays * 1000 * 3600 * 24)) ;
       // tslint:disable-next-line: max-line-length
@@ -36,8 +43,19 @@ export class ShoppingListComponent implements OnInit {
        ) {
         this.itemsList.push(data);
       }
+     // if(this.crudService.getItemListKey(this.items)!=""){
+     //   this.errMessage=this.crudService.getItemListKey(this.items);
+      //  this.errFlag=true;
+      //}
+      if(this.itemsList.length==0){
+        this.errMessage="your haveli is full!! nothing to purchase in "+noOfDays.toString()+" days";
+        this.errFlag=true;
+      }
+      else{
+        this.errFlag=false;
+      }
     });
-
+  }
     this.showSpinner = false;
   }
 }
