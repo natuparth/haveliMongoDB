@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   display = 'none';
   addFormFlag = false;
   groupMap = new Map<Number, Group>();
-  joinGroupDisplay = 'none';
+  requestList: Array<string> = [];
   requestedUser: String;
   constructor(private router: Router, private authService: AuthService) { }
   groups: Group[] = [];
@@ -40,6 +40,15 @@ export class HomeComponent implements OnInit {
           this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
         });
       });
+
+      //Request for fetching the group requests for a user
+      this.authService.getGroupRequests([...this.groupMap.keys()]).subscribe((data) => {
+        this.requestList = data.requests;
+        this.authService.requestSubject.next(this.requestList);
+      })
+
+
+
     });
   }
 
@@ -49,7 +58,6 @@ export class HomeComponent implements OnInit {
   }
   joinGroup(){
   this.display = 'block';
-  this.joinGroupDisplay = 'inline-block';
   }
   showAddForm(){
     this.addFormFlag = true;
@@ -101,6 +109,10 @@ export class HomeComponent implements OnInit {
      }
    })
   }
+ closeGroupModal(){
+  this.display = 'none'
+
+ }
 }
 interface Group{
   name: string;

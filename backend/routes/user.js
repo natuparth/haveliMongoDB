@@ -9,6 +9,41 @@ const Request = require('../models/groupAddRequest');
 const nodemailer = require("nodemailer");
 
 
+router.get("/getGroupRequests", (req,res,next)=>{
+  var groupArray = req.query.groupList.split(',');
+  for(var i=0;i<groupArray.length;i++){
+    groupArray[i] = parseInt(groupArray[i]);
+  }
+ Request.aggregate([
+  {
+    $match: { groupId : { $in : groupArray}}
+  },
+  {
+    $addFields: { type: 'Request' }
+  }
+ ],(err,doc)=>{
+  if(!err)
+  res.json({message: 'successful',requests: doc})
+  else
+   next(err)
+}).catch(err => {
+  res.json({message: err, requests: null})
+})
+
+/*
+  Request.find({
+    groupId : {$in : groupArray}
+  },proj,(err,doc)=>{
+    if(!err)
+    res.json({message: 'successful',requests: doc})
+    else
+     next(err)
+  }).catch(err => {
+    res.json({message: err, requests: null})
+  })*/
+})
+
+
 router.post("/addRequest", (req,res,next) => {
  const requestBody = {
    for: req.body.for,
@@ -30,7 +65,7 @@ router.post("/addRequest", (req,res,next) => {
 
 
 router.get("/getGroupsByName/:name", (req,res,next)=>{
-Group.find({groupName: { $regex: new RegExp(req.params.name) }}).then(doc=>{
+Group.find({groupName: { $regex: new RegExp(req.params.name,"i") }}).then(doc=>{
     res.send({groups: doc})
 });
 })

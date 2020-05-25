@@ -13,17 +13,25 @@ export  class  AuthService {
   private userAuthenticated: boolean;
 
   public nameSubject = new BehaviorSubject<string>(' ');
-
+  public requestSubject = new BehaviorSubject<any[]>([]);
   constructor(private http: HttpClient, private router: Router) {
   }
 
   public userAuthListener: Subject<string>;
 
+  getRequestObservable(){
+    return this.requestSubject.asObservable();
+  }
   getGroupsByName(name: String){
     return this.http.get<{groups: any}>(env.apiUrl + '/auth/getGroupsByName/' + name);
 
   }
 
+  getGroupRequests(groupList: Array<Number>){
+    console.log(groupList);
+    const params = new HttpParams().set('groupList', groupList.join(','));
+    return this.http.get<{requests: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupRequests' , {params: params});
+  }
   getGroupMembers(groupList: Array<Number>){
     console.log(groupList);
    const params = new HttpParams().set('groupList', groupList.join(','));

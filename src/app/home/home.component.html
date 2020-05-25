@@ -129,12 +129,12 @@
  <!-- Join Group Modal Box -->
 <div>
  <div class="backdrop" [ngStyle]="{ display: display }"></div>
-  <div class="modal" [ngStyle]="{ display: display }" role="dialog" tabindex="-1" style="margin: auto">
-    <div class="modal-dialog" role="document" style="margin: 0px;">
+  <div class="modal p-5" [ngStyle]="{ display: display }" role="dialog" tabindex="-1" style="margin: auto">
+    <div class="modal-dialog" role="document" >
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Join Group</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close" data-dismiss="modal" (click)="closeGroupModal()">&times;</button>
         </div>
 
         <div class="modal-body">
@@ -183,7 +183,7 @@
       </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" (click)= "joinGroupFlag = false" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" (click)= "closeGroupModal()" data-dismiss="modal">Close</button>
         </div>
 
       </div>
