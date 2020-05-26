@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../Services/authService/auth.service';
 
@@ -13,8 +13,11 @@ export class MainComponent implements OnInit {
   user = ' ';
   userImg = ' ';
   userName = ' ';
+  groupList: any[] = [];
+  gid:string;
+  showChildToggle:boolean=true;
   nameObservable: Observable<string>;
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService,private route: ActivatedRoute) {
     console.log('main constructor called and added');
    // this.router.navigate(['main/grocery']);
     this.nameObservable = authService.getNameObservable();
@@ -27,6 +30,13 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit() {
+    this.gid=localStorage.getItem('groupId');
+    this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
+      this.groupList=doc.items;
+     // console.log(doc);
+     // console.log(this.groupList);
+
+    });
     this.nameObservable.subscribe(name => {
       console.log('observable called');
       this.userName = name;
@@ -47,4 +57,15 @@ export class MainComponent implements OnInit {
 
   }
 
+  setGroup(groupId:string){
+    localStorage.setItem('groupId',groupId)
+    this.gid=localStorage.getItem('groupId');
+        this.showChildToggle = false;
+        setTimeout(() => {
+        this.showChildToggle = true
+        }, 100);
+    
+  }
+
 }
+
