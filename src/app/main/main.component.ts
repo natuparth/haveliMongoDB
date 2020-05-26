@@ -35,8 +35,9 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this.requestObservable.subscribe(value => {
      // this.requests = value;
+     console.log('subscribed');
     this.notifications = value;
-     console.log(value);
+     console.log(this.notifications);
     })
     this.nameObservable.subscribe(name => {
       console.log('observable called');

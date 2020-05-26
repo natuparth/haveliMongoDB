@@ -1,5 +1,15 @@
-<ul class="list-group w-25 float-right" [ngStyle]="{display: requestDisplay}">
-  <li *ngFor="let notification of notifications" class="list-group-item">
-       {{notification.for}}
+<ul class="list-group">
+  <li *ngFor="let notification of notifications"   class="list-group-item py-0">
+    <div *ngIf ="notification.Status === 'Pending'">
+    <div class="m-0 p-0 border-bottom">
+       {{notification.for}} has requested for joining group {{notification.groupName}}
+    </div>
+    <div class="mt-2">
+       <button class="btn btn-dark mr-2" (click)="changeRequestStatus(notification._id,'accepted', notification.for, notification.groupId)">
+    Accept
+   </button>
+   <button class="btn btn-dark" (click) = "changeRequestStatus(notification._id,'rejected', notification.for, notification.groupId)">Reject</button>
+   </div>
+    </div>
   </li>
  </ul>

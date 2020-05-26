@@ -9,6 +9,40 @@ const Request = require('../models/groupAddRequest');
 const nodemailer = require("nodemailer");
 
 
+
+router.post("/changeRequestStatus", (req,res,next)=>{
+  if(req.body.action === "accepted"){
+    console.log(req.body)
+     User.find({email: req.body.requestFor},(err,doc)=>{
+      if(!err){
+      doc[0].groups.push(req.body.groupId);
+       doc[0].save().then((doc)=>{
+       // console.log(doc);
+        Request.updateOne({_id: req.body.requestId}, {'$set': { Status: 'Accepted'}},(err, doc) => {
+          res.json({message: 'request accepted'});
+       //   console.log(doc);
+        })
+       })
+      }
+      else
+        next(err);
+      }).catch(err => {
+        res.json({message: 'some error occurred'});
+      })
+
+  }
+  else{
+    Request.updateOne({_id: req.body.requestId}, {'$set': { Status: 'Rejected'}},(err, doc) => {
+      res.json({message: 'request rejected successfully'});
+      console.log(doc);
+    }).catch(err => {
+      res.json({message: 'some error occurred'});
+    })
+  }
+
+})
+
+
 router.get("/getGroupRequests", (req,res,next)=>{
   var groupArray = req.query.groupList.split(',');
   for(var i=0;i<groupArray.length;i++){
@@ -30,17 +64,7 @@ router.get("/getGroupRequests", (req,res,next)=>{
   res.json({message: err, requests: null})
 })
 
-/*
-  Request.find({
-    groupId : {$in : groupArray}
-  },proj,(err,doc)=>{
-    if(!err)
-    res.json({message: 'successful',requests: doc})
-    else
-     next(err)
-  }).catch(err => {
-    res.json({message: err, requests: null})
-  })*/
+
 })
 
 
@@ -136,7 +160,6 @@ router.get("/getGroupMembers", (req,res,next)=>{
     groupArray[i] = parseInt(groupArray[i]);
 
   }
-
    User.aggregate([
      {
        $match: { 'groups': { $in : groupArray } }
@@ -151,9 +174,13 @@ router.get("/getGroupMembers", (req,res,next)=>{
      (err, doc)=>{
        if(err)
          next(err);
-        else
-         res.status(200).json({users: doc, message: 'users fetched'});
-       }
+        else{
+        var updatedDoc = doc.filter(function(user)  {
+          return groupArray.includes(user.groups);
+         });
+          res.status(200).json({users: updatedDoc, message: 'users fetched'});
+        }
+        }
   )
 
 

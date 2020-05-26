@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   display = 'none';
   addFormFlag = false;
   groupMap = new Map<Number, Group>();
-  requestList: Array<string> = [];
+  requestList: Array<any> = [];
   requestedUser: String;
   constructor(private router: Router, private authService: AuthService) { }
   groups: Group[] = [];
@@ -29,23 +29,33 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.registerSearchGroup();
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
+
       const size = doc.items.length;
       for (let i = 0; i < size; i++) {
         this.groupMap.set(doc.items[i].groupId, { name: doc.items[i].groupName, users: []});
       }
       this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
+          console.log(this.groupMap);
+          console.log(data.users);
         data.users.forEach((user) => {
+          console.log(user.groups);
+          console.log(this.groupMap.get(user.groups));
           const usersArray = this.groupMap.get(user.groups).users;
           usersArray.push(user.name);
           this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
+
         });
+        this.authService.getGroupRequests([...this.groupMap.keys()]).subscribe((data) => {
+          this.requestList = data.requests;
+          this.requestList.map((request) => {
+            request.groupName = this.groupMap.get(request.groupId).name;
+          })
+          this.authService.requestSubject.next(this.requestList);
+        })
       });
 
       //Request for fetching the group requests for a user
-      this.authService.getGroupRequests([...this.groupMap.keys()]).subscribe((data) => {
-        this.requestList = data.requests;
-        this.authService.requestSubject.next(this.requestList);
-      })
+
 
 
 

@@ -19,6 +19,16 @@ export  class  AuthService {
 
   public userAuthListener: Subject<string>;
 
+  changeRequestStatus(requestId: string, action: string, requestFor: string, groupId: Number){
+    const reqBody = {
+      requestId: requestId,
+      action: action,
+      requestFor: requestFor,
+      groupId: groupId
+    }
+    return this.http.post<{message: string}>(env.apiUrl + '/auth/changeRequestStatus', reqBody);
+  }
+
   getRequestObservable(){
     return this.requestSubject.asObservable();
   }
