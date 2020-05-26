@@ -4,3 +4,6 @@
   text-align: center !important;
   transform: translate(-50%, 0) !important;
 }
+.dropdown-item:hover {
+ cursor: pointer;
+  }
