@@ -15,6 +15,7 @@ export class MainComponent implements OnInit {
   userName = ' ';
   groupList: any[] = [];
   gid:string;
+  showChildToggle:boolean=true;
   nameObservable: Observable<string>;
   constructor(private router: Router, private authService: AuthService,private route: ActivatedRoute) {
     console.log('main constructor called and added');
@@ -55,9 +56,15 @@ export class MainComponent implements OnInit {
 
 
   }
+
   setGroup(groupId:string){
     localStorage.setItem('groupId',groupId)
-    window.location.reload();
+    this.gid=localStorage.getItem('groupId');
+        this.showChildToggle = false;
+        setTimeout(() => {
+        this.showChildToggle = true
+        }, 100);
+    
   }
 
 }

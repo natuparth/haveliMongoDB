@@ -1,21 +1,13 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-  <div>
-    <button class="btn btn-secondary bg-dark" (click)="flag=!flag" type="button" data-toggle="dropdown">
-      &#9776;
-    </button>
- <!-- <a class="navbar-brand" routerLink="home">Home</a>-->
- <div class="dropdown-menu bg-dark text-light">
-       <a [ngStyle]="{'background-color': group.groupId==gid? 'black':'bg-dark'}" class="dropdown-item" (click)="setGroup(group.groupId);flag=!flag"
-       *ngFor='let group of groupList'>{{group.groupName}}</a>
-  </div>
-  </div>
+  <a class="nav-link" routerLink="home">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
+
       <li class="nav-item ">
-        <a class="nav-link" routerLink="home">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item ">
-        <a class="nav-link" routerLink="grocery">Grocery Management</a>
+        <a class="nav-link" routerLink="grocery">Grocery Management<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="expense">Expense Management</a>
@@ -42,6 +34,17 @@
 
       </li>
       <li class="nav-item">
+        <div class="dropdown float-left">
+          <button class="dropdown-toggle btn btn-secondary bg-dark float-right" (click)="flag=!flag" type="button" data-toggle="dropdown">
+            {{gid}}
+          </button>
+       <div class="dropdown-menu  bg-dark text-light">
+             <a [ngStyle]="{'background-color': group.groupId!=gid? 'rgb(32, 32, 32)':'black'}" class="dropdown-item " (click)="setGroup(group.groupId);flag=!flag;"
+             *ngFor='let group of groupList'>{{group.groupName}}</a>
+        </div>
+        </div>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href=" " (click)='logout()'>Logout</a>
 
       </li>
@@ -51,4 +54,4 @@
 
 </nav>
 
-<router-outlet></router-outlet>
+<router-outlet *ngIf="showChildToggle"></router-outlet>
