@@ -8,6 +8,8 @@ import { AuthService } from 'src/app/Services/authService/auth.service';
 })
 export class NotificationComponent implements OnInit, OnChanges {
    @Input() notifications: Array<any> = [];
+   requestArea = true;
+   notificationArea = false;
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
@@ -15,6 +17,16 @@ export class NotificationComponent implements OnInit, OnChanges {
    ngOnChanges(changes: SimpleChanges) {
    this.notifications = changes.notifications.currentValue;
    }
+
+  onRequestOpen(){
+    this.requestArea = true;
+    this.notificationArea = false;
+  }
+
+  onNotificationOpen(){
+    this.requestArea = false;
+    this.notificationArea = true;
+  }
 
    changeRequestStatus(requestId: string, action: string, requstFor: string, groupId: Number){
     if(confirm("Are you sure you want to accept the request")){

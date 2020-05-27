@@ -113,11 +113,16 @@ export class HomeComponent implements OnInit {
       for: localStorage.getItem('userEmail'),
       groupId: this.expandedIndex
     };
+    if([...this.groupMap.keys()].includes(reqBody.groupId)){
+     alert('you cannot request for a group you are already a part of');
+    }
+    else{
    this.authService.createRequest(reqBody).subscribe(val => {
      if(val.message === "request successful"){
        alert('you have successfully requested to be a part of the group' + groupName );
      }
    })
+  }
   }
  closeGroupModal(){
   this.display = 'none'

@@ -51,13 +51,15 @@ router.get("/getGroupRequests", (req,res,next)=>{
  Request.aggregate([
   {
     $match: { groupId : { $in : groupArray}}
-  },
-  {
-    $addFields: { type: 'Request' }
-  }
+   }
+
  ],(err,doc)=>{
-  if(!err)
-  res.json({message: 'successful',requests: doc})
+  if(!err){
+  var filteredDoc = doc.filter((request) => {
+    return request.Status === "Pending";
+  })
+    res.json({message: 'successful',requests: filteredDoc})
+  }
   else
    next(err)
 }).catch(err => {

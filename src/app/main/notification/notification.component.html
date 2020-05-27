@@ -1,4 +1,13 @@
-<ul class="list-group">
+<ul class="nav nav-tabs justify-content-center">
+ <li class="nav-item">
+   <a class="nav-link text-secondary"  (click)= "onRequestOpen()" >Requests</a>
+ </li>
+ <li class="nav-item mx-3">
+  <a class="nav-link text-secondary"  (click)= "onNotificationOpen()" >Notifications</a>
+</li>
+</ul>
+<div *ngIf="requestArea">
+<ul class="list-group"  *ngIf = "notifications.length>0 ;else noRequestsBlock">
   <li *ngFor="let notification of notifications"   class="list-group-item py-0">
     <div *ngIf ="notification.Status === 'Pending'">
     <div class="m-0 p-0 border-bottom">
@@ -12,4 +21,8 @@
    </div>
     </div>
   </li>
+
  </ul>
+ <ng-template class="text-secondary" #noRequestsBlock><span> You don't have any pending request </span></ng-template>
+</div>
+ <ul class="list-group collapse"  *ngIf="notificationArea"> Hello</ul>

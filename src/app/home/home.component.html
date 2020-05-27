@@ -134,7 +134,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Join Group</h4>
-          <button type="button" class="close" data-dismiss="modal" (click)="closeGroupModal()">&times;</button>
+          <button type="button" class="close" style="width: fit-content;" data-dismiss="modal" (click)="closeGroupModal()">&times;</button>
         </div>
 
         <div class="modal-body">
@@ -147,6 +147,7 @@
                 name="groupName"
                 type="text"
                 placeholder="name of the existing group"
+                style="margin: auto"
               />
             </form>
         </div>
@@ -183,7 +184,7 @@
       </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" (click)= "closeGroupModal()" data-dismiss="modal">Close</button>
+          <button type="button" style = "width: fit-content;" class="btn btn-danger" (click)= "closeGroupModal()" data-dismiss="modal">Close</button>
         </div>
 
       </div>
