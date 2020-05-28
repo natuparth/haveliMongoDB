@@ -9,6 +9,13 @@ const Request = require('../models/groupAddRequest');
 const nodemailer = require("nodemailer");
 
 
+router.get("/getPendingRequests/:email", (req,res,next) => {
+  Request.find( {$and :[{ for: req.params.email}, { Status: 'Pending'}]}, { groupId: true}, (err,doc)=>{
+    var newArr = doc.map(val => val.groupId)
+    res.json({doc: newArr})
+  })
+})
+
 
 router.post("/changeRequestStatus", (req,res,next)=>{
   if(req.body.action === "accepted"){

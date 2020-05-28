@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   groupMap = new Map<Number, Group>();
   requestList: Array<any> = [];
   requestedUser: String;
+  pendingRequestGroupIds: Array<Number>;
   constructor(private router: Router, private authService: AuthService) { }
   groups: Group[] = [];
   groupUsersList: String[] = [];
@@ -37,7 +38,7 @@ export class HomeComponent implements OnInit {
       this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
           console.log(this.groupMap);
           console.log(data.users);
-        data.users.forEach((user) => {
+          data.users.forEach((user) => {
           console.log(user.groups);
           console.log(this.groupMap.get(user.groups));
           const usersArray = this.groupMap.get(user.groups).users;
@@ -53,13 +54,12 @@ export class HomeComponent implements OnInit {
           this.authService.requestSubject.next(this.requestList);
         })
       });
-
-      //Request for fetching the group requests for a user
-
-
-
-
     });
+
+    this.authService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
+      console.log('insddfh');
+      this.pendingRequestGroupIds = groupIds.doc;
+    })
   }
 
   addGroup(groupName: string){
@@ -127,6 +127,17 @@ export class HomeComponent implements OnInit {
  closeGroupModal(){
   this.display = 'none'
 
+ }
+ checkButton(groupId: Number){
+   if ([...this.groupMap.keys()].includes(groupId)){
+     return 1;
+   }
+   else if(this.pendingRequestGroupIds.includes(groupId)){
+     return 2;
+   }
+   else{
+     return 3;
+   }
  }
 }
 interface Group{

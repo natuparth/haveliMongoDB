@@ -18,6 +18,9 @@ export  class  AuthService {
   }
 
   public userAuthListener: Subject<string>;
+  getPendingRequests(email: string){
+    return this.http.get<{doc: Array<Number>}>(env.apiUrl + '/auth/getPendingRequests/' + email);
+  }
 
   changeRequestStatus(requestId: string, action: string, requestFor: string, groupId: Number){
     const reqBody = {

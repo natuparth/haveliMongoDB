@@ -165,17 +165,16 @@
 
                   <li class="list-group-item" >
                    <div style="float: left; ">
-                    <!-- <input style="width:fit-content"
-                    type="radio" name="radiobutton" [value]="user.email"
-                    (change)="onSelectionChange(user.email)"> -->
                     {{user.name}}
                    </div>
                   </li>
 
                 </ul>
-                <button class="btn btn-primary" (click) = "sendRequest(group.groupName)" >Send Request</button>
+                <button class="btn btn-primary" (click) = "sendRequest(group.groupName)" *ngIf = "checkButton(group.groupId) == 3">Send Request</button>
+                <button class="btn btn-primary" *ngIf = "checkButton(group.groupId) == 2" disabled>Already Requested</button>
+                <button class="btn btn-primary" *ngIf = "checkButton(group.groupId) == 1" disabled>Already a member</button>
 
-              </div>
+                </div>
 
           </ul>
         </div>
