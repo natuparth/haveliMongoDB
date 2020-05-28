@@ -5,7 +5,103 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Group = require('../models/group');
 const globalData = require('../models/globalData');
+const Request = require('../models/groupAddRequest');
 const nodemailer = require("nodemailer");
+
+
+router.get("/getPendingRequests/:email", (req,res,next) => {
+  Request.find( {$and :[{ for: req.params.email}, { Status: 'Pending'}]}, { groupId: true}, (err,doc)=>{
+    var newArr = doc.map(val => val.groupId)
+    res.json({doc: newArr})
+  })
+})
+
+
+router.post("/changeRequestStatus", (req,res,next)=>{
+  if(req.body.action === "accepted"){
+    console.log(req.body)
+     User.find({email: req.body.requestFor},(err,doc)=>{
+      if(!err){
+      doc[0].groups.push(req.body.groupId);
+       doc[0].save().then((doc)=>{
+       // console.log(doc);
+        Request.updateOne({_id: req.body.requestId}, {'$set': { Status: 'Accepted'}},(err, doc) => {
+          res.json({message: 'request accepted'});
+       //   console.log(doc);
+        })
+       })
+      }
+      else
+        next(err);
+      }).catch(err => {
+        res.json({message: 'some error occurred'});
+      })
+
+  }
+  else{
+    Request.updateOne({_id: req.body.requestId}, {'$set': { Status: 'Rejected'}},(err, doc) => {
+      res.json({message: 'request rejected successfully'});
+      console.log(doc);
+    }).catch(err => {
+      res.json({message: 'some error occurred'});
+    })
+  }
+
+})
+
+
+router.get("/getGroupRequests", (req,res,next)=>{
+  var groupArray = req.query.groupList.split(',');
+  for(var i=0;i<groupArray.length;i++){
+    groupArray[i] = parseInt(groupArray[i]);
+  }
+ Request.aggregate([
+  {
+    $match: { groupId : { $in : groupArray}}
+   }
+
+ ],(err,doc)=>{
+  if(!err){
+  var filteredDoc = doc.filter((request) => {
+    return request.Status === "Pending";
+  })
+    res.json({message: 'successful',requests: filteredDoc})
+  }
+  else
+   next(err)
+}).catch(err => {
+  res.json({message: err, requests: null})
+})
+
+
+})
+
+
+router.post("/addRequest", (req,res,next) => {
+ const requestBody = {
+   for: req.body.for,
+   groupId: req.body.groupId,
+   Status: 'Pending'
+ }
+
+  Request.insertMany(requestBody, (err, doc) => {
+    if(!err){
+      res.json({doc: doc, message: 'request successful'})
+    }
+    else
+     {
+       res.json({doc: null, message: 'request failed'})
+     }
+  })
+
+})
+
+
+router.get("/getGroupsByName/:name", (req,res,next)=>{
+Group.find({groupName: { $regex: new RegExp(req.params.name,"i") }}).then(doc=>{
+    res.send({groups: doc})
+});
+})
 
 
 router.get("/getUsers", (req, res, next) => {
@@ -20,14 +116,10 @@ router.get("/getUsers", (req, res, next) => {
 });
 
 router.get("/getUsersByGroupId/:groupId", (req, res, next) => {
-  // User.find({ groupId: req.params.groupId }).then((doc) => {
-  //   res.status(200).json({ users: doc })
-  // })
   var groupArray = req.params.groupId.split(',');
   for(var i=0;i<groupArray.length;i++){
     groupArray[i] = parseInt(groupArray[i]);
   }
-  console.log('gparray',groupArray);
   User.aggregate([
       {  $match: { 'groups': { $in : groupArray } }  },
       {  $project : { email: 1, name:1} }
@@ -70,25 +162,13 @@ router.get("/checkEmailExists/:email", (req, res, next) => {
 });
 });
 
-/*
-router.get("/searchMaxGroupId", (req, res, next) => {
-  Group.find().sort({ groupId: -1 }).limit(1).
-  then((doc) => {
-    res.json({ group: doc[0].groupId })
-  }).catch((err)=>{
-    return res.json({message: 'some error occured!! please try again'});
-});
-});
-*/
-
 router.get("/getGroupMembers", (req,res,next)=>{
   var groupArray = req.query.groupList.split(',');
   for(var i=0;i<groupArray.length;i++){
 
     groupArray[i] = parseInt(groupArray[i]);
-    console.log('gparray',groupArray[i]);
-  }
 
+  }
    User.aggregate([
      {
        $match: { 'groups': { $in : groupArray } }
@@ -103,9 +183,13 @@ router.get("/getGroupMembers", (req,res,next)=>{
      (err, doc)=>{
        if(err)
          next(err);
-        else
-         res.status(200).json({users: doc, message: 'users fetched'});
-       }
+        else{
+        var updatedDoc = doc.filter(function(user)  {
+          return groupArray.includes(user.groups);
+         });
+          res.status(200).json({users: updatedDoc, message: 'users fetched'});
+        }
+        }
   )
 
 
@@ -113,7 +197,6 @@ router.get("/getGroupMembers", (req,res,next)=>{
 
 router.get("/getGroups/:email", (req,res,next)=>{
   User.findOne({email: req.params.email}).then(doc => {
-    console.log(doc.groups);
      Group.find({groupId: { $in : doc.groups }},{ groupId: 1, groupName: 1},(err,doc)=>{
        res.status(200).json({items:doc, message: "groups fetched for a user"});
      })

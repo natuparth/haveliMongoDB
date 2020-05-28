@@ -13,12 +13,38 @@ export  class  AuthService {
   private userAuthenticated: boolean;
 
   public nameSubject = new BehaviorSubject<string>(' ');
-
+  public requestSubject = new BehaviorSubject<any[]>([]);
   constructor(private http: HttpClient, private router: Router) {
   }
 
   public userAuthListener: Subject<string>;
+  getPendingRequests(email: string){
+    return this.http.get<{doc: Array<Number>}>(env.apiUrl + '/auth/getPendingRequests/' + email);
+  }
 
+  changeRequestStatus(requestId: string, action: string, requestFor: string, groupId: Number){
+    const reqBody = {
+      requestId: requestId,
+      action: action,
+      requestFor: requestFor,
+      groupId: groupId
+    }
+    return this.http.post<{message: string}>(env.apiUrl + '/auth/changeRequestStatus', reqBody);
+  }
+
+  getRequestObservable(){
+    return this.requestSubject.asObservable();
+  }
+  getGroupsByName(name: String){
+    return this.http.get<{groups: any}>(env.apiUrl + '/auth/getGroupsByName/' + name);
+
+  }
+
+  getGroupRequests(groupList: Array<Number>){
+    console.log(groupList);
+    const params = new HttpParams().set('groupList', groupList.join(','));
+    return this.http.get<{requests: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupRequests' , {params: params});
+  }
   getGroupMembers(groupList: Array<Number>){
     console.log(groupList);
    const params = new HttpParams().set('groupList', groupList.join(','));
@@ -163,5 +189,8 @@ public sendMessageByMail(userData:any):Observable<any>{
   return this.http.post<any>(env.apiUrl + '/auth/sendMessage',userData);
 }
 
+createRequest(reqBody: any){
+   return this.http.post<{doc: Array<any>, message: String}>(env.apiUrl + '/auth/addRequest', reqBody);
+}
 }
 

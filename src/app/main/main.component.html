@@ -20,6 +20,22 @@
       </li>
     </ul>
       <ul class="navbar-nav">
+
+        <li class="nav-item mr-3 mt-2" >
+          <div class="dropdown">
+          <button class="btn " (click)="openNotification()" data-toggle="dropdown">
+          <i class="fa fa-bell" style="color: white;"></i>
+        </button>
+        <div class="dropdown-menu p-0  dropdown-menu-center" style="width: 65vh">
+        <form>
+          <app-notification [notifications] = 'notifications'></app-notification>
+        </form>
+        </div>
+
+
+        </div>
+        </li>
+
       <li class= "nav-item">
         <!-- <img style='height:40px;width:40px ;border-radius: 20px;' src={{userImg}}> -->
         <a routerLink="profile">

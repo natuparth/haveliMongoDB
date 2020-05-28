@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../Services/authService/auth.service';
 
 
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -13,15 +14,20 @@ export class MainComponent implements OnInit {
   user = ' ';
   userImg = ' ';
   userName = ' ';
-  groupList: any[] = [];
-  gid:string;
-  showChildToggle:boolean=true;
+  notifications: Array<any> = [];
   nameObservable: Observable<string>;
+  requestObservable: Observable<string[]>;
+  requestDisplay = 'none';
+  groupList: any[] = [];
+  gid: string;
+  showChildToggle = true;
+
   constructor(private router: Router, private authService: AuthService,private route: ActivatedRoute) {
     console.log('main constructor called and added');
    // this.router.navigate(['main/grocery']);
     this.nameObservable = authService.getNameObservable();
     authService.nameSubject.next(localStorage.getItem('userName'));
+    this.requestObservable = authService.getRequestObservable();
   }
 
   logout(){
@@ -30,6 +36,12 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit() {
+    this.requestObservable.subscribe(value => {
+     // this.requests = value;
+     console.log('subscribed');
+    this.notifications = value;
+     console.log(this.notifications);
+    })
     this.gid=localStorage.getItem('groupId');
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
       this.groupList=doc.items;
@@ -44,17 +56,14 @@ export class MainComponent implements OnInit {
     this.userImg = '../assets/' + this.user.toLocaleLowerCase() + '.jpg';
 
     });
-    //  this.user = localStorage.getItem('userName').split(' ')[0];
-    // console.log(this.user);
     const a1 = new Date(localStorage.getItem('expiresAt')).getTime();
     const a2 = new Date().getTime();
-    // console.log(a1);
-    // console.log(a2);
     if(a1 < a2) {
         //  this.router.navigate(['home']);
       }
-
-
+  }
+  openNotification(){
+   this.requestDisplay = this.requestDisplay === 'block' ? 'none' : 'block';
   }
 
   setGroup(groupId:string){
@@ -64,7 +73,7 @@ export class MainComponent implements OnInit {
         setTimeout(() => {
         this.showChildToggle = true
         }, 100);
-    
+
   }
 
 }
