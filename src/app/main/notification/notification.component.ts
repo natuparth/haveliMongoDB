@@ -10,6 +10,7 @@ export class NotificationComponent implements OnInit, OnChanges {
    @Input() notifications: Array<any> = [];
    requestArea = true;
    notificationArea = false;
+   openRequestNumber = -1;
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
@@ -36,4 +37,13 @@ export class NotificationComponent implements OnInit, OnChanges {
         })
     }
    }
+  openRequest(requestNo:Number){
+    // console.log('request no called'+requestNo);
+    if(this.openRequestNumber == +requestNo){
+      this.openRequestNumber = -1;
+    }
+    else{
+      this.openRequestNumber = +requestNo;
+    }
+  }
 }

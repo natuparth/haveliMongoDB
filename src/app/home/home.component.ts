@@ -36,11 +36,11 @@ export class HomeComponent implements OnInit {
         this.groupMap.set(doc.items[i].groupId, { name: doc.items[i].groupName, users: []});
       }
       this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
-          console.log(this.groupMap);
-          console.log(data.users);
+          // console.log(this.groupMap);
+          // console.log(data.users);
           data.users.forEach((user) => {
-          console.log(user.groups);
-          console.log(this.groupMap.get(user.groups));
+          // console.log(user.groups);
+          // console.log(this.groupMap.get(user.groups));
           const usersArray = this.groupMap.get(user.groups).users;
           usersArray.push(user.name);
           this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
@@ -57,13 +57,13 @@ export class HomeComponent implements OnInit {
     });
 
     this.authService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
-      console.log('insddfh');
+      // console.log('insddfh');
       this.pendingRequestGroupIds = groupIds.doc;
     })
   }
 
   addGroup(groupName: string){
-    console.log('add group',groupName);
+    // console.log('add group',groupName);
     this.authService.addGroup(groupName);
   }
   joinGroup(){
@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit {
     ).subscribe((groups) => {
       this.groupList = [];
      groups.subscribe(value => {
-      console.log(value.groups);
+      // console.log(value.groups);
       this.groupList = value.groups;
      })
     })
@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit {
     this.groupUsersList = [];
     this.authService.getUsersByGroupId(groupId).subscribe(value => {
       this.groupUsersList = value.users;
-      console.log(value);
+      // console.log(value);
     })
   }
 

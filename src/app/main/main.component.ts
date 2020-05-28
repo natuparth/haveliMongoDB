@@ -21,6 +21,7 @@ export class MainComponent implements OnInit {
   groupList: any[] = [];
   gid: string;
   showChildToggle = true;
+  noOfNotificatons = 0;
 
   constructor(private router: Router, private authService: AuthService,private route: ActivatedRoute) {
     console.log('main constructor called and added');
@@ -37,17 +38,16 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     this.requestObservable.subscribe(value => {
-     // this.requests = value;
-     console.log('subscribed');
     this.notifications = value;
-     console.log(this.notifications);
+    console.log('notifiaction',value.length);
+    this.noOfNotificatons=value.length;
     })
-    this.gid=localStorage.getItem('groupId');
+    // this.gid=localStorage.getItem('groupId');
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
       this.groupList=doc.items;
-     // console.log(doc);
-     // console.log(this.groupList);
-
+      if(this.groupList.length){
+        this.gid=this.groupList.find(x => x.groupId == localStorage.getItem('groupId')).groupName;
+      }
     });
     this.nameObservable.subscribe(name => {
       console.log('observable called');
@@ -66,9 +66,9 @@ export class MainComponent implements OnInit {
    this.requestDisplay = this.requestDisplay === 'block' ? 'none' : 'block';
   }
 
-  setGroup(groupId:string){
-    localStorage.setItem('groupId',groupId)
-    this.gid=localStorage.getItem('groupId');
+  setGroup(group:any){
+    localStorage.setItem('groupId',group.groupId)
+    this.gid=group.groupName;
         this.showChildToggle = false;
         setTimeout(() => {
         this.showChildToggle = true

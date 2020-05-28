@@ -120,7 +120,6 @@ export  class  AuthService {
     if(groups.length>0){
       localStorage.setItem('groupId', groups[0].toString());
     }
-    console.log(localStorage.getItem('groupId'))
   }
 
   logout() {

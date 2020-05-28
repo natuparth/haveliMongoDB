@@ -7,13 +7,13 @@
     <ul class="navbar-nav mr-auto">
 
       <li class="nav-item ">
-        <a class="nav-link" routerLink="grocery">Grocery Management<span class="sr-only">(current)</span></a>
+        <a class="nav-link" routerLink="grocery">Grocery<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="expense">Expense Management</a>
+        <a class="nav-link" routerLink="expense">Expense</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="shopping">Shopping List</a>
+        <a class="nav-link" routerLink="shopping">Shopping</a>
       </li>
       <li class="nav-item">
           <a class="nav-link" routerLink="calculate">Milk Management</a>
@@ -22,18 +22,18 @@
       <ul class="navbar-nav">
 
         <li class="nav-item mr-3 mt-2" >
-          <div class="dropdown">
-          <button class="btn " (click)="openNotification()" data-toggle="dropdown">
-          <i class="fa fa-bell" style="color: white;"></i>
-        </button>
-        <div class="dropdown-menu p-0  dropdown-menu-center" style="width: 65vh">
-        <form>
-          <app-notification [notifications] = 'notifications'></app-notification>
-        </form>
-        </div>
-
-
-        </div>
+          <div class="dropdown notificationsDropdown">
+            <button class="btn " (click)="openNotification()" data-toggle="dropdown">
+              <i class="fa fa-bell" style="color: white;">
+                <span *ngIf="noOfNotificatons" class="badge">{{noOfNotificatons}}</span>
+              </i>
+            </button>
+            <div class="dropdown-menu p-0  dropdown-menu-center">
+              <form>
+                <app-notification [notifications] = 'notifications'></app-notification>
+              </form>
+            </div>
+          </div>
         </li>
 
       <li class= "nav-item">
@@ -55,7 +55,7 @@
             {{gid}}
           </button>
        <div class="dropdown-menu  bg-dark text-light">
-             <a [ngStyle]="{'background-color': group.groupId!=gid? 'rgb(32, 32, 32)':'black'}" class="dropdown-item " (click)="setGroup(group.groupId);flag=!flag;"
+             <a [ngStyle]="{'background-color': group.groupId!=gid? 'rgb(32, 32, 32)':'black'}" class="dropdown-item " (click)="setGroup(group);flag=!flag;"
              *ngFor='let group of groupList'>{{group.groupName}}</a>
         </div>
         </div>
