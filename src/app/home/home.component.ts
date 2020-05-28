@@ -80,10 +80,9 @@ export class HomeComponent implements OnInit {
     this.searchGroupForm.controls.search.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-     map(value => {
-       return this.authService.getGroupsByName(value);
-     }
-    )
+      map(value => {
+        return this.authService.getGroupsByName(value);
+      })
     ).subscribe((groups) => {
       this.groupList = [];
      groups.subscribe(value => {
@@ -91,8 +90,6 @@ export class HomeComponent implements OnInit {
       this.groupList = value.groups;
      })
     })
-
-
   }
 
   fetchUsers(groupId: number){
