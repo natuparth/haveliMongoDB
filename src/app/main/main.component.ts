@@ -24,7 +24,7 @@ export class MainComponent implements OnInit {
   noOfNotificatons = 0;
 
   constructor(private router: Router, private authService: AuthService,private route: ActivatedRoute) {
-    console.log('main constructor called and added');
+    // console.log('main constructor called and added');
    // this.router.navigate(['main/grocery']);
     this.nameObservable = authService.getNameObservable();
     authService.nameSubject.next(localStorage.getItem('userName'));
@@ -39,7 +39,7 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this.requestObservable.subscribe(value => {
     this.notifications = value;
-    console.log('notifiaction',value.length);
+    // console.log('notifiaction',value.length);
     this.noOfNotificatons=value.length;
     })
     // this.gid=localStorage.getItem('groupId');
@@ -50,7 +50,7 @@ export class MainComponent implements OnInit {
       }
     });
     this.nameObservable.subscribe(name => {
-      console.log('observable called');
+      // console.log('observable called');
       this.userName = name;
       this.user = name.split(' ')[0];
     this.userImg = '../assets/' + this.user.toLocaleLowerCase() + '.jpg';

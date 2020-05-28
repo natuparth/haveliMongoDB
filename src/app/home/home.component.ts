@@ -29,6 +29,12 @@ export class HomeComponent implements OnInit {
   expandedIndex = -1 ;
   ngOnInit() {
     this.registerSearchGroup();
+    this.authService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
+      // console.log('insddfh');
+      this.pendingRequestGroupIds = groupIds.doc;
+    })
+  }
+  getGroupData(){
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
 
       const size = doc.items.length;
@@ -55,11 +61,6 @@ export class HomeComponent implements OnInit {
         })
       });
     });
-
-    this.authService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
-      // console.log('insddfh');
-      this.pendingRequestGroupIds = groupIds.doc;
-    })
   }
 
   addGroup(groupName: string){

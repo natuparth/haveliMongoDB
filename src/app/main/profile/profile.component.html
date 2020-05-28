@@ -53,7 +53,30 @@
         </div>
     </div>
     <!-- Group Div -->
-    <div *ngIf='status' class="container profileDetailsDiv"></div>
+    <div *ngIf='status' class="container profileDetailsDiv">
+        <div *ngIf="!groupMap.size" class="loading">
+            <app-circle-load></app-circle-load>
+        </div>
+        <div *ngIf="groupMap.size" class="allGroupsContainer">
+            <div
+              class="groupDescription"
+              *ngFor="let group of groupMap | keyvalue"
+              (click)="setFocusGroup(group)">
+              <div class="imgBox">
+                <app-profile-logo [userName]="group.value.name"></app-profile-logo>
+                <!-- <img src="../../assets/parth.jpg"> -->
+              </div>
+              <div class="content">
+                <h2>{{ group.value.name | titlecase }}</h2>
+                <ul>
+                  <li *ngFor="let user of group.value.users">
+                    <h4>{{ user | titlecase }}</h4>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        </div>
+    </div>
     <!-- <div class="profileFooter">Footer</div> -->
 </div>
 

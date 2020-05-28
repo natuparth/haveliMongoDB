@@ -41,12 +41,12 @@ export  class  AuthService {
   }
 
   getGroupRequests(groupList: Array<Number>){
-    console.log(groupList);
+    // console.log(groupList);
     const params = new HttpParams().set('groupList', groupList.join(','));
     return this.http.get<{requests: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupRequests' , {params: params});
   }
   getGroupMembers(groupList: Array<Number>){
-    console.log(groupList);
+    // console.log(groupList);
    const params = new HttpParams().set('groupList', groupList.join(','));
     return this.http.get<{users: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupMembers' , {params: params});
   }
