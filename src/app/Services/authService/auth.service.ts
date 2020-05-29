@@ -40,7 +40,7 @@ export  class  AuthService {
 
   }
 
-  getGroupRequests(groupList: Array<Number>){
+  getGroupRequests(groupList: Array<string>){
     // console.log(groupList);
     const params = new HttpParams().set('groupList', groupList.join(','));
     return this.http.get<{requests: Array<any>, message: string}>(env.apiUrl + '/auth/getGroupRequests' , {params: params});

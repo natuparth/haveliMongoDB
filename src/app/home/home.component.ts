@@ -32,7 +32,8 @@ export class HomeComponent implements OnInit {
     this.authService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
       // console.log('insddfh');
       this.pendingRequestGroupIds = groupIds.doc;
-    })
+    });
+    this.getGroupData();
   }
   getGroupData(){
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
@@ -52,7 +53,7 @@ export class HomeComponent implements OnInit {
           this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
 
         });
-        this.authService.getGroupRequests([...this.groupMap.keys()]).subscribe((data) => {
+        this.authService.getGroupRequests(localStorage.getItem('groups').split(',')).subscribe((data) => {
           this.requestList = data.requests;
           this.requestList.map((request) => {
             request.groupName = this.groupMap.get(request.groupId).name;

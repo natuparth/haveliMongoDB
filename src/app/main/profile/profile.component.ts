@@ -113,13 +113,6 @@ export class ProfileComponent implements OnInit {
           this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
 
         });
-        this.authService.getGroupRequests([...this.groupMap.keys()]).subscribe((data) => {
-          this.requestList = data.requests;
-          this.requestList.map((request) => {
-            request.groupName = this.groupMap.get(request.groupId).name;
-          })
-          this.authService.requestSubject.next(this.requestList);
-        })
       });
     });
   }
