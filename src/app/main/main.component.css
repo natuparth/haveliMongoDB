@@ -45,3 +45,25 @@
   width: 100%;
   left: 0;
 }
+
+.navbarLinks ul li a{
+  position: relative;
+  display: block;
+}
+
+.navbarLinks ul li .nav-link::before{
+  content: '';
+  height: 3px;
+  background-color: white;
+  width: 0%;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all .5s ease;
+}
+
+.navbarLinks ul li .nav-link.active::before{
+  width: 90%;
+  /* left: 0; */
+}
