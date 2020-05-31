@@ -35,8 +35,8 @@ export class CrudService {
       .post<{message: string}>(env.apiUrl + '/item/postItem/' + groupId, itemAdded)
       .subscribe(data => {
         if (data.message === 'successful') {
-       if(this.items.length == undefined){
-         this.items=[];
+       if (this.items.length == undefined) {
+         this.items = [];
        }
         this.items.push(itemAdded);
         this.itemsUpdated.next([...this.items]);

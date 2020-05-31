@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { AuthService } from 'src/app/Services/authService/auth.service';
+import { GroupService } from 'src/app/Services/groupService/group.service';
 
 @Component({
   selector: 'app-notification',
@@ -11,7 +11,7 @@ export class NotificationComponent implements OnInit, OnChanges {
    requestArea = true;
    notificationArea = false;
    openRequestNumber = -1;
-  constructor(private authService: AuthService) { }
+  constructor(private groupService: GroupService) { }
 
   ngOnInit() {
   }
@@ -19,30 +19,29 @@ export class NotificationComponent implements OnInit, OnChanges {
    this.notifications = changes.notifications.currentValue;
    }
 
-  onRequestOpen(){
+  onRequestOpen() {
     this.requestArea = true;
     this.notificationArea = false;
   }
 
-  onNotificationOpen(){
+  onNotificationOpen() {
     this.requestArea = false;
     this.notificationArea = true;
   }
 
-   changeRequestStatus(requestId: string, action: string, requstFor: string, groupId: Number){
-    if(confirm("Are you sure you want to accept the request")){
-        this.authService.changeRequestStatus(requestId, action, requstFor, groupId).subscribe((doc) => {
+   changeRequestStatus(requestId: string, action: string, requstFor: string, groupId: Number) {
+    if (confirm('Are you sure you want to accept the request')) {
+        this.groupService.changeRequestStatus(requestId, action, requstFor, groupId).subscribe((doc) => {
           console.log(doc);
 
-        })
+        });
     }
    }
-  openRequest(requestNo:Number){
+  openRequest(requestNo: Number) {
     // console.log('request no called'+requestNo);
-    if(this.openRequestNumber == +requestNo){
+    if (this.openRequestNumber === +requestNo) {
       this.openRequestNumber = -1;
-    }
-    else{
+    } else {
       this.openRequestNumber = +requestNo;
     }
   }

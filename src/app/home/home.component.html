@@ -87,9 +87,10 @@
                   <button class="btn btn-info">{{user.name.split(' ')[0]}}</button>
                 <!-- </li> -->
               </ul>
+              <button class="btn btn-primary" *ngIf = "checkButton(group.groupId) == 1" disabled>Already a member</button>
               <button class="btn btn-primary" (click) = "sendRequest(group.groupName)" *ngIf = "checkButton(group.groupId) == 3">Send Request</button>
               <button class="btn btn-primary" *ngIf = "checkButton(group.groupId) == 2" disabled>Already Requested</button>
-              <button class="btn btn-primary" *ngIf = "checkButton(group.groupId) == 1" disabled>Already a member</button>
+
             </div>
           </ul>
         </div>

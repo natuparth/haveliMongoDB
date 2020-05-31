@@ -4,7 +4,7 @@ const router = express.Router();
 const Item= require('../models/item');
 const group = require('../models/group');
 const checkAuth = require('../middleware/check-auth');
-router.post("/postItem/:groupId",(req,res,next)=>{
+router.post("/postItem/:groupId",checkAuth,(req,res,next)=>{
   const item = new Item({
     name : req.body.name,
   quantity:req.body.quantity,
@@ -34,7 +34,7 @@ router.post("/postItem/:groupId",(req,res,next)=>{
         res.send({message:'items not available!! please add'})
       }).catch((err) =>{
         if(err.message.includes("groupId"))
-        res.send({message:'group Id not found'}) 
+        res.send({message:'group Id not found'})
         else
          res.send({message:'some error occured'+err})
       });

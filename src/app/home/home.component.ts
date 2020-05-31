@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from '../Services/authService/auth.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { GroupService } from '../Services/groupService/group.service';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-home',
@@ -15,102 +14,94 @@ import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 export class HomeComponent implements OnInit {
   display = 'none';
   addFormFlag = false;
-  groupMap = new Map<Number, Group>();
   requestList: Array<any> = [];
   requestedUser: String;
   pendingRequestGroupIds: Array<Number>;
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private groupService: GroupService) { }
   groups: Group[] = [];
   groupUsersList: String[] = [];
   searchGroupForm = new FormGroup({
     search: new FormControl('')
-  })
+  });
   groupList: Group[] = [];
+  groupIds = localStorage.getItem('groups').split(',');
   expandedIndex = -1 ;
   ngOnInit() {
     this.registerSearchGroup();
-    this.authService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
-      // console.log('insddfh');
+    this.groupService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
+       console.log(groupIds.doc);
       this.pendingRequestGroupIds = groupIds.doc;
     });
   }
 
-  addGroup(groupName: string){
-    // console.log('add group',groupName);
-    this.authService.addGroup(groupName);
+  addGroup(groupName: string) {
+    this.groupService.addGroup(groupName);
   }
-  joinGroup(){
+  joinGroup() {
   this.display = 'block';
   }
-  showAddForm(){
+  showAddForm() {
     this.addFormFlag = true;
   }
-  setFocusGroup(group:any){
-    // console.log(group.key)
+  setFocusGroup(group: any) {
     localStorage.setItem('groupId', group.key.toString());
   }
-  registerSearchGroup(){
+  registerSearchGroup() {
     this.searchGroupForm.controls.search.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
       map(value => {
-        return this.authService.getGroupsByName(value);
+        return this.groupService.getGroupsByName(value);
       })
     ).subscribe((groups) => {
       this.groupList = [];
      groups.subscribe(value => {
-      // console.log(value.groups);
       this.groupList = value.groups;
-     })
-    })
+     });
+    });
   }
 
-  fetchUsers(groupId: number){
+  fetchUsers(groupId: number) {
     this.expandedIndex = groupId === this.expandedIndex ? -1 : groupId;
     this.groupUsersList = [];
-    this.authService.getUsersByGroupId(groupId).subscribe(value => {
+    this.groupService.getUsersByGroupId(groupId).subscribe(value => {
       this.groupUsersList = value.users;
-      // console.log(value);
-    })
+    });
   }
 
-  onSelectionChange(email: String){
+  onSelectionChange(email: String) {
     this.requestedUser = email;
   }
 
-  sendRequest(groupName: String){
+  sendRequest(groupName: String) {
     const reqBody = {
       for: localStorage.getItem('userEmail'),
       groupId: this.expandedIndex
     };
-    if([...this.groupMap.keys()].includes(reqBody.groupId)){
-     alert('you cannot request for a group you are already a part of');
-    }
-    else{
-   this.authService.createRequest(reqBody).subscribe(val => {
-     if(val.message === "request successful"){
+   this.groupService.createRequest(reqBody).subscribe(val => {
+     if (val.message === 'request successful') {
        alert('you have successfully requested to be a part of the group' + groupName );
      }
-   })
+   });
+
   }
-  }
- closeGroupModal(){
-  this.display = 'none'
+ closeGroupModal() {
+  this.display = 'none';
 
  }
- checkButton(groupId: Number){
-   if ([...this.groupMap.keys()].includes(groupId)){
+
+
+ checkButton(groupId: Number) {
+   if (this.groupIds.includes(groupId.toString())) {
      return 1;
-   }
-   else if(this.pendingRequestGroupIds.includes(groupId)){
+   } else if (this.pendingRequestGroupIds.includes(groupId)) {
      return 2;
-   }
-   else{
+   } else {
      return 3;
    }
  }
 }
-interface Group{
+interface Group {
   name: string;
   users: Array<any>;
 }

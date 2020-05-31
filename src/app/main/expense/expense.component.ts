@@ -5,6 +5,7 @@ import { ExpenseService } from 'src/app/Services/expenseService/expense-service.
 import { AuthService } from 'src/app/Services/authService/auth.service';
 import { Users } from 'src/app/models/users.model';
 import { Subject } from 'rxjs';
+import { GroupService } from 'src/app/Services/groupService/group.service';
 
 @Component({
   selector: 'app-expense',
@@ -27,8 +28,8 @@ export class ExpenseComponent implements OnInit {
   updateitemflag = false;
   expenseGraphToggle = false;
   expenseDetailsToggle = false;
-  errMessage:String;
-  errFlag:Boolean=false;
+  errMessage: String;
+  errFlag: Boolean = false;
   graphDataColumns: any[];
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
@@ -36,7 +37,8 @@ export class ExpenseComponent implements OnInit {
   constructor(
     private crudService: CrudService,
     private expenseService: ExpenseService,
-    private authService: AuthService
+    private authService: AuthService,
+    private groupService: GroupService
   ) {}
 
   ngOnInit() {
@@ -55,32 +57,30 @@ export class ExpenseComponent implements OnInit {
   openModal()
     Functionality:  open the selected model
     Returns:        No values are returned from this funcion.
-    Inputs:         itemId: 
+    Inputs:         itemId:
                     modalName:  Name of the modal to be displayed
   */
   openModal(expense: any, modalName: string) {
-    if (modalName == 'addModal') {
+    if (modalName === 'addModal') {
       this.addExpenseForm = new FormGroup({
         'purpose': new FormControl('', Validators.required),
         'dateOfPurchase': new FormControl(Date.now, Validators.required),
         'amount': new FormControl('', Validators.required),
         'description': new FormControl(''),
-        'forWhom' : new FormControl([],Validators.required)
+        'forWhom' : new FormControl([], Validators.required)
       });
-      for(var i=0; i < this.membersList.length;i++)
-      {
+      for (let i = 0; i < this.membersList.length; i++) {
         this.addExpenseForm.value.forWhom.push(this.membersList[i].email);
       }
       this.addDisplay = true;
-    }
-    else {
+    } else {
       this.updateExpenseForm = new FormGroup({
-        'purpose' : new FormControl(expense.purpose,Validators.required),
+        'purpose' : new FormControl(expense.purpose, Validators.required),
         'dateOfPurchase': new FormControl(expense.dateOfPurchase, Validators.required),
         'amount': new FormControl(expense.amount, Validators.required),
         'description': new FormControl(expense.description),
-        'forWhom' : new FormControl(expense.forWhom,Validators.required),
-        'expenseId' : new FormControl(expense._id,Validators.required)
+        'forWhom' : new FormControl(expense.forWhom, Validators.required),
+        'expenseId' : new FormControl(expense._id, Validators.required)
       });
       this.updateDisplay = true;
     }
@@ -106,11 +106,11 @@ export class ExpenseComponent implements OnInit {
                     name: calls the getexpense function
                     email:  sets the current user-email
   */
-  MemberFunction(index: any,type:String) {
+  MemberFunction(index: any, type: String) {
     this.memberFlag = true;
     this.currentUserName = this.membersList[index].name;
-    this.currentUserEmail= this.membersList[index].email;
-    if(type==='name'){
+    this.currentUserEmail = this.membersList[index].email;
+    if (type === 'name') {
       this.GetUserValues(this.membersList[index].email);
     }
   }
@@ -124,18 +124,17 @@ export class ExpenseComponent implements OnInit {
     this.expenseGraphToggle = false;
     this.welcomeFlag = true;
     this.itemList = [];
-    this.errFlag=false;
+    this.errFlag = false;
     this.expenseService.getExpenses(email).subscribe(doc => {
       this.itemSubject.next(doc);
-      if(this.crudService.getItemListKey(this.itemList)!=""){
-      this.errMessage=this.crudService.getItemListKey(this.itemList);
-      this.errFlag=true;
-    }
-    else{
-      this.graphDataColumns = ['purpose','amount'];
+      if (this.crudService.getItemListKey(this.itemList) !='') {
+      this.errMessage = this.crudService.getItemListKey(this.itemList);
+      this.errFlag = true;
+    } else {
+      this.graphDataColumns = ['purpose', 'amount'];
       this.expenseGraphToggle = this.itemList.length > 0;
       this.expenseDetailsToggle = false;
-      
+
     }
       this.welcomeFlag = false;
     });
@@ -149,11 +148,10 @@ export class ExpenseComponent implements OnInit {
   */
   async GetUsers() {
     this.membersList = [];
-    var groupId = localStorage.getItem('groupId');//data strored in string
-   
+    let groupId = localStorage.getItem('groupId'); // data strored in string
+
     // console.log("sart",groupId);
-    if(groupId == "undefined")//string comparision => if group id is not assigned pull the user details only 
-    {
+    if (groupId == 'undefined') {
       this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
@@ -168,9 +166,8 @@ export class ExpenseComponent implements OnInit {
         });
         this.welcomeFlag = false;
       });
-    }
-    else{
-      this.authService.getUsersByGroupId(Number(groupId)).subscribe(doc => {
+    } else {
+      this.groupService.getUsersByGroupId(Number(groupId)).subscribe(doc => {
         let count = 0;
         // console.log('users',doc);
         doc.users.forEach(user => {
@@ -201,13 +198,13 @@ export class ExpenseComponent implements OnInit {
       description: expensedata.value.description,
       forWhom : expensedata.value.forWhom
     };
-    var expenseId = expensedata.value.expenseId;
-    this.expenseService.updateExpense(expense,this.currentUserEmail,expenseId).subscribe(response =>{
-      if(response.message === 'successfully updated'){
+    let expenseId = expensedata.value.expenseId;
+    this.expenseService.updateExpense(expense, this.currentUserEmail, expenseId).subscribe(response => {
+      if (response.message === 'successfully updated') {
         alert('Expense successfully updated');
-      } else{
+      } else {
         alert('some error occurred while adding the expense. Error: ' +
-        response.error)
+        response.error);
       }
       this.onCloseHandled('updateModal');
       this.GetUserValues(this.currentUserEmail);
@@ -229,12 +226,13 @@ export class ExpenseComponent implements OnInit {
       groupId : +this.groupId
     };
 
-    this.expenseService.addExpenses(expense,this.currentUserEmail).subscribe(response => {
-      this.onCloseHandled('addModal')
+    this.expenseService.addExpenses(expense, this.currentUserEmail).subscribe(response => {
+      this.onCloseHandled('addModal');
       if (response.message === 'successful') {
         alert('Expense added successfully');
-        if(this.itemList.length === undefined)
+        if (this.itemList.length === undefined) {
               this.itemList=[];
+        }
         this.itemList.push(expense);
         this.itemSubject.next([...this.itemList]);
         this.GetUserValues(this.currentUserEmail);
@@ -253,29 +251,25 @@ export class ExpenseComponent implements OnInit {
     Inputs:         index:take the index of the user.
                     modalName:take the modal name for which the operation to be executed
   */
-  changeforUser(index:any,modalName:String){
-    if(modalName === 'addExpense'){
-      var memberemail = this.membersList[index].email;
-      var memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
-      if(memberIndex >=0){
-        this.addExpenseForm.value.forWhom.splice(memberIndex,1);
-      }
-      else{
+  changeforUser(index: any, modalName: String) {
+    if (modalName === 'addExpense') {
+      let memberemail = this.membersList[index].email;
+      let memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
+      if (memberIndex >= 0) {
+        this.addExpenseForm.value.forWhom.splice(memberIndex, 1);
+      } else {
         this.addExpenseForm.value.forWhom.push(memberemail);
       }
-    }
-    else
-    {
-      var memberemail = this.membersList[index].email;
-      var memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
-      if(memberIndex >=0){
-        this.updateExpenseForm.value.forWhom.splice(memberIndex,1);
-      }
-      else{
+    } else {
+      let memberemail = this.membersList[index].email;
+      let memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
+      if (memberIndex >= 0) {
+        this.updateExpenseForm.value.forWhom.splice(memberIndex, 1);
+      } else {
         this.updateExpenseForm.value.forWhom.push(memberemail);
       }
     }
-    
+
   }
   /*
   checkforUser()
@@ -284,14 +278,14 @@ export class ExpenseComponent implements OnInit {
     Inputs:         index:take the index of the user.
                     modalName:take the modal name for which the operation to be executed
   */
-  deleteExpense(expense : any){
-    console.log("delete");
+  deleteExpense(expense: any) {
+    console.log('delete');
     if (confirm('Are you sure you want to remove ' + expense.purpose + ' expense')) {
-      this.expenseService.deleteExpense(this.currentUserEmail,expense._id).subscribe(response =>{
-        if(response.message === 'successfully deleted'){
+      this.expenseService.deleteExpense(this.currentUserEmail, expense._id).subscribe(response => {
+        if (response.message === 'successfully deleted') {
           alert('Expense successfully deleted');
-        } else{
-          alert('some error occurred while adding the expense. Error: ')
+        } else {
+          alert('some error occurred while adding the expense. Error: ');
         }
         this.GetUserValues(this.currentUserEmail);
       });
@@ -304,24 +298,21 @@ export class ExpenseComponent implements OnInit {
     Inputs:         index:take the index of the user.
                     modalName:take the modal name for which the operation to be executed
   */
-  checkforUser(index:any,modalName:String){
-    if(modalName === 'addExpense'){
-      var memberemail = this.membersList[index].email;
-      var memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
-      if(memberIndex>=0){
+  checkforUser(index: any, modalName: String) {
+    if (modalName === 'addExpense') {
+      let memberemail = this.membersList[index].email;
+      let memberIndex = this.addExpenseForm.value.forWhom.indexOf(memberemail);
+      if (memberIndex >= 0) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
-    }
-    else{
-      var memberemail = this.membersList[index].email;
-      var memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
-      if(memberIndex>=0){
+    } else {
+      let memberemail = this.membersList[index].email;
+      let memberIndex = this.updateExpenseForm.value.forWhom.indexOf(memberemail);
+      if (memberIndex >= 0) {
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     }

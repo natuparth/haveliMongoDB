@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { GroupService } from '../Services/groupService/group.service';
 import { AuthService } from '../Services/authService/auth.service';
 
 
@@ -22,22 +23,23 @@ export class MainComponent implements OnInit {
   showChildToggle = true;
   noOfNotificatons = 0;
 
-  constructor(private router: Router, private authService: AuthService,private route: ActivatedRoute) {
+  constructor(private groupService: GroupService, private route: ActivatedRoute , private authService: AuthService) {
     this.nameObservable = authService.getNameObservable();
     authService.nameSubject.next(localStorage.getItem('userName'));
-    this.requestObservable = authService.getRequestObservable();
+    this.requestObservable = groupService.getRequestObservable();
   }
 
-  logout(){
+  logout() {
   this.authService.logout();
   }
 
 
   ngOnInit() {
-    this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
-      this.groupList=doc.items;
-      if(this.groupList.length){
-        this.gid=this.groupList.find(x => x.groupId == localStorage.getItem('groupId')).groupName;
+    this.groupService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
+      this.groupList = doc.items;
+      console.log(this.groupList);
+      if (this.groupList.length) {
+        this.gid = this.groupList.find(x => x.groupId == localStorage.getItem('groupId')).groupName;
         this.getNotifications();
       }
     });
@@ -46,26 +48,26 @@ export class MainComponent implements OnInit {
       this.user = name.split(' ')[0];
     });
   }
-  openNotification(){
+  openNotification() {
    this.requestDisplay = this.requestDisplay === 'block' ? 'none' : 'block';
   }
 
-  setGroup(group:any){
-    localStorage.setItem('groupId',group.groupId)
-    this.gid=group.groupName;
+  setGroup(group: any) {
+    localStorage.setItem('groupId', group.groupId);
+    this.gid = group.groupName;
     this.showChildToggle = false;
     setTimeout(() => {
-      this.showChildToggle = true
+      this.showChildToggle = true;
     }, 100);
   }
-  getNotifications(){
-    this.authService.getGroupRequests(localStorage.getItem('groups').split(',')).subscribe((data) => {
+  getNotifications() {
+    this.groupService.getGroupRequests(localStorage.getItem('groups').split(',')).subscribe((data) => {
       this.notifications = data.requests;
-      this.noOfNotificatons=this.notifications.length;
+      this.noOfNotificatons = this.notifications.length;
       this.notifications.map((request) => {
-        request.groupName=this.groupList.find(x => x.groupId == request.groupId).groupName;
+        request.groupName = this.groupList.find(x => x.groupId == request.groupId).groupName;
       });
-      this.authService.requestSubject.next(this.notifications);
+      this.groupService.requestSubject.next(this.notifications);
     });
   }
 }

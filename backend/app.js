@@ -12,6 +12,8 @@ const authRoutes = require('./routes/user');
 
 const expenseRoutes = require('./routes/expense');
 
+const groupRoutes = require('./routes/group');
+
 const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
@@ -30,6 +32,7 @@ app.use(cors());
 app.use('/api/item',itemRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/expense',expenseRoutes);
+app.use('/api/group', groupRoutes);
 
 
  module.exports = app;

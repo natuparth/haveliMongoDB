@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/Services/authService/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { GroupService } from 'src/app/Services/groupService/group.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,7 @@ export class ProfileComponent implements OnInit {
   loadingFlad = false;
   nameObservable: Observable<string>;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private groupService: GroupService) {
 
   }
 
@@ -38,9 +39,9 @@ export class ProfileComponent implements OnInit {
     this.getGroupData();
   }
 
-  getProfileData(){
+  getProfileData() {
     this.authService.getUserDetails(this.userEmail).subscribe(doc => {
-      console.log(doc.users.length,this.userEmail)
+      console.log(doc.users.length, this.userEmail);
       doc.users.forEach(user => {
         this.userData.value.name = user.name;
         this.userData.value.email = user.email;
@@ -55,13 +56,13 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  updateProfileclose(){
+  updateProfileclose() {
     this.updateProfileDisplay = false;
   }
 
-  updateProfileOpen(){
+  updateProfileOpen() {
     this.updatePofileForm = new FormGroup({
-      'name' : new FormControl(this.userData.value.name,Validators.required),
+      'name' : new FormControl(this.userData.value.name, Validators.required),
       'email': new FormControl(this.userData.value.email, Validators.required),
       'password': new FormControl('', Validators.required),
       'groupId': new FormControl(this.userData.value.groupId),
@@ -81,13 +82,13 @@ export class ProfileComponent implements OnInit {
       profilePicId : profiledata.value.profilePicId,
       updatePassword : profiledata.value.updatePassword
     };
-    this.authService.updateProfile(profile,profiledata.value.email).subscribe(response =>{
-      if(response.message === 'successfully updated'){
+    this.authService.updateProfile(profile, profiledata.value.email).subscribe(response => {
+      if (response.message === 'successfully updated') {
         alert('Profile successfully updated');
 
-      } else{
+      } else {
         alert('some error occurred while adding the expense. Error: ' +
-        response.error)
+        response.error);
       }
       this.getProfileData();
       this.loadingFlad = false;
@@ -95,19 +96,16 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  getGroupData(){
-    this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
+  getGroupData() {
+    this.groupService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
 
       const size = doc.items.length;
       for (let i = 0; i < size; i++) {
         this.groupMap.set(doc.items[i].groupId, { name: doc.items[i].groupName, users: []});
       }
-      this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
-          // console.log(this.groupMap);
-          // console.log(data.users);
+      this.groupService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
+
           data.users.forEach((user) => {
-          // console.log(user.groups);
-          // console.log(this.groupMap.get(user.groups));
           const usersArray = this.groupMap.get(user.groups).users;
           usersArray.push(user.name);
           this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
@@ -118,7 +116,7 @@ export class ProfileComponent implements OnInit {
   }
 
 }
-interface Group{
+interface Group {
   name: string;
   users: Array<any>;
 }
