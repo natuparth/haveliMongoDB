@@ -35,9 +35,8 @@ export class CrudService {
       .post<{message: string}>(env.apiUrl + '/item/postItem/' + groupId, itemAdded)
       .subscribe(data => {
         if (data.message === 'successful') {
-       if(this.items.length == undefined){////whunmute//whatsapp+//ho
-          // if(this.getItemListKey(this.items)!="")//done andi this function //good//same chnge there also macha//where//whenever we are fetching expense or adding expense  ,//there are two conditions for this 1.when msg doc is present2.when oject is present//for that push op we didn,t push there so its working fine 
-              this.items=[];
+       if(this.items.length == undefined){
+         this.items=[];
        }
         this.items.push(itemAdded);
         this.itemsUpdated.next([...this.items]);
@@ -117,8 +116,6 @@ export class CrudService {
 
  getItemListKey(itemsList: Array<any>):string{
   let keys = Object.keys(itemsList)
-  //let values = keys.map(k => itemsList[k])
-  //console.log(itemsList[keys[0]]);
   if(keys[0]=="message")
     return itemsList[keys[0]];
   else
