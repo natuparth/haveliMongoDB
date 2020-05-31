@@ -10,7 +10,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ProfileComponent implements OnInit {
 
-
+  groupMap = new Map<Number, Group>();
+  requestList: Array<any> = [];
   userData: FormGroup;
   userEmail:  string = null;
   userName:  string = null;
@@ -34,6 +35,7 @@ export class ProfileComponent implements OnInit {
     this.userEmail = localStorage.getItem('userEmail');
     this.userName = localStorage.getItem('userName');
     this.getProfileData();
+    this.getGroupData();
   }
 
   getProfileData(){
@@ -93,4 +95,30 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  getGroupData(){
+    this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
+
+      const size = doc.items.length;
+      for (let i = 0; i < size; i++) {
+        this.groupMap.set(doc.items[i].groupId, { name: doc.items[i].groupName, users: []});
+      }
+      this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
+          // console.log(this.groupMap);
+          // console.log(data.users);
+          data.users.forEach((user) => {
+          // console.log(user.groups);
+          // console.log(this.groupMap.get(user.groups));
+          const usersArray = this.groupMap.get(user.groups).users;
+          usersArray.push(user.name);
+          this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
+
+        });
+      });
+    });
+  }
+
+}
+interface Group{
+  name: string;
+  users: Array<any>;
 }

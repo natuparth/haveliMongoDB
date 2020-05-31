@@ -1,6 +1,7 @@
 <ul class="nav nav-tabs justify-content-center">
  <li class="nav-item">
-   <a class="nav-link text-secondary"  (click)= "onRequestOpen()" >Requests</a>
+  <a class="nav-link text-secondary"  (click)= "onRequestOpen()" >Requests <span *ngIf="notifications.length" class="badge" [ngStyle]="{'color': 'red'}">{{notifications.length}}</span>
+  </a>
  </li>
  <li class="nav-item mx-3">
   <a class="nav-link text-secondary"  (click)= "onNotificationOpen()" >Notifications</a>
@@ -8,17 +9,19 @@
 </ul>
 <div *ngIf="requestArea">
 <ul class="list-group"  *ngIf = "notifications.length>0 ;else noRequestsBlock">
-  <li *ngFor="let notification of notifications"   class="list-group-item py-0">
+  <li *ngFor="let notification of notifications;index as i" (click)="openRequest(i)"  class="list-group-item py-0">
     <div *ngIf ="notification.Status === 'Pending'">
-    <div class="m-0 p-0 border-bottom">
-       {{notification.for}} has requested for joining group {{notification.groupName}}
-    </div>
-    <div class="mt-2">
-       <button class="btn btn-dark mr-2" (click)="changeRequestStatus(notification._id,'accepted', notification.for, notification.groupId)">
-    Accept
-   </button>
-   <button class="btn btn-dark" (click) = "changeRequestStatus(notification._id,'rejected', notification.for, notification.groupId)">Reject</button>
-   </div>
+      <div class="m-0 p-0 border-bottom">
+        <span class="specialWords">{{notification.for}}</span> has requested for joining group <span class="specialWords">{{notification.groupName}}</span>
+      </div>
+      <div class="mt-2" *ngIf="i==openRequestNumber">
+        <button class="btn btn-dark mr-2" (click)="changeRequestStatus(notification._id,'accepted', notification.for, notification.groupId)">
+          Accept
+        </button>
+        <button class="btn btn-dark" (click) = "changeRequestStatus(notification._id,'rejected', notification.for, notification.groupId)">
+          Reject
+        </button>
+      </div>
     </div>
   </li>
 

@@ -29,41 +29,14 @@ export class HomeComponent implements OnInit {
   expandedIndex = -1 ;
   ngOnInit() {
     this.registerSearchGroup();
-    this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
-
-      const size = doc.items.length;
-      for (let i = 0; i < size; i++) {
-        this.groupMap.set(doc.items[i].groupId, { name: doc.items[i].groupName, users: []});
-      }
-      this.authService.getGroupMembers([...this.groupMap.keys()]).subscribe((data) => {
-          console.log(this.groupMap);
-          console.log(data.users);
-          data.users.forEach((user) => {
-          console.log(user.groups);
-          console.log(this.groupMap.get(user.groups));
-          const usersArray = this.groupMap.get(user.groups).users;
-          usersArray.push(user.name);
-          this.groupMap.set(user.groups, Object.assign({...this.groupMap.get(user.groups)}, {users: usersArray}));
-
-        });
-        this.authService.getGroupRequests([...this.groupMap.keys()]).subscribe((data) => {
-          this.requestList = data.requests;
-          this.requestList.map((request) => {
-            request.groupName = this.groupMap.get(request.groupId).name;
-          })
-          this.authService.requestSubject.next(this.requestList);
-        })
-      });
-    });
-
     this.authService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
-      console.log('insddfh');
+      // console.log('insddfh');
       this.pendingRequestGroupIds = groupIds.doc;
-    })
+    });
   }
 
   addGroup(groupName: string){
-    console.log('add group',groupName);
+    // console.log('add group',groupName);
     this.authService.addGroup(groupName);
   }
   joinGroup(){
@@ -80,19 +53,16 @@ export class HomeComponent implements OnInit {
     this.searchGroupForm.controls.search.valueChanges.pipe(
       debounceTime(1000),
       distinctUntilChanged(),
-     map(value => {
-       return this.authService.getGroupsByName(value);
-     }
-    )
+      map(value => {
+        return this.authService.getGroupsByName(value);
+      })
     ).subscribe((groups) => {
       this.groupList = [];
      groups.subscribe(value => {
-      console.log(value.groups);
+      // console.log(value.groups);
       this.groupList = value.groups;
      })
     })
-
-
   }
 
   fetchUsers(groupId: number){
@@ -100,7 +70,7 @@ export class HomeComponent implements OnInit {
     this.groupUsersList = [];
     this.authService.getUsersByGroupId(groupId).subscribe(value => {
       this.groupUsersList = value.users;
-      console.log(value);
+      // console.log(value);
     })
   }
 

@@ -12,7 +12,6 @@ import { AuthService } from '../Services/authService/auth.service';
 })
 export class MainComponent implements OnInit {
   user = ' ';
-  userImg = ' ';
   userName = ' ';
   notifications: Array<any> = [];
   nameObservable: Observable<string>;
@@ -21,10 +20,9 @@ export class MainComponent implements OnInit {
   groupList: any[] = [];
   gid: string;
   showChildToggle = true;
+  noOfNotificatons = 0;
 
   constructor(private router: Router, private authService: AuthService,private route: ActivatedRoute) {
-    console.log('main constructor called and added');
-   // this.router.navigate(['main/grocery']);
     this.nameObservable = authService.getNameObservable();
     authService.nameSubject.next(localStorage.getItem('userName'));
     this.requestObservable = authService.getRequestObservable();
@@ -36,45 +34,39 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit() {
-    this.requestObservable.subscribe(value => {
-     // this.requests = value;
-     console.log('subscribed');
-    this.notifications = value;
-     console.log(this.notifications);
-    })
-    this.gid=localStorage.getItem('groupId');
     this.authService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
       this.groupList=doc.items;
-     // console.log(doc);
-     // console.log(this.groupList);
-
+      if(this.groupList.length){
+        this.gid=this.groupList.find(x => x.groupId == localStorage.getItem('groupId')).groupName;
+        this.getNotifications();
+      }
     });
     this.nameObservable.subscribe(name => {
-      console.log('observable called');
       this.userName = name;
       this.user = name.split(' ')[0];
-    this.userImg = '../assets/' + this.user.toLocaleLowerCase() + '.jpg';
-
     });
-    const a1 = new Date(localStorage.getItem('expiresAt')).getTime();
-    const a2 = new Date().getTime();
-    if(a1 < a2) {
-        //  this.router.navigate(['home']);
-      }
   }
   openNotification(){
    this.requestDisplay = this.requestDisplay === 'block' ? 'none' : 'block';
   }
 
-  setGroup(groupId:string){
-    localStorage.setItem('groupId',groupId)
-    this.gid=localStorage.getItem('groupId');
-        this.showChildToggle = false;
-        setTimeout(() => {
-        this.showChildToggle = true
-        }, 100);
-
+  setGroup(group:any){
+    localStorage.setItem('groupId',group.groupId)
+    this.gid=group.groupName;
+    this.showChildToggle = false;
+    setTimeout(() => {
+      this.showChildToggle = true
+    }, 100);
   }
-
+  getNotifications(){
+    this.authService.getGroupRequests(localStorage.getItem('groups').split(',')).subscribe((data) => {
+      this.notifications = data.requests;
+      this.noOfNotificatons=this.notifications.length;
+      this.notifications.map((request) => {
+        request.groupName=this.groupList.find(x => x.groupId == request.groupId).groupName;
+      });
+      this.authService.requestSubject.next(this.notifications);
+    });
+  }
 }
 

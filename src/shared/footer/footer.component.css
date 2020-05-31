@@ -1,0 +1,66 @@
+.footer{
+    height: 35px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 5px;
+    flex-wrap: wrap;
+    color: wheat;
+    flex-direction: column;
+    transition: 0.3s ease-in-out;
+}
+.footer:hover{
+    height: auto;
+}
+.footer:hover .ContactInformation{
+    visibility: visible;
+    opacity: 1;
+    margin-top: 0px;
+    transition-delay: 0.1s;
+    transition: 0.3s;
+}
+.copyrightDetails{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+}
+p{
+    margin: 0;
+}
+.copyrightDate{
+    font-size: 12px;
+    color: #696666;
+}
+.copyrightCompany{
+    font-size: 17px;
+    color: wheat;
+}
+.ContactInformation{
+    position: relative;
+    visibility: hidden;
+    opacity: 0;
+    margin-top: -140px;
+    transition: 0.3 ease-in-out;
+}
+.arrow{
+    position: absolute;
+    right: 1%;
+    transform: rotateZ(90deg);
+    resize: 0.5;
+    transition: 0.3s;
+    animation: fadeInAnimation ease 2s infinite alternate
+}
+.footer:hover .arrow{
+    transform: rotateZ(-90deg);
+    transition: 0.3s;
+}
+@keyframes fadeInAnimation {
+    0%{
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+     }
+}
