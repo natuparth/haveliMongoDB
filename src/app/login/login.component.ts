@@ -5,6 +5,7 @@ import { CrudService } from 'src/app/Services/crudService/crud.service';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HostListener } from "@angular/core";
+import { GroupService } from '../Services/groupService/group.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
   newGroupId: Number = null;
   searchForm: FormGroup;
   isAuthenticated: boolean;
-  message:String;
+  message:String='';
   login_flag:boolean;
   in_min = [0, 0];
   in_max = [0, 0];
@@ -30,15 +31,18 @@ export class LoginComponent implements OnInit {
   resendOtpFlag:boolean = false;
   forgotPasswordFlag: boolean = false;
   updatePasswordFlag: boolean = false;
-  constructor( private authService: AuthService, private router: Router) {
+  constructor( private authService: AuthService, private router: Router,private groupService:GroupService) {
     this.authService.userAuthListener = new Subject<string>();
-
   }
-
   ngOnInit() {
-    if(localStorage.getItem('userName') != null && !localStorage.getItem('serverDown')) {
-       this.router.navigate(['main/home']);
+    if(localStorage.getItem('token') != null){
+    if(new Date(localStorage.getItem('expiresAt'))> new Date(Date.now())){
+      localStorage.clear();
+      this.message = "your authentication has expired"
     }
+    else
+    this.router.navigate(['main/home']);
+  }
     this.getScreenSize();
     this.otpCheckForm = new FormGroup({
       'email' : new FormControl('', Validators.required),
