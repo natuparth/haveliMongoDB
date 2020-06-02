@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     if(localStorage.getItem('token') != null){
     if(new Date(localStorage.getItem('expiresAt'))> new Date(Date.now())){
       localStorage.clear();
-      this.message = "your authentication has expired"
+      this.message = "your session has expired"
     }
     else
     this.router.navigate(['main/home']);
