@@ -9,9 +9,9 @@ import { throwError } from 'rxjs';
 export class AuthInterceptor implements HttpInterceptor{
   constructor(private router: Router) {
   }
-  intercept(req: HttpRequest<any>, next: HttpHandler){
-  //  const authToken = this.authService.getToken();
+    intercept(req: HttpRequest<any>, next: HttpHandler){
     const authToken = localStorage.getItem('token');
+    console.log(authToken)
   const authRequest = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + authToken)
     });
@@ -28,7 +28,10 @@ return next.handle(authRequest).pipe(
     } else {
       errorMessage = error.error.message.message;
     }
-
+    if(errorMessage==='Your Authentication Token has expired') {
+      this.router.navigate(['login'] )
+    }
+    else
     this.router.navigate(['error'], { state: {message: errorMessage}} );
     return throwError(errorMessage);
   })
