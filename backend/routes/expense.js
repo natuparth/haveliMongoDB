@@ -5,17 +5,49 @@ const Expense= require('../models/expense');
 const User  = require('../models/user');
 const checkAuth = require('../middleware/check-auth');
 
+// router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
+//   User.find({email: req.params.email}).then((doc)=>{
+//       if(doc[0].expenses[0]!=null)
+//        res.send(doc[0].expenses);
+//        else
+//        res.send({message:"you have no Expenses yet!!"});
+//   }).catch((e)=>{
+//     res.json({message: 'error occured '});
+//   });
+// });
+
 router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
-  User.find({email: req.params.email}).then((doc)=>{
-      if(doc[0].expenses[0]!=null)
-       res.send(doc[0].expenses);
-       else
-       res.send({message:"you have no Expenses yet!!"});
+ console.log(req.params.email);
+  User.aggregate([
+    { $match : {email : req.params.email}},
+    { $project : {'expenses':1,_id:1}},
+    { $unwind: '$expenses'},
+        { $sort : { 'expenses.dateOfPurchase' :-1}},
+        {
+          "$group": {
+            "_id": "$_id",
+            "expenses": {
+              "$push": "$expenses"
+            }
+          }
+        }
+  
+      ],
+  (err, doc)=>{
+    console.log(doc,doc.length)
+    if(err)
+      res.json({message: 'error occured '});
+    else{
+      if(doc.length)
+        res.send(doc[0].expenses);
+      else
+      res.send({message:"you have no Expenses yet!!"});
+    }
   }).catch((e)=>{
-    res.json({message: 'error occured '});
+    console.log('err'+e)
+    res.json({message: 'error occured '+e});
   });
 });
-
  
 router.post("/addExpenses/:email",checkAuth, (req,res,next)=>{
   console.log("reqbody",req.body);
