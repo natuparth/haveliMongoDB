@@ -14,9 +14,9 @@ export class ExpenseService {
 
   }
 
-  public getExpenses(email: string):Observable<any> {
+  public getExpenses(email: string, groupId: string):Observable<any> {
 
-   return this.http.get<Expense[]>(env.apiUrl + '/expense/getExpenses/'+ email);
+   return this.http.get<Expense[]>(env.apiUrl + '/expense/getExpenses/'+ email+'/'+groupId);
   }
 
   public addExpenses(expense: any, email:string): Observable<any>{

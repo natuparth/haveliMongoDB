@@ -38,7 +38,6 @@ export class ExpenseComponent implements OnInit {
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
   dateFilterForm: FormGroup;
-  groupId: string = null;
   custuomDatesFlag: boolean = false;
   constructor(
     private crudService: CrudService,
@@ -135,7 +134,8 @@ export class ExpenseComponent implements OnInit {
     this.welcomeFlag = true;
     this.itemList = [];
     this.errFlag = false;
-    this.expenseService.getExpenses(email).subscribe(doc => {
+    let groupId = localStorage.getItem('groupId');
+    this.expenseService.getExpenses(email,groupId).subscribe(doc => {
       this.itemSubject.next(doc);
       if (this.crudService.getItemListKey(this.itemList) !='') {
       this.errMessage = this.crudService.getItemListKey(this.itemList);
@@ -145,9 +145,10 @@ export class ExpenseComponent implements OnInit {
       this.expenseGraphToggle = this.itemList.length > 0;
       this.expenseDetailsToggle = false;
       this.filteredItemList = this.itemList;
-      console.log(this.itemList)
+      
     }
       this.welcomeFlag = false;
+      console.log(this.itemList);
     });
   }
   /*
@@ -228,13 +229,14 @@ export class ExpenseComponent implements OnInit {
     Inputs:         Take the form value of Add Expense form.
   */
   addExpense(item: FormGroup) {
+    let groupId = localStorage.getItem('groupId');
     const expense = {
       purpose: item.value.purpose,
       amount: item.value.amount,
       dateOfPurchase: item.value.dateOfPurchase,
       description: item.value.description,
       forWhom : item.value.forWhom,
-      groupId : +this.groupId
+      groupId : +groupId
     };
 
     this.expenseService.addExpenses(expense, this.currentUserEmail).subscribe(response => {

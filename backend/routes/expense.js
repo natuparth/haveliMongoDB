@@ -16,25 +16,34 @@ const checkAuth = require('../middleware/check-auth');
 //   });
 // });
 
-router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
- console.log(req.params.email);
+router.get("/getExpenses/:email/:groupId",checkAuth,(req,res,next)=>{
+ console.log(req.params.email,req.params.groupId);
   User.aggregate([
-    { $match : {email : req.params.email}},
-    { $project : {'expenses':1,_id:1}},
-    { $unwind: '$expenses'},
-        { $sort : { 'expenses.dateOfPurchase' :-1}},
-        {
-          "$group": {
-            "_id": "$_id",
-            "expenses": {
-              "$push": "$expenses"
-            }
+    { $match : {'email' : req.params.email} },
+    { $project : {  expenses: {
+         $filter: {
+            input: "$expenses",
+            as: "expense",
+            cond: { $eq: [ "$$expense.groupId", +req.params.groupId ]  }
           }
+        }, _id:1
+      }
+    },
+    // { $project : {'expenses':1,_id:1}},
+    { $unwind: '$expenses'},
+    { $sort : { 'expenses.dateOfPurchase' :-1}},
+    {
+      "$group": {
+        "_id": "$_id",
+        "expenses": {
+          "$push": "$expenses"
         }
+      }
+    }
   
-      ],
+    ],
   (err, doc)=>{
-    console.log(doc,doc.length)
+    console.log(doc)
     if(err)
       res.json({message: 'error occured '});
     else{
