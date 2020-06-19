@@ -1,0 +1,9 @@
+<div class="groupDashboardContainer">
+    <h2>&emsp;{{groupName}}</h2>
+    <div class="graphsContainer">
+        <app-piechart class="graphs" *ngIf="expCompareFlag" [graphDataList]="expCompareData" [graphDataLabel]="expLabels"></app-piechart>
+        <app-piechart class="graphs" *ngIf="expByDateFlag"></app-piechart>
+        <app-piechart class="graphs" *ngIf="splitGraphFlag"></app-piechart>
+        <h2 *ngIf="!expCompareFlag && !splitGraphFlag && !expByDateFlag">No Data Available</h2>
+    </div>
+</div>
