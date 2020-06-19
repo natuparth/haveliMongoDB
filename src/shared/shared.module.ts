@@ -5,12 +5,13 @@ import { CircleLoadComponent } from 'src/shared/LoadingBar/circle-load/circle-lo
 import { DotJumpComponent } from './LoadingBar/dot-jump/dot-jump.component';
 import { FooterComponent } from './footer/footer.component';
 import { PiechartComponent } from './graphs/piechart/piechart.component';
-import { HighchartsChartModule } from 'highcharts-angular'
+import { HighchartsChartModule } from 'highcharts-angular';
+import { ScatterplotComponent } from './graphs/scatterplot/scatterplot.component'
 
 @NgModule({
-declarations: [CircleLoadComponent, DotJumpComponent, FooterComponent, PiechartComponent],
+declarations: [CircleLoadComponent, DotJumpComponent, FooterComponent, PiechartComponent, ScatterplotComponent],
 imports: [CommonModule, HighchartsChartModule],
-exports: [ReactiveFormsModule, FormsModule, CommonModule, CircleLoadComponent, DotJumpComponent, FooterComponent, PiechartComponent]
+exports: [ReactiveFormsModule, FormsModule, CommonModule, CircleLoadComponent, DotJumpComponent, FooterComponent, PiechartComponent, ScatterplotComponent]
 })
 
 export class SharedModule{

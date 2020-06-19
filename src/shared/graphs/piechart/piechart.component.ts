@@ -26,7 +26,7 @@ export class PiechartComponent implements OnInit {
       for ( let i = 0; i < dataLength; i++ ) {
         this.dataPoints.push({ y : this.graphDataList[i].data, name : this.graphDataList[i].name});
       }
-      console.log(this.dataPoints);
+      // console.log(this.dataPoints);
       let dataLabelsLength = this.graphDataLabel.length;
       if(dataLabelsLength){
         this.dataLabels = this.graphDataLabel;
@@ -36,27 +36,13 @@ export class PiechartComponent implements OnInit {
       }
       this.pointFormat = '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>'
                         +this.dataLabels[1]+' <b>{point.y}</b><br/>'
-      console.log("asda",this.graphDataLabel,this.dataLabels,this.pointFormat);
+      // console.log("asda",this.graphDataLabel,this.dataLabels,this.pointFormat);
       this.displayGraphFlag = true;
       this.defaultChartData();
     }
     else{
-      console.log("no data display")
       this.displayGraphFlag = false;
-      // this.dataPoints = [ { name: 'Spain', y: 505370, z: 92.9 },
-      //             { name: 'France', y: 551500,  z: 118.7 },
-      //             { name: 'Poland', y: 312685,  z: 124.6 },
-      //             { name: 'Czech Republic',y: 78867,z: 137.5 },
-      //             { name: 'Italy',y: 301340,z: 201.8 },
-      //             { name: 'Switzerland',y: 41277,z: 214.5 },
-      //             { name: 'Germany',y: 357022,z: 235.6 }
-      //           ];
-      // this.dataLabels = ["Country","Area"]
     }
-    // this.pointFormat = '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>'
-    //                     +this.dataLabels[1]+' <b>{point.y}</b><br/>'
-    // console.log("asda",this.graphDataLabel,this.dataLabels,this.pointFormat)
-    // this.defaultChartData();
   }
 
   defaultChartData(){
@@ -70,8 +56,6 @@ export class PiechartComponent implements OnInit {
       tooltip: {
           headerFormat: '',
           pointFormat: this.pointFormat
-          // '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
-          //     +this.dataLabels[1]+' <b>{point.y}</b><br/>'
       },
       plotOptions: {
         pie: {

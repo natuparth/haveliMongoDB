@@ -11,10 +11,12 @@ export class GroupdashboardComponent implements OnInit {
   @Input() groupDetails: any;
   groupName: String = '';
   groupMap = new Map<Number, Group>();
-  expCompareData: any[]=[];
+  expCompareData: any[] = [];
+  expDateGraphData: any[] = [];
   expCompareFlag: boolean = false;
-  expByDateFlag: boolean = true;
-  expLabels: String[] = [];
+  expByDateFlag: boolean = false;
+  expCompareDataLabels: String[] = [];
+  expDateGraphDataLabels: String[] = [];
   splitGraphFlag: boolean = true;
   constructor(private groupService: GroupService) { }
 
@@ -28,17 +30,34 @@ export class GroupdashboardComponent implements OnInit {
   getExpenseDataOfGroups(){
     this.groupService.getGroupMembersExpense(this.groupDetails.groupId).subscribe((data) => {
       let dataSize = data.length;
-      // console.log(dataSize);
+      // console.log(data);
       if(dataSize){
         for( let i=0; i<dataSize; i++){
           let name = data[i]._id.name.split(' ')[0];
           let amount = data[i].TotalAmount;
-          this.expCompareData.push({name:name,data:amount})
+          this.expCompareData.push({ name:name, data:amount });
+          // console.log(data[i].data[0].expenses)
+          let expLength = data[i].data.length;
+          let expData = [];
+          for( let j=0; j<expLength; j++){
+            let dt = new Date(data[i].data[j].expenses.dateOfPurchase);
+            let dd = dt.getDate();
+            let mm = dt.getMonth();
+            let yy = dt.getFullYear();
+            // console.log(dd,mm,yy);
+            expData.push([Date.UTC(yy,mm,dd),data[i].data[j].expenses.amount])
+          }
+          // this.expDateGraphData.push({ name: name, data: })
+          let seriesData = { name: name, data: expData};
+          this.expDateGraphData.push(seriesData);
+          // console.log("seer",seriesData);
         }
-        this.expLabels = ["Name","Total Expense"]
+        // console.log("seer",this.expDateGraphData,this.expDateGraphData.length);
+        this.expCompareDataLabels = ["Name","Total Expense"]
+        this.expDateGraphDataLabels = ["Expense By Date","Date Of Purchase","Amount"];
         this.expCompareFlag = true;
+        this.expByDateFlag = true;
       }
-      console.log(this.expCompareData.length);
     });    
   }
 
