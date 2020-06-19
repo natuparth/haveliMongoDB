@@ -26,7 +26,7 @@ export  class  AuthService {
   }
 
   addUsers(user: {email: string , password: string, name: string, groupId: Number, profilePicId: Number }) {
-    return this.http.post<{message: string}>(env.apiUrl + '/group/addUser', user);
+    return this.http.post<{message: string}>(env.apiUrl + '/auth/addUser', user);
  }
 
  getUserAuthenticated() {
@@ -81,9 +81,7 @@ export  class  AuthService {
   }
 
 
-  getUserDetails(email: string): Observable<Users> {
-   return this.http.get<Users[]>(env.apiUrl + '/auth/getUserDetails/' + email);
- }
+
 
  checkEmailExists(email: string) {
    return this.http.get(env.apiUrl + '/auth/checkEmailExists/' + email);

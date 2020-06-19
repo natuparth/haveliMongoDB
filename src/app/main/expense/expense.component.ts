@@ -164,7 +164,7 @@ export class ExpenseComponent implements OnInit {
 
     // console.log("sart",groupId);
     if (groupId == 'undefined') {
-      this.authService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
+      this.groupService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
           this.membersList.push({

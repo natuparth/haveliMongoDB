@@ -40,7 +40,8 @@ export class ProfileComponent implements OnInit {
   }
 
   getProfileData() {
-    this.authService.getUserDetails(this.userEmail).subscribe(doc => {
+
+    this.groupService.getUserDetails(this.userEmail).subscribe(doc => {
       console.log(doc.users.length, this.userEmail);
       doc.users.forEach(user => {
         this.userData.value.name = user.name;

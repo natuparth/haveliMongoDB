@@ -84,6 +84,9 @@ createRequest(reqBody: any) {
   return this.http.post<{doc: Array<any>, message: String}>(env.apiUrl + '/group/addRequest', reqBody);
 }
 
+getUserDetails(email: string): Observable<Users> {
+  return this.http.get<Users[]>(env.apiUrl + '/group/getUserDetails/' + email);
+}
 
 
 
