@@ -225,6 +225,34 @@ router.get("/getGroupMembersExpense", checkAuth, (req,res,next)=>{
     });
 });
 
+router.get("/getGroupMembersByGroupId", checkAuth, (req,res,next)=>{
+  var groupArray = req.query.groupId.split(',');
+  for(var i=0;i<groupArray.length;i++){
+    groupArray[i] = parseInt(groupArray[i]);
+  }
+   User.aggregate([
+    {
+      $match: { 'groups': { $in : groupArray } }
+    },
+    {
+      $project : {
+        email: 1,
+        name:1, 
+      }
+    }
+    ],
+    (err, doc)=>{
+      console.log(doc)
+      if(err)
+        res.json({message: 'error occured '});
+      else{
+        res.send(doc);
+      }
+    }).catch((e)=>{
+      console.log('error'+e);
+      res.send({message: 'error occured'});
+    });
+});
 
 router.get("/getGroups/:email", checkAuth, (req,res,next)=>{
   User.findOne({email: req.params.email}).then(doc => {

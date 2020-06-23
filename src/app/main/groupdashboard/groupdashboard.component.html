@@ -2,7 +2,7 @@
     <h2>&emsp;{{groupName}}</h2>
     <div class="graphsContainer">
         <app-piechart class="graphs" *ngIf="expCompareFlag" [graphDataList]="expCompareData" [graphDataLabel]="expCompareDataLabels"></app-piechart>
-        <app-piechart class="graphs" *ngIf="splitGraphFlag"></app-piechart>
+        <app-splitexpense class="graphs" *ngIf="splitGraphFlag" [graphDataList]="splitGraphData" [groupDetails]="groupDetails"></app-splitexpense>
         <app-scatterplot class="graphs" *ngIf="expByDateFlag" [graphDataList]="expDateGraphData" [graphDataLabel]="expDateGraphDataLabels"></app-scatterplot>
         <h2 *ngIf="!expCompareFlag && !splitGraphFlag && !expByDateFlag">No Data Available</h2>
     </div>

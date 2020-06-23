@@ -1,0 +1,45 @@
+.splitExpenseContainer{
+    width: 100%;
+    height: auto;
+    border-radius: 7px;
+    background-color: rgba(87, 81, 81, 0.1);
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.splitBubble{
+    min-width: 40%;
+    border-radius: 25px;
+    background-color: rgba(87, 81, 81, 0.5);
+    padding: 0px 15px 0px 15px;
+    margin-top: 10px;
+    transition: 0.5s;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    /* transform: translate(-50%,-50%); */
+}
+
+.bubblePrice{
+    /* margin: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,0%); */
+    align-items: center;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-direction: column;
+    
+}
+
+p{
+    margin: 0;
+    padding: 0;
+}

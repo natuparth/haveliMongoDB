@@ -17,7 +17,8 @@ export class GroupdashboardComponent implements OnInit {
   expByDateFlag: boolean = false;
   expCompareDataLabels: String[] = [];
   expDateGraphDataLabels: String[] = [];
-  splitGraphFlag: boolean = true;
+  splitGraphData: any[] = [];
+  splitGraphFlag: boolean = false;
   constructor(private groupService: GroupService) { }
 
   ngOnInit() {
@@ -32,6 +33,8 @@ export class GroupdashboardComponent implements OnInit {
       let dataSize = data.length;
       // console.log(data);
       if(dataSize){
+        this.splitGraphData = data;
+        this.splitGraphFlag = true;
         for( let i=0; i<dataSize; i++){
           let name = data[i]._id.name.split(' ')[0];
           let amount = data[i].TotalAmount;
