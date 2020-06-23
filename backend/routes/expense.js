@@ -85,7 +85,8 @@ router.put("/updateExpense/:email/:_id",checkAuth,(req,res,next)=>{
     amount :  req.body.amount,
     dateOfPurchase : req.body.dateOfPurchase,
     description : req.body.description,
-    forWhom : req.body.forWhom
+    forWhom : req.body.forWhom,
+    groupId : req.body.groupId
   });
   User.updateOne({$and : [{email : req.params.email},{'expenses._id' : req.params._id}]},
                   {'$set' : {'expenses.$' : expense}},

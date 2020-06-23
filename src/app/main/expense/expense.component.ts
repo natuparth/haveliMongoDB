@@ -76,7 +76,7 @@ export class ExpenseComponent implements OnInit {
         'dateOfPurchase': new FormControl(Date.now, Validators.required),
         'amount': new FormControl('', Validators.required),
         'description': new FormControl(''),
-        'forWhom' : new FormControl([], Validators.required)
+        'forWhom' : new FormControl([], Validators.required),
       });
       for (let i = 0; i < this.membersList.length; i++) {
         this.addExpenseForm.value.forWhom.push(this.membersList[i].email);
@@ -203,12 +203,14 @@ export class ExpenseComponent implements OnInit {
     Inputs:         Take the form value of Add Expense form.
   */
   updateExpense(expensedata: FormControl) {
+    let groupId = localStorage.getItem('groupId');
     const expense = {
       purpose: expensedata.value.purpose,
       amount: expensedata.value.amount,
       dateOfPurchase: expensedata.value.dateOfPurchase,
       description: expensedata.value.description,
-      forWhom : expensedata.value.forWhom
+      forWhom : expensedata.value.forWhom,
+      groupId : +groupId
     };
     let expenseId = expensedata.value.expenseId;
     this.expenseService.updateExpense(expense, this.currentUserEmail, expenseId).subscribe(response => {

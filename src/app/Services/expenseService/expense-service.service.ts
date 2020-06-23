@@ -37,7 +37,8 @@ export class ExpenseService {
       amount :  expense.amount,
       dateOfPurchase : expense.dateOfPurchase,
       description : expense.description,
-      forWhom : expense.forWhom
+      forWhom : expense.forWhom,
+      groupId : expense.groupId
     };
     return this.http.put<{message: string}>(env.apiUrl + '/expense/updateExpense/'+ email + '/' + _id, expenseItem);
   }
