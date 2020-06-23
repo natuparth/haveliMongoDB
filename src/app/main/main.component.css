@@ -7,8 +7,11 @@
   max-height: 170px;
   overflow-y: scroll;
 }
-.dropdown-item:hover {
+.dropdown-item :hover {
  cursor: pointer;
+  }
+  .nav-item:hover{
+    cursor: pointer;
   }
 .navbar{
   padding: 0.4rem 0rem 0rem 1rem;

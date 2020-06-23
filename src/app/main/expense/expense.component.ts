@@ -34,6 +34,7 @@ export class ExpenseComponent implements OnInit {
   updateExpenseForm: FormGroup;
   addExpenseForm: FormGroup;
   groupId: string = null;
+  prevExpense:any;
   constructor(
     private crudService: CrudService,
     private expenseService: ExpenseService,
@@ -42,6 +43,7 @@ export class ExpenseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.groupId = localStorage.getItem('groupId');
     this.memberFlag = false;
     this.welcomeFlag = true;
     this.itemSubject.subscribe(doc => {
@@ -61,6 +63,7 @@ export class ExpenseComponent implements OnInit {
                     modalName:  Name of the modal to be displayed
   */
   openModal(expense: any, modalName: string) {
+    this.prevExpense=expense;
     if (modalName === 'addModal') {
       this.addExpenseForm = new FormGroup({
         'purpose': new FormControl('', Validators.required),
@@ -148,10 +151,10 @@ export class ExpenseComponent implements OnInit {
   */
   async GetUsers() {
     this.membersList = [];
-    let groupId = localStorage.getItem('groupId'); // data strored in string
+     // data strored in string
 
     // console.log("sart",groupId);
-    if (groupId == 'undefined') {
+    if (this.groupId == 'undefined') {
       this.groupService.getUserDetails(localStorage.getItem('userEmail')).subscribe(doc => {
         let count = 0;
         doc.users.forEach(user => {
@@ -167,7 +170,7 @@ export class ExpenseComponent implements OnInit {
         this.welcomeFlag = false;
       });
     } else {
-      this.groupService.getUsersByGroupId(Number(groupId)).subscribe(doc => {
+      this.groupService.getUsersByGroupId(Number(this.groupId)).subscribe(doc => {
         let count = 0;
         // console.log('users',doc);
         doc.users.forEach(user => {
@@ -199,8 +202,10 @@ export class ExpenseComponent implements OnInit {
       forWhom : expensedata.value.forWhom
     };
     let expenseId = expensedata.value.expenseId;
+    
     this.expenseService.updateExpense(expense, this.currentUserEmail, expenseId).subscribe(response => {
       if (response.message === 'successfully updated') {
+        this.expenseService.addExpenseHistory(this.currentUserEmail,"U",this.prevExpense);
         alert('Expense successfully updated');
       } else {
         alert('some error occurred while adding the expense. Error: ' +
@@ -223,11 +228,13 @@ export class ExpenseComponent implements OnInit {
       dateOfPurchase: item.value.dateOfPurchase,
       description: item.value.description,
       forWhom : item.value.forWhom,
-      groupId : +this.groupId
+      groupId : Number(this.groupId)
     };
 
+    
     this.expenseService.addExpenses(expense, this.currentUserEmail).subscribe(response => {
       this.onCloseHandled('addModal');
+      this.expenseService.addExpenseHistory(this.currentUserEmail,"A",null);
       if (response.message === 'successful') {
         alert('Expense added successfully');
         if (this.itemList.length === undefined) {
@@ -279,10 +286,12 @@ export class ExpenseComponent implements OnInit {
                     modalName:take the modal name for which the operation to be executed
   */
   deleteExpense(expense: any) {
-    console.log('delete');
+    console.log('expense');
     if (confirm('Are you sure you want to remove ' + expense.purpose + ' expense')) {
-      this.expenseService.deleteExpense(this.currentUserEmail, expense._id).subscribe(response => {
+      
+      this.expenseService.deleteExpense(this.currentUserEmail, expense).subscribe(response => {
         if (response.message === 'successfully deleted') {
+          this.expenseService.addExpenseHistory(this.currentUserEmail,"D",expense);
           alert('Expense successfully deleted');
         } else {
           alert('some error occurred while adding the expense. Error: ');

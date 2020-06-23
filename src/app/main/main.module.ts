@@ -12,13 +12,14 @@ import { DoughnutComponent } from './graphs/doughnut/doughnut.component';
 import { HomeComponent } from '../home/home.component';
 import { MatCardModule } from '@angular/material/card';
 import { NotificationComponent } from './notification/notification.component';
+import { HistoryComponent } from './history/history.component';
 
 
 
 @NgModule({
   declarations : [MainComponent, ExpenseComponent, GroceryComponent,
     ShoppingListComponent, CalculateexpenseComponent, ProfileComponent,
-    ProfileLogoComponent, DoughnutComponent,HomeComponent, NotificationComponent ],
+    ProfileLogoComponent, DoughnutComponent,HomeComponent, NotificationComponent, HistoryComponent ],
   imports : [SharedModule, MainRouting, MatCardModule]
 })
 

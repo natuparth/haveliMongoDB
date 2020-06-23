@@ -1,0 +1,24 @@
+.model{
+    margin-top: 30px;
+}
+.boxuser
+{
+    background: #1d1c1c;
+    color:#fff;
+}
+.foruserbox
+{
+    max-width: 16%;
+    min-width: 40px;
+    display: flex;
+}
+.foruserbox:hover .foruser
+{
+    transform: translate(0px,-10px);
+    opacity: 1;
+    transition:0.5s;
+}
+.foruser
+{
+    transition:0.5s;
+}
