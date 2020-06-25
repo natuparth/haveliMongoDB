@@ -1,0 +1,65 @@
+<br>
+<br>
+
+<div *ngIf='errFlag' class="text-danger col text-center"><br><br>{{errMessage}}<br><br></div>
+                    
+ <div *ngIf='!errFlag' class="col-md-10 offset-1 table-responsive" >
+     <table class="table table-dark table-hover table-sm">
+        <tbody>
+             <tr *ngFor="let history of expHistory ;let i = index">
+                <th scope="row">{{i+1}}</th>
+                <td>{{history.modifyBy}} {{ history.modifyType === 'U'?"  updated  ":(history.modifyType === 'D')? '  deleted  ':'  added  '}}{{"expense  "}}{{history.purpose}}{{"  paid  by  "}}{{history.paidBy}}</td>
+                <td><button *ngIf="!(history.modifyType === 'A')" class="btn btn-info" (click)='expenseHistory = history; flag=true'><span style="font-size:24px" class="fa fa-history"></span> </button></td>
+             </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal" tabindex="-1" role="dialog" *ngIf='flag' [ngStyle]="{'display':'block'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Previous Expense</h4>
+        <button type="button" class="close" aria-label="Close" (click)="flag=false"><span
+            aria-hidden="true">&times;</span></button>
+      </div>
+
+      <div class="modal-body">
+    <div class="container border border-info expenseHistoryContainer">
+        <div class="row">
+            <div class="col-sm-4" style="font-weight: bold;">PaidBy </div>
+            <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseHistory.paidBy}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="font-weight: bold;">Purpose</div>
+            <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseHistory.purpose}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="font-weight: bold;">Amount</div>
+            <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseHistory.amount}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="font-weight: bold;">Date</div>
+            <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseHistory.dateOfPurchase}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="font-weight: bold;">Description</div>
+            <div class="col-sm-7 offset-1" style="font-weight: bold;">{{expenseHistory.description}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="font-weight: bold;">For Whom</div>
+        </div>
+        <div class="row">
+            <div class="col-lg foruserbox" *ngFor='let member of expenseHistory.forWhom'>
+                <div class="card boxuser foruser">
+                    <div class="card-img-top" style="height:40px">
+                        <app-profile-logo [userName]="member"></app-profile-logo>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
