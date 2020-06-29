@@ -1,4 +1,5 @@
-<div class="splitExpenseContainer">
+<div class="loading" *ngIf="loadingFlag"><app-dotjumpblack></app-dotjumpblack></div>
+<div class="splitExpenseContainer" *ngIf="!loadingFlag">
     <div class="splitBubble" *ngFor="let bubble of splitBubbleData | keyvalue">
         <span class="bubblePrice">
             <p>{{bubble.value.name | titlecase}}</p>

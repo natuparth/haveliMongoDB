@@ -11,17 +11,17 @@ export class SplitexpenseComponent implements OnInit {
   @Input() graphDataList: any[] = [];
   @Input() groupDetails: any;
   windowHeight: Number = 0;
+  loadingFlag: boolean = true;
   
   splitBubbleData: { [id: string]: memberDetails } = {};
   constructor(private groupService: GroupService,private er: ElementRef) { }
 
   ngOnInit() {
-    console.log(this.graphDataList,this.groupDetails);
-    //this.onResize();
     this.splitBubbleDesign();
   }
 
   splitBubbleDesign(){
+    this.loadingFlag = true;
     let dataSize = this.graphDataList.length;
     this.groupService.getGroupMembersByGroupId(this.groupDetails.groupId).subscribe((data)=>{
       let groupDataSize = data.length;
@@ -30,6 +30,7 @@ export class SplitexpenseComponent implements OnInit {
       }
       for(let k=0; k<dataSize; k++){
         let expLength = this.graphDataList[k].data.length;
+        this.splitBubbleData[this.graphDataList[k]._id.email].price += this.graphDataList[k].TotalAmount;
         for(let j=0; j<expLength; j++){
           let expAmount = this.graphDataList[k].data[j].expenses.amount;
           let forWhom = this.graphDataList[k].data[j].expenses.forWhom;
@@ -37,30 +38,14 @@ export class SplitexpenseComponent implements OnInit {
           let noOfMember = forWhom.length;
           let amountPerMember = expAmount / noOfMember;
           for(let m=0; m<noOfMember; m++){
-            if(forWhom[m]==paidBy){
-              this.splitBubbleData[forWhom[m]].price += amountPerMember;  
-            }
-            else{
-              this.splitBubbleData[forWhom[m]].price -= amountPerMember;
-            }
+            this.splitBubbleData[forWhom[m]].price -= amountPerMember;  
           }
-          console.log(paidBy,expAmount,noOfMember,amountPerMember,forWhom)
         }
       }
+      setTimeout(()=>{ this.loadingFlag = false; }, 800);
+      
     });
-    
-    console.log(this.splitBubbleData);
   }
-
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event?) {
-  //   console.log(window.innerWidth);
-  //   console.log(this.er.nativeElement);
-
-  //   console.log('height---' + this.er.nativeElement.offsetHeight);  //<<<===here
-  //   console.log('width---' + this.er.nativeElement.offsetWidth);
-  // }
-
 }
 
 interface memberDetails {
