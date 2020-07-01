@@ -262,3 +262,36 @@ label
     text-align: left;
     overflow: auto;
 }
+
+
+.tabsDiv{
+    max-width: 400px;
+    justify-content: center;
+    margin: auto;
+    text-align: center;
+    animation: fadeInAnimation ease 1.5s ;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.tabs{
+    max-width: 150px;
+    /* max-height: 20px; */
+    font-size: 15px;
+    border-width: 10px;
+    padding: 0 30px 0 30px;
+    display: inline-block;
+    transition: 0.5s;
+    box-shadow: 0 15px 20px black;
+}
+
+.tabs:hover{
+    box-shadow: 0 15px 20px black;
+    transition: 0.4s;
+    background-color: black;
+    color: white;
+}
+
+.tabs p{
+    margin: 0;
+}

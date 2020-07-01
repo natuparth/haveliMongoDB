@@ -35,6 +35,25 @@
     </section>
 
     <div class="container" *ngIf='memberFlag'>
+        <br>
+        <br>
+        <div class="card-deck tabsDiv ">
+            <div class="tabs rounded" [ngClass]="{'border-bottom border-success': !flag}" (click)="flag=!flag">
+                <div>
+                    <p>Expense</p>
+                </div>
+            </div>
+            <div class="tabs rounded" [ngClass]="{'border-bottom border-success': flag}" (click)="flag=!flag">
+                <div>
+                    <p>History</p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div *ngIf='flag' class="container">
+            <app-history></app-history>
+        </div>
+        <div *ngIf='!flag' class="container ">
         <div class="row">
             <div class="col-md">
                 <div class="Itemscontainer" >
@@ -145,8 +164,25 @@
                 </div>
             </div>
         </div>
+        </div>
+        
     </div>
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div>
         <div class="backdrop" *ngIf='addDisplay'></div>
         <div class="modal" tabindex="-1" role="dialog" *ngIf='addDisplay' [ngStyle]="{'display':'block'}">
