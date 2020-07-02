@@ -8,7 +8,6 @@ const Group  = require('../models/group');
 const checkAuth = require('../middleware/check-auth');
 
 router.post("/addExpenseHistory/:groupId",checkAuth, (req,res,next)=>{
-console.log("miru chala chet//sorry//can b any kada//ho macha//i'm laughing at what you wrote//i forgot//welcome back macha//")
   if(req.body.expense==null){
     const expenseHistory = new ExpenseHistory({
       modifyType:req.body.modifyType,
@@ -41,12 +40,9 @@ console.log("miru chala chet//sorry//can b any kada//ho macha//i'm laughing at w
   });
   Group.findOne({groupId : req.params.groupId},(err,doc)=>{
     doc.expHistory.push(expenseHistory)
-    console.log(doc+ "else")
     doc.save().then(()=>{
-      console.log("enti idi")
       res.send({message:'successful'});
     }).catch((err)=>{
-      console.log(err+"n")
       res.send({message:'error occurred: '+err})
     });
   });
