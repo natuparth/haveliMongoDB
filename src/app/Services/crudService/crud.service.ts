@@ -5,6 +5,7 @@ import { Observable, Subject, pipe } from 'rxjs';
 import { environment as env} from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, debounceTime } from 'rxjs/operators';
+import { resolve } from 'url';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class CrudService {
   message = new Subject<string>();
 
   constructor(private http: HttpClient) {}
-  addItem(item: any, groupId: string) {
+  addItem(item: any, groupId: string){
 
     const itemAdded: Item = {
        name: item.name,
@@ -39,11 +40,14 @@ export class CrudService {
          this.items = [];
        }
         this.items.push(itemAdded);
-        this.itemsUpdated.next([...this.items]);
+        console.log([...this.items]);
+        this.itemsUpdated.next(this.items);
       } else {
       alert('error adding the item to the database');
     }
+
       });
+
   }
 
   deleteItem(itemName: string, groupId: string) {
@@ -59,7 +63,7 @@ export class CrudService {
         );
        this.items = updatedItems;
       }
-        this.itemsUpdated.next([...this.items]);
+       this.itemsUpdated.next([...this.items]);
       });
   }
   // tslint:disable-next-line: whitespace
@@ -67,7 +71,6 @@ export class CrudService {
     this.http.put(env.apiUrl + '/item/updateItem/' + name + '/' + groupId, item, {
       headers: new HttpHeaders().set('Content-Type', 'application/json')
    }).subscribe((resData) => {
-       console.log(resData);
       this.items.find(itemPassed => itemPassed.name === name).quantity = item.quantity;
       this.items.find(itemPassed => itemPassed.name === name).date = item.date;
       this.items.find(itemPassed => itemPassed.name === name).price = item.price;
@@ -106,7 +109,7 @@ export class CrudService {
     return this.itemsUpdated.asObservable();
   }
 
-  getShoppingList(groupId: string): Observable<Item[]> {
+   getShoppingList(groupId: string): Observable<Item[]> {
       return this.http.get<Item[]>(env.apiUrl + '/item/getItems/' + groupId);
 
 
@@ -114,12 +117,13 @@ export class CrudService {
 
 
 
- getItemListKey(itemsList: Array<any>):string{
-  let keys = Object.keys(itemsList)
-  if(keys[0]=="message")
+ getItemListKey(itemsList: Array<any>): string {
+  const keys = Object.keys(itemsList);
+  if(keys[0] === 'message') {
     return itemsList[keys[0]];
-  else
-   return "";
+  } else {
+   return '' ;
+  }
  }
 
 }

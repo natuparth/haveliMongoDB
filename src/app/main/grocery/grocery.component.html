@@ -1,4 +1,4 @@
-
+<!-- Welcome Animation -->
 <div class="Welcomecontainer" *ngIf='welcomeFlag'>
     <p>Loading List</p>
     <div class="Loading"
@@ -10,7 +10,8 @@
                 *ngFor='let i of [0,1,2,3,4]'>
     </div>
 </div>
-<div *ngIf="!welcomeFlag">
+<div class="d-flex flex-row bd-highlight mb-3" *ngIf="!welcomeFlag">
+  <!-- Add Item Modal -->
   <div>
     <div class="backdrop" [ngStyle]="{ display: addDisplay }"></div>
     <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{ display: addDisplay }">
@@ -91,50 +92,10 @@
       </div>
     </div>
   </div>
-<router-outlet></router-outlet>
-  <div class="table-dark text-center" style="width: inherit; height: 60px;">
-    <form [formGroup]="searchForm">
-      <input formControlName="search"
-        style="border-radius: 25px ;border: 2px solid greenyellow; outline: none; width: 35%; margin-top:15px" id="search"
-        placeholder="search item" />
-    </form>
-  </div>
-  
-  <div *ngIf='errFlag' class="text-danger text-center"><br><br>{{errMessage}}<br><br></div>
-  <table *ngIf='!errFlag' class="table table-dark">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Type</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Last Purchased On</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of itemsList; let i = index">
-        <th scope="row">{{ i }}</th>
-        <td>{{ item.name }}</td>
-        <td>{{ item.type }}</td>
-        <td>{{ item.quantity }}{{item.measurementUnit[0] == 'grams'?' g':' U'}}</td>
-        <td>{{ item.date | date: "MM/dd/yyyy" }}</td>
-        <button class="btn btn-info" (click)="openModal(item.name, item.date)">
-          Update
-        </button>
-        &nbsp;
-        <button class="btn btn-danger" (click)="deleteItem(item.name)">
-          Delete
-        </button>
-      </tr>
-    </tbody>
-  </table>
-  <div class="text-center">
-    <button class="btn btn-primary" (click)="openAddModal()">Add Item</button>
-  </div>
-  <!-- <div class="text-center"><button class="btn btn-primary" (click)="addUser()"> Add User</button></div> -->
+  <!-- Add Item Modal Ends Here -->
 
+  <!-- Update Item Modal -->
   <div class="backdrop" [ngStyle]="{ display: display }"></div>
-
   <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{ display: display }">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -146,7 +107,7 @@
         </div>
 
         <div class="modal-body">
-          <form [formGroup]="updateItemForm" class="form form-group" (ngSubmit)="updateItem()">
+          <form [formGroup]="updateItemForm" class="form form-group">
             <label for="name">Name</label>
             <input name="name" class="form-control" type="text" formControlName="name" [placeholder]="itemName" readonly
               [value]="itemName" />
@@ -182,8 +143,11 @@
             </p>
 
             <div class="modal-footer text-center">
-              <button type="submit" class="btn btn-danger" [disabled]="!updateItemForm.valid">
+              <button (click)="updateItem()" class="btn btn-danger" [disabled]="!updateItemForm.valid">
                 Update Item
+              </button>
+              <button  (click)="deleteItem()" class="btn btn-danger">
+                Delete Item
               </button>
             </div>
           </form>
@@ -191,4 +155,43 @@
       </div>
     </div>
   </div>
+  <!-- Update Item Modal Ends Here -->
+
+
+
+  <div class="p-2 w-75 bd-highlight"> <!-- Search Bar Div -->
+    <div class="text-center" style="width: 100%; height: 60px;">
+      <div class="text-center" style="width: 20%; margin-top:15px;float: left;">
+        <button class="btn btn-primary" (click)="openAddModal()">Add Item</button>
+      </div>
+      <div style="width: 80%;">
+      <form [formGroup]="searchForm">
+        <input formControlName="search"
+          style="border-radius: 25px ;border: 2px solid greenyellow; outline: none; width: 35%; margin-top:15px" id="search"
+          placeholder="search item" />
+      </form>
+      </div>
+    </div>
+  <!-- Search Bar Div Ends   -->
+
+     <!-- grocery List  -->
+    <ag-grid-angular
+      style="width: 100%; height:600px"
+      class="ag-theme-alpine"
+      [columnDefs]="columnDefs"
+      [rowData] = "rowData"
+      [overlayNoRowsTemplate] = "overlayNoRowTemplate"
+      (rowClicked)='onRowClicked($event)'
+      (gridReady)='onGridReady($event)'
+
+
+     >
+    </ag-grid-angular></div>
+  <div class="p-2 w-25 bd-highlight">
+    <app-shopping-list [inputList]="itemsArray"></app-shopping-list>
+  </div>
+
+
+
+
 </div>

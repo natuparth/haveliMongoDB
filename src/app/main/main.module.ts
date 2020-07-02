@@ -12,14 +12,15 @@ import { DoughnutComponent } from './graphs/doughnut/doughnut.component';
 import { HomeComponent } from '../home/home.component';
 import { MatCardModule } from '@angular/material/card';
 import { NotificationComponent } from './notification/notification.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 
 @NgModule({
   declarations : [MainComponent, ExpenseComponent, GroceryComponent,
     ShoppingListComponent, CalculateexpenseComponent, ProfileComponent,
-    ProfileLogoComponent, DoughnutComponent,HomeComponent, NotificationComponent ],
-  imports : [SharedModule, MainRouting, MatCardModule]
+    ProfileLogoComponent, DoughnutComponent, HomeComponent, NotificationComponent ],
+  imports : [SharedModule, MainRouting, MatCardModule, AgGridModule ]
 })
 
 export class MainModule {

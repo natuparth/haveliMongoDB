@@ -87,6 +87,8 @@ router.post("/postItem/:groupId",checkAuth,(req,res,next)=>{
       const item = {
       name : req.body.name,
       quantity:req.body.quantity,
+      measurementUnit: req.body.measurementUnit,
+      type: req.body.type,
       date:req.body.date,
       consumptionPerDay: req.body.consumptionPerDay,
       price:req.body.price,

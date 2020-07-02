@@ -7,7 +7,7 @@ import { ItemFilterPipe } from './item-filter.pipe';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './Services/authService/auth-interceptor';
 import { ErrorComponent } from './error/error.component';
-
+import { AgGridModule } from 'ag-grid-angular';
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,6 +19,7 @@ import { ErrorComponent } from './error/error.component';
     AppRoutingModule,
     HttpClientModule,
     SharedModule,
+    AgGridModule.withComponents([])
   ],
 
   providers: [
