@@ -15,9 +15,9 @@ export class ExpenseService {
 
   }
 
-  public getExpenses(email: string):Observable<any> {
+  public getExpenses(email: string, groupId: string):Observable<any> {
 
-   return this.http.get<Expense[]>(env.apiUrl + '/expense/getExpenses/'+ email);
+   return this.http.get<Expense[]>(env.apiUrl + '/expense/getExpenses/'+ email+'/'+groupId);
   }
 
   public getExpenseHistory(groupId: Number):Observable<any> {
@@ -43,7 +43,8 @@ export class ExpenseService {
       amount :  expense.amount,
       dateOfPurchase : expense.dateOfPurchase,
       description : expense.description,
-      forWhom : expense.forWhom
+      forWhom : expense.forWhom,
+      groupId : expense.groupId
     };
     
     return this.http.put<{message: string}>(env.apiUrl + '/expense/updateExpense/'+ email + '/' + _id, expenseItem);

@@ -264,6 +264,7 @@ label
 }
 
 
+
 .tabsDiv{
     max-width: 400px;
     justify-content: center;
@@ -295,3 +296,20 @@ label
 .tabs p{
     margin: 0;
 }
+.customDatesSelectDiv{
+    position: relative;
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-around;
+    padding: 20px;
+    flex-wrap: wrap
+}
+.graphDiv{
+    display: block;
+}
+@media only screen and (max-width: 800px) {
+    .graphDiv{
+        display: none;
+    }
+}
+

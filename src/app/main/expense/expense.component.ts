@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CrudService } from 'src/app/Services/crudService/crud.service';
 import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ExpenseService } from 'src/app/Services/expenseService/expense-service.service';
@@ -6,6 +6,8 @@ import { AuthService } from 'src/app/Services/authService/auth.service';
 import { Users } from 'src/app/models/users.model';
 import { Subject } from 'rxjs';
 import { GroupService } from 'src/app/Services/groupService/group.service';
+// import { DatePipe } from '@angular/common';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-expense',
@@ -14,11 +16,13 @@ import { GroupService } from 'src/app/Services/groupService/group.service';
 })
 export class ExpenseComponent implements OnInit {
   membersList: any[] = [];
+  filterOptionList: any[] = ['All','This Week','This Month','Custom Dates'];
   itemSubject = new Subject<any>();
   memberFlag = false;
   addDisplay = false;
   updateDisplay = false;
   itemList: any = [];
+  filteredItemList: any = [];
   updateItemList: any = [];
   memberListPos = '40%';
   currentUserName = '';
@@ -35,11 +39,13 @@ export class ExpenseComponent implements OnInit {
   addExpenseForm: FormGroup;
   groupId: string = null;
   prevExpense:any;
+  dateFilterForm: FormGroup;
+  custuomDatesFlag: boolean = false;
   constructor(
     private crudService: CrudService,
     private expenseService: ExpenseService,
     private authService: AuthService,
-    private groupService: GroupService
+    private groupService: GroupService,
   ) {}
 
   ngOnInit() {
@@ -54,6 +60,10 @@ export class ExpenseComponent implements OnInit {
     });
     this.addExpenseForm = new FormGroup({});
     this.updateExpenseForm = new FormGroup({});
+    this.dateFilterForm = new FormGroup({
+      'dateStart': new FormControl(new Date, Validators.required),
+      'dateEnd': new FormControl(new Date, Validators.required)
+    })
   }
   /*
   openModal()
@@ -70,7 +80,7 @@ export class ExpenseComponent implements OnInit {
         'dateOfPurchase': new FormControl(Date.now, Validators.required),
         'amount': new FormControl('', Validators.required),
         'description': new FormControl(''),
-        'forWhom' : new FormControl([], Validators.required)
+        'forWhom' : new FormControl([], Validators.required),
       });
       for (let i = 0; i < this.membersList.length; i++) {
         this.addExpenseForm.value.forWhom.push(this.membersList[i].email);
@@ -128,7 +138,8 @@ export class ExpenseComponent implements OnInit {
     this.welcomeFlag = true;
     this.itemList = [];
     this.errFlag = false;
-    this.expenseService.getExpenses(email).subscribe(doc => {
+    let groupId = localStorage.getItem('groupId');
+    this.expenseService.getExpenses(email,groupId).subscribe(doc => {
       this.itemSubject.next(doc);
       if (this.crudService.getItemListKey(this.itemList) !='') {
       this.errMessage = this.crudService.getItemListKey(this.itemList);
@@ -137,9 +148,11 @@ export class ExpenseComponent implements OnInit {
       this.graphDataColumns = ['purpose', 'amount'];
       this.expenseGraphToggle = this.itemList.length > 0;
       this.expenseDetailsToggle = false;
-
+      this.filteredItemList = this.itemList;
+      
     }
       this.welcomeFlag = false;
+      console.log(this.itemList);
     });
   }
   /*
@@ -194,12 +207,14 @@ export class ExpenseComponent implements OnInit {
     Inputs:         Take the form value of Add Expense form.
   */
   updateExpense(expensedata: FormControl) {
+    let groupId = localStorage.getItem('groupId');
     const expense = {
       purpose: expensedata.value.purpose,
       amount: expensedata.value.amount,
       dateOfPurchase: expensedata.value.dateOfPurchase,
       description: expensedata.value.description,
-      forWhom : expensedata.value.forWhom
+      forWhom : expensedata.value.forWhom,
+      groupId : +groupId
     };
     let expenseId = expensedata.value.expenseId;
     
@@ -325,5 +340,63 @@ export class ExpenseComponent implements OnInit {
         return false;
       }
     }
+  }
+  /*
+  filterExpense()
+    Functionality:  to update the list of expense as per the dates selected.
+                    Options are filterOptionList.
+    Returns:        returns filtered expenses with in date range
+    Inputs:         options:  type of filter
+  */
+  filterExpense(option : string){
+    let optionNo = this.filterOptionList.indexOf(option);
+    let dateStart = new Date();
+    let dateEnd = new Date();
+    //formatDate(new Date(), 'yyyy/MM/dd', 'en')
+    switch (optionNo) {
+      case 1:
+        dateStart.setDate(dateStart.getDate() - 7);
+        this.dateFilterForm.value.dateStart = dateStart;
+        this.applyDateFilter();
+        break;
+      case 2:
+        dateStart.setDate(dateStart.getDate() - 30);
+        this.dateFilterForm.value.dateStart = dateStart;
+        this.applyDateFilter();
+        break;
+      case 3:
+        console.log('custom is selected');
+        this.custuomDatesFlag = true;
+        break;
+      default:
+        this.filteredItemList = this.itemList;
+        console.log('All expense');
+        break;
+    }
+  }
+  /*
+  chooseCustomDate()
+    Functionality:  to update the list of expense as per the dates selected.
+                    Options are filterOptionList.
+    Returns:        returns filtered expenses with in date range
+    Inputs:         options:  type of filter
+  */
+  chooseCustomDate(){
+    console.log('customdates selectfunction called',this.dateFilterForm.value);
+    this.applyDateFilter();
+    this.custuomDatesFlag = false;
+  }
+  /*
+  applyDateFilter()
+    Functionality:  to update the list of expense as per the dates selected.
+                    Options are filterOptionList.
+    Returns:        returns filtered expenses with in date range
+    Inputs:         options:  type of filter
+  */
+  applyDateFilter(){
+    let dateStart = new Date(this.dateFilterForm.value.dateStart);
+    let dateEnd = new Date(this.dateFilterForm.value.dateEnd);
+    this.filteredItemList = this.itemList.filter(items => new Date(items.dateOfPurchase) >= dateStart && new Date(items.dateOfPurchase) <= dateEnd);
+    console.log(dateStart,dateEnd,this.filteredItemList);
   }
 }

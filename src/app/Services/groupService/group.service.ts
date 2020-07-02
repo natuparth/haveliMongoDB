@@ -47,6 +47,16 @@ export class GroupService {
     return this.http.get<{users: Array<any>, message: string}>(env.apiUrl + '/group/getGroupMembers' , {params: params});
   }
 
+  getGroupMembersExpense(groupId: string) {
+    const params = new HttpParams().set('groupId', groupId);
+     return this.http.get<any>(env.apiUrl + '/group/getGroupMembersExpense' , {params: params});
+   }
+  
+   getGroupMembersByGroupId(groupId: string) {
+    const params = new HttpParams().set('groupId', groupId);
+    return this.http.get<any>(env.apiUrl + '/group/getGroupMembersByGroupId' , {params: params});
+  }
+
   getGroups(email: string): Observable<{items: Array<any>, message: string}> {
     return this.http.get<{items: Array<any>, message: string}>(env.apiUrl + '/group/getGroups/' + email);
   }

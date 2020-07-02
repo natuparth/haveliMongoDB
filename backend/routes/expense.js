@@ -8,8 +8,8 @@ const Group  = require('../models/group');
 const checkAuth = require('../middleware/check-auth');
 
 router.post("/addExpenseHistory/:groupId",checkAuth, (req,res,next)=>{
-
-  if(req.body.expense==null){
+console.log("miru chala chet//sorry//can b any kada//ho macha//i'm laughing at what you wrote//i forgot//welcome back macha//")
+  if(req.body.expense==null){//for update macha//u can macha??mrge//2 mins macha
     const expenseHistory = new ExpenseHistory({
       modifyType:req.body.modifyType,
       modifyDate:req.body.modifyDate,
@@ -18,15 +18,16 @@ router.post("/addExpenseHistory/:groupId",checkAuth, (req,res,next)=>{
     });
     Group.findOne({groupId : req.params.groupId},(err,doc)=>{
       doc.expHistory.push(expenseHistory)
+      console.log(doc.expenseHistory+"dfghjkjhvkkjvbnmnm")
       doc.save().then(()=>{
         res.send({message:'successful'});
       }).catch((err)=>{
-        console.log(err)
+        console.log(err+"jhhjj")
         res.send({message:'error occurred: '+err})
       });
     });
   }
-  else{
+  else{//otherthan//anti//we got error in add expense also kada iho macha doc.save//give me 1 min macha//don't sleep//sare macha
   const expenseHistory = new ExpenseHistory({
     modifyType:req.body.modifyType,
     modifyDate:req.body.modifyDate,
@@ -37,13 +38,15 @@ router.post("/addExpenseHistory/:groupId",checkAuth, (req,res,next)=>{
     dateOfPurchase : req.body.expense.dateOfPurchase,
     description :req.body.expense.description,
     forWhom : req.body.expense.forWhom,
-  });
+  });//what is this 43?
   Group.findOne({groupId : req.params.groupId},(err,doc)=>{
     doc.expHistory.push(expenseHistory)
+    console.log(doc+ "else")//ippud malli delete cheyandi
     doc.save().then(()=>{
-      res.send({message:'successful'});
-    }).catch((err)=>{
-      console.log(err)
+      console.log("enti idi")
+      res.send({message:'successful'});//see macha getting added but unable to save//rep chuddam amma///sare?//nidrostundi??//ledamma//i can stay awake//aren't you sleepy?//ho macha//miru changes push chey//I'll check into your bran//cpushed already//merge conflicts undi macha??
+    }).catch((err)=>{//this is getting exe//ledamma//where is it printing this error message?
+      console.log(err+"n")
       res.send({message:'error occurred: '+err})
     });
   });
@@ -62,17 +65,58 @@ router.get("/getExpensehistory/:groupId",checkAuth,(req,res,next)=>{
   });
 });
 
-router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
-  User.find({email: req.params.email}).then((doc)=>{
-      if(doc[0].expenses[0]!=null)
-       res.send(doc[0].expenses);
-       else
-       res.send({message:"you have no Expenses yet!!"});
+ router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
+   User.find({email: req.params.email}).then((doc)=>{
+       if(doc[0].expenses[0]!=null)
+        res.send(doc[0].expenses);
+        else
+        res.send({message:"you have no Expenses yet!!"});
+   }).catch((e)=>{
+     res.json({message: 'error occured '});
+   });
+ });
+
+router.get("/getExpenses/:email/:groupId",checkAuth,(req,res,next)=>{
+ console.log(req.params.email,req.params.groupId);
+  User.aggregate([
+    { $match : {'email' : req.params.email} },
+    { $project : {  expenses: {
+         $filter: {
+            input: "$expenses",
+            as: "expense",
+            cond: { $eq: [ "$$expense.groupId", +req.params.groupId ]  }
+          }
+        }, _id:1
+      }
+    },
+    // { $project : {'expenses':1,_id:1}},
+    { $unwind: '$expenses'},
+    { $sort : { 'expenses.dateOfPurchase' :-1}},
+    {
+      "$group": {
+        "_id": "$_id",
+        "expenses": {
+          "$push": "$expenses"
+        }
+      }
+    }
+  
+    ],
+  (err, doc)=>{
+    console.log(doc)
+    if(err)
+      res.json({message: 'error occured '});
+    else{
+      if(doc.length)
+        res.send(doc[0].expenses);
+      else
+      res.send({message:"you have no Expenses yet!!"});
+    }
   }).catch((e)=>{
-    res.json({message: 'error occured '});
+    console.log('err'+e)
+    res.json({message: 'error occured '+e});
   });
 });
-
  
 router.post("/addExpenses/:email",checkAuth, (req,res,next)=>{
   console.log("reqbody",req.body);
@@ -101,7 +145,8 @@ router.put("/updateExpense/:email/:_id",checkAuth,(req,res,next)=>{
     amount :  req.body.amount,
     dateOfPurchase : req.body.dateOfPurchase,
     description : req.body.description,
-    forWhom : req.body.forWhom
+    forWhom : req.body.forWhom,
+    groupId : req.body.groupId
   });
   User.updateOne({$and : [{email : req.params.email},{'expenses._id' : req.params._id}]},
                   {'$set' : {'expenses.$' : expense}},
@@ -127,3 +172,4 @@ router.delete('/deleteExpense',checkAuth,(req,res,next)=>{
 });
 module.exports = router;
 
+//macha//this error is not due to your code//db structure chngd ?No macha//choodu in error it is showing grocery list...enduku?ho macha we r saving group kada unable to push chnages into history
