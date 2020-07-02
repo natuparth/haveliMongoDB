@@ -44,11 +44,11 @@
                     <div class="row">
                         <div class="col-md-6 text-left">
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" (click)="status=!status"   (mouseover)="status=true" (mouseleave)="status=false" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-secondary dropdown-toggle" (click)="status=!status" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Select User
                                 </button>
                                 <div class="dropdown-menu"
-                                    (mouseover)="status=true" (mouseleave)="status=false"
+                                    
                                     [ngClass]="status ? 'dropdown-menu show' : 'dropdown-menu'"
                                     aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" (click)="MemberFunction(member.index,'name');status=!status"
@@ -64,10 +64,47 @@
                     <div class="row">
                         <div class="col">&nbsp;</div>
                     </div>
-                    <div class="row">
+                    <div class="row" *ngIf="!custuomDatesFlag">
                         <div class="col text-center">
-                        <button (click)="openModal('','addModal')" class="btn btn-primary">Add Expense</button>
+                            <button (click)="openModal('','addModal')" class="btn btn-primary">Add Expense</button>
                         </div>
+                        <div class="col text-center">
+                            <button class="btn btn-primary dropdown-toggle" 
+                                (click)="filterState=!filterState" type="button"
+                                id="dropdownFilterButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Filter Expense
+                            </button>
+                            <div class="dropdown-menu"
+                                [ngClass]="filterState ? 'dropdown-menu show' : 'dropdown-menu'"
+                                aria-labelledby="dropdownFilterButton">
+                                <a class="dropdown-item" (click)="filterExpense(option);filterState=!filterState;"
+                                        *ngFor='let option of filterOptionList'>{{option}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="customDatesSelectDiv" *ngIf="custuomDatesFlag">
+                        <form class="form-group form-inline"  [formGroup]="dateFilterForm" (ngSubmit)="chooseCustomDate()">
+                            <i class="fa fa-chevron-circle-left fa-2x"
+                                (click)="custuomDatesFlag = false"
+                                aria-hidden="true"
+                            ></i>
+                            <label for="dateStart" style="padding-right: 10px;padding-left: 10px;">Start Date</label>
+                            <input name="dateStart" class="form-control"
+                                formControlName="dateStart" type="date" placeholder="Start Date"/>
+                            <p class="help-block text-danger"
+                                *ngIf="!dateFilterForm.get('dateStart').valid && 
+                                dateFilterForm.get('dateStart').touched">
+                                Please enter Start Date</p>
+                            <label for="dateEnd" style="padding-right: 10px;padding-left: 10px;">End Date</label>
+                            <input name="dateEnd" class="form-control"
+                                formControlName="dateEnd" type="date" placeholder="End Date"/>
+                            <p class="help-block text-danger"
+                                *ngIf="!dateFilterForm.get('dateEnd').valid && 
+                                dateFilterForm.get('dateEnd').touched">
+                                Please enter Start Date</p>
+                            &nbsp;
+                            <button class="btn btn-primary" type="submit">Apply</button>
+                        </form>
                     </div>
                     <div class="row">
                         <div class="col">&nbsp;</div>
@@ -86,7 +123,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of itemList ;let i = index" (click)='expenseDetails = item;expenseDetailsToggle = true;'>
+                                    <tr *ngFor="let item of filteredItemList ;let i = index" (click)='expenseDetails = item;expenseDetailsToggle = true;expenseGraphToggle=true'>
                                         <th scope="row">{{i}}</th>
                                         <td>{{item.purpose}}</td>
                                         <td>{{item.amount}}</td>
@@ -101,14 +138,14 @@
                     
                 </div>
             </div>
-            <div class="col-md-3 container" *ngIf='expenseGraphToggle'>
+            <div class="col-md-3 container graphDiv" *ngIf='expenseGraphToggle && filteredItemList.length'>
                 <br>
                 <br>
                 <div class="graphContainer">
                     <button type="button" class="close" aria-label="Close" (click)="expenseGraphToggle=false"><span
                             aria-hidden="true">&times;</span></button>
                     <h3 style="text-align: center;">{{graphDataColumns[0]}}</h3>
-                    <app-doughnut [graphDataList]="itemList" [graphDataColumns]="graphDataColumns"></app-doughnut>
+                    <app-doughnut [graphDataList]="filteredItemList" [graphDataColumns]="graphDataColumns"></app-doughnut>
                 </div>
                 <br>
                 <br>

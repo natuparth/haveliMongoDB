@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
     search: new FormControl('')
   });
   groupList: Group[] = [];
+  userGroupList: any[] = [];
   groupIds = localStorage.getItem('groups').split(',');
   expandedIndex = -1 ;
   ngOnInit() {
@@ -31,6 +32,9 @@ export class HomeComponent implements OnInit {
     this.groupService.getPendingRequests(localStorage.getItem('userEmail')).subscribe((groupIds) => {
        console.log(groupIds.doc);
       this.pendingRequestGroupIds = groupIds.doc;
+    });
+    this.groupService.getGroups(localStorage.getItem('userEmail')).subscribe( (doc)=> {
+      this.userGroupList = doc.items;
     });
   }
 
