@@ -9,7 +9,7 @@ const checkAuth = require('../middleware/check-auth');
 
 router.post("/addExpenseHistory/:groupId",checkAuth, (req,res,next)=>{
 console.log("miru chala chet//sorry//can b any kada//ho macha//i'm laughing at what you wrote//i forgot//welcome back macha//")
-  if(req.body.expense==null){//for update macha//u can macha??mrge//2 mins macha
+  if(req.body.expense==null){
     const expenseHistory = new ExpenseHistory({
       modifyType:req.body.modifyType,
       modifyDate:req.body.modifyDate,
@@ -27,7 +27,7 @@ console.log("miru chala chet//sorry//can b any kada//ho macha//i'm laughing at w
       });
     });
   }
-  else{//otherthan//anti//we got error in add expense also kada iho macha doc.save//give me 1 min macha//don't sleep//sare macha
+  else{
   const expenseHistory = new ExpenseHistory({
     modifyType:req.body.modifyType,
     modifyDate:req.body.modifyDate,
@@ -38,14 +38,14 @@ console.log("miru chala chet//sorry//can b any kada//ho macha//i'm laughing at w
     dateOfPurchase : req.body.expense.dateOfPurchase,
     description :req.body.expense.description,
     forWhom : req.body.expense.forWhom,
-  });//what is this 43?
+  });
   Group.findOne({groupId : req.params.groupId},(err,doc)=>{
     doc.expHistory.push(expenseHistory)
-    console.log(doc+ "else")//ippud malli delete cheyandi
+    console.log(doc+ "else")
     doc.save().then(()=>{
       console.log("enti idi")
-      res.send({message:'successful'});//see macha getting added but unable to save//rep chuddam amma///sare?//nidrostundi??//ledamma//i can stay awake//aren't you sleepy?//ho macha//miru changes push chey//I'll check into your bran//cpushed already//merge conflicts undi macha??
-    }).catch((err)=>{//this is getting exe//ledamma//where is it printing this error message?
+      res.send({message:'successful'});
+    }).catch((err)=>{
       console.log(err+"n")
       res.send({message:'error occurred: '+err})
     });
@@ -171,5 +171,3 @@ router.delete('/deleteExpense',checkAuth,(req,res,next)=>{
                       });
 });
 module.exports = router;
-
-//macha//this error is not due to your code//db structure chngd ?No macha//choodu in error it is showing grocery list...enduku?ho macha we r saving group kada unable to push chnages into history
