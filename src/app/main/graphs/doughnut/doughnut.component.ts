@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as CanvasJS from '../../../../../canvasjs.min';
 // import * as CanvasJS from './canvasjs.min';
 @Component({
@@ -6,7 +6,7 @@ import * as CanvasJS from '../../../../../canvasjs.min';
   templateUrl: './doughnut.component.html',
   styleUrls: ['./doughnut.component.css']
 })
-export class DoughnutComponent implements OnInit {
+export class DoughnutComponent implements OnInit, OnChanges{
   public pieChartLabels:string[] = ['Chrome', 'Safari', 'Firefox','Internet Explorer','Other'];
   public pieChartData:number[] = [40, 20, 20 , 10,10];
   public pieChartType:string = 'doughnut';
@@ -15,6 +15,11 @@ export class DoughnutComponent implements OnInit {
   @Input() graphDataColumns: any[]; //expected data =>['colname','values'];  string list with columns name
   constructor() { }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.graphDataList = changes.graphDataList.currentValue;
+    //this.graphDataColumns = changes.graphDataColumns.currentValue;
+    this.ngOnInit();
+  }
   ngOnInit() {
     let dataPoints = [];
   let y = 0;

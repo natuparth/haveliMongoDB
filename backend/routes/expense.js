@@ -5,17 +5,58 @@ const Expense= require('../models/expense');
 const User  = require('../models/user');
 const checkAuth = require('../middleware/check-auth');
 
-router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
-  User.find({email: req.params.email}).then((doc)=>{
-      if(doc[0].expenses[0]!=null)
-       res.send(doc[0].expenses);
-       else
-       res.send({message:"you have no Expenses yet!!"});
+// router.get("/getExpenses/:email",checkAuth,(req,res,next)=>{
+//   User.find({email: req.params.email}).then((doc)=>{
+//       if(doc[0].expenses[0]!=null)
+//        res.send(doc[0].expenses);
+//        else
+//        res.send({message:"you have no Expenses yet!!"});
+//   }).catch((e)=>{
+//     res.json({message: 'error occured '});
+//   });
+// });
+
+router.get("/getExpenses/:email/:groupId",checkAuth,(req,res,next)=>{
+ console.log(req.params.email,req.params.groupId);
+  User.aggregate([
+    { $match : {'email' : req.params.email} },
+    { $project : {  expenses: {
+         $filter: {
+            input: "$expenses",
+            as: "expense",
+            cond: { $eq: [ "$$expense.groupId", +req.params.groupId ]  }
+          }
+        }, _id:1
+      }
+    },
+    // { $project : {'expenses':1,_id:1}},
+    { $unwind: '$expenses'},
+    { $sort : { 'expenses.dateOfPurchase' :-1}},
+    {
+      "$group": {
+        "_id": "$_id",
+        "expenses": {
+          "$push": "$expenses"
+        }
+      }
+    }
+  
+    ],
+  (err, doc)=>{
+    console.log(doc)
+    if(err)
+      res.json({message: 'error occured '});
+    else{
+      if(doc.length)
+        res.send(doc[0].expenses);
+      else
+      res.send({message:"you have no Expenses yet!!"});
+    }
   }).catch((e)=>{
-    res.json({message: 'error occured '});
+    console.log('err'+e)
+    res.json({message: 'error occured '+e});
   });
 });
-
  
 router.post("/addExpenses/:email",checkAuth, (req,res,next)=>{
   console.log("reqbody",req.body);
@@ -44,7 +85,8 @@ router.put("/updateExpense/:email/:_id",checkAuth,(req,res,next)=>{
     amount :  req.body.amount,
     dateOfPurchase : req.body.dateOfPurchase,
     description : req.body.description,
-    forWhom : req.body.forWhom
+    forWhom : req.body.forWhom,
+    groupId : req.body.groupId
   });
   User.updateOne({$and : [{email : req.params.email},{'expenses._id' : req.params._id}]},
                   {'$set' : {'expenses.$' : expense}},

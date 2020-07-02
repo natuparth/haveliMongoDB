@@ -177,9 +177,82 @@ router.get("/getGroupMembers", checkAuth, (req,res,next)=>{
         }
         }
   )
-
-
 })
+
+router.get("/getGroupMembersExpense", checkAuth, (req,res,next)=>{
+  var groupArray = req.query.groupId.split(',');
+  for(var i=0;i<groupArray.length;i++){
+    groupArray[i] = parseInt(groupArray[i]);
+  }
+   User.aggregate([
+    {
+      $match: { 'groups': { $in : groupArray } }
+    },
+    {
+      $project : {
+        email: 1,
+        groups: 1,
+        name:1, 
+        expenses: 
+        {
+          $filter: {
+              input: "$expenses",
+              as: "expense",
+              cond: { $in: [ "$$expense.groupId", groupArray ]  }
+            }
+          }
+      }
+    },
+    { $unwind: '$expenses'},
+    {
+      $group: {
+        _id: {'email':'$email','group':'$expenses.groupId','name':'$name'},
+        TotalAmount: { $sum: "$expenses.amount" },
+        data: { '$push': {name: '$name', expenses: '$expenses'} }
+      }
+    }
+    ],
+    (err, doc)=>{
+      console.log(doc)
+      if(err)
+        res.json({message: 'error occured '});
+      else{
+        res.send(doc);
+      }
+    }).catch((e)=>{
+      console.log('error'+e);
+      res.send({message: 'error occured'});
+    });
+});
+
+router.get("/getGroupMembersByGroupId", checkAuth, (req,res,next)=>{
+  var groupArray = req.query.groupId.split(',');
+  for(var i=0;i<groupArray.length;i++){
+    groupArray[i] = parseInt(groupArray[i]);
+  }
+   User.aggregate([
+    {
+      $match: { 'groups': { $in : groupArray } }
+    },
+    {
+      $project : {
+        email: 1,
+        name:1, 
+      }
+    }
+    ],
+    (err, doc)=>{
+      console.log(doc)
+      if(err)
+        res.json({message: 'error occured '});
+      else{
+        res.send(doc);
+      }
+    }).catch((e)=>{
+      console.log('error'+e);
+      res.send({message: 'error occured'});
+    });
+});
 
 router.get("/getGroups/:email", checkAuth, (req,res,next)=>{
   User.findOne({email: req.params.email}).then(doc => {

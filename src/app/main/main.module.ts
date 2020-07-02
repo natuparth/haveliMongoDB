@@ -13,13 +13,15 @@ import { HomeComponent } from '../home/home.component';
 import { MatCardModule } from '@angular/material/card';
 import { NotificationComponent } from './notification/notification.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { GroupdashboardComponent } from './groupdashboard/groupdashboard.component';
+import { SplitexpenseComponent } from './groupdashboard/splitexpense/splitexpense.component';
 
 
 
 @NgModule({
   declarations : [MainComponent, ExpenseComponent, GroceryComponent,
     ShoppingListComponent, CalculateexpenseComponent, ProfileComponent,
-    ProfileLogoComponent, DoughnutComponent, HomeComponent, NotificationComponent ],
+    ProfileLogoComponent, DoughnutComponent, HomeComponent, NotificationComponent, GroupdashboardComponent, SplitexpenseComponent],
   imports : [SharedModule, MainRouting, MatCardModule, AgGridModule ]
 })
 
