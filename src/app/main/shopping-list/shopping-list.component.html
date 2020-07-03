@@ -9,8 +9,10 @@
               *ngFor='let i of [0,1,2,3,4]'>
   </div>
 </div>
-<br>
-<div class="dropdown" style="text-align: center;">
+<div class="d-flex pt-0 flex-row bd-highlight mb-0" style="height: 60px;">
+  <div class="p-2 w-100 bd-highlight"><h3>Shopping List</h3></div>
+  <div class="p-2 w-100 bd-highlight">
+<div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     {{dropdownButton}}
   </button>
@@ -20,10 +22,18 @@
     <a class="dropdown-item" (click)="getShoppingListUpdated(20)">20</a>
   </div>
 </div>
-<br>
+  </div>
+</div>
 
 <div *ngIf='errFlag' class="text-danger text-center"><br><br>{{errMessage}}<br><br></div>
-<table *ngIf='!errFlag' class="table table-dark">
+<ag-grid-angular
+      style="width: 100%; height:600px"
+      class="ag-theme-alpine"
+      [columnDefs]="columnDefs"
+      [rowData] = "itemsList"
+      >
+    </ag-grid-angular>
+<!-- <table *ngIf='!errFlag' class="table table-dark">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -40,4 +50,4 @@
     </tr>
 
   </tbody>
-</table>
+</table> -->

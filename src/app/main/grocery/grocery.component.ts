@@ -77,6 +77,7 @@ export class GroceryComponent implements OnInit  {
       }),
      ).subscribe(value => {
       this.itemsList = value.map(item => new Item(item)) ;
+      this.rowData = this.itemsList;
    });
   }
 

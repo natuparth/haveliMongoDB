@@ -29,10 +29,6 @@ const routes: Routes = [
         component: ExpenseComponent
       },
       {
-        path: 'shopping',
-        component: ShoppingListComponent
-      },
-      {
         path: 'calculate',
         component: CalculateexpenseComponent
       },

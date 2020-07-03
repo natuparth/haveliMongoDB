@@ -159,17 +159,17 @@
 
 
 
-  <div class="p-2 w-75 bd-highlight"> <!-- Search Bar Div -->
-    <div class="text-center" style="width: 100%; height: 60px;">
-      <div class="text-center" style="width: 20%; margin-top:15px;float: left;">
-        <button class="btn btn-primary" (click)="openAddModal()">Add Item</button>
-      </div>
-      <div style="width: 80%;">
+  <div class="w-75 bd-highlight"> <!-- Search Bar Div -->
+    <div class="d-flex flex-row bd-highlight" style="width: 100%; height: 60px;">
+      <div class="w-75 ml-2">
       <form [formGroup]="searchForm">
         <input formControlName="search"
           style="border-radius: 25px ;border: 2px solid greenyellow; outline: none; width: 35%; margin-top:15px" id="search"
           placeholder="search item" />
       </form>
+      </div>
+      <div class="w-25 mt-2" >
+        <button class="btn btn-primary" (click)="openAddModal()">Add Item</button>
       </div>
     </div>
   <!-- Search Bar Div Ends   -->
@@ -187,7 +187,7 @@
 
      >
     </ag-grid-angular></div>
-  <div class="p-2 w-25 bd-highlight">
+  <div class="w-25 bd-highlight">
     <app-shopping-list [inputList]="itemsArray"></app-shopping-list>
   </div>
 

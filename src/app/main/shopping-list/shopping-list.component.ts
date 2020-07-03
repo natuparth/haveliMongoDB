@@ -17,6 +17,10 @@ export class ShoppingListComponent implements OnInit {
   showSpinner: boolean;
   errMessage: String;
   errFlag: Boolean = false;
+  columnDefs: any = [
+    {headerName: 'S.No', valueGetter: 'node.rowIndex + 1', width: 90},
+    {headerName: 'Name', field: 'name' , width: 150}
+  ];
   constructor(private crudService: CrudService) {}
 
   ngOnInit() {
@@ -24,10 +28,6 @@ export class ShoppingListComponent implements OnInit {
     this.showSpinner = true;
     this.items = this.inputList;
     this.getShoppingListUpdated(5);
-    // this.crudService.getShoppingList(localStorage.getItem('groupId')).subscribe(data => {
-    //   this.items = data;
-    //
-    // });
   }
 
   getShoppingListUpdated(noOfDays: number = 5) {
