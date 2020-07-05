@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from 'src/app/Services/authService/auth.service';
 import * as moment from 'moment';
+import * as _ from 'lodash';
+
+
 import { GridOptions } from 'ag-grid-community';
 @Component({
   selector: 'app-grocery',
@@ -87,7 +90,8 @@ export class GroceryComponent implements OnInit  {
     this.crudService.getListUpdated().subscribe((items) => {
         this.itemsList = items;
         this.itemsArray = items;
-         if (this.itemsList.length === undefined || this.itemsList.length === 0) {
+        this.itemsArray = _.clone(this.itemsArray);
+       if (this.itemsList.length === undefined || this.itemsList.length === 0) {
             this.rowData = [];
             if (this.itemsList.length === 0) {
                this.errMessage = 'Items not available! Please Add';

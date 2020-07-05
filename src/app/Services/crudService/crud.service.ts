@@ -31,16 +31,14 @@ export class CrudService {
        price : item.price
 
     };
-    console.log(itemAdded);
     this.http
-      .post<{message: string}>(env.apiUrl + '/item/postItem/' + groupId, itemAdded)
+      .post<{message: string, dataAdded?: any}>(env.apiUrl + '/item/postItem/' + groupId, itemAdded)
       .subscribe(data => {
         if (data.message === 'successful') {
        if (this.items.length == undefined) {
          this.items = [];
        }
-        this.items.push(itemAdded);
-        console.log([...this.items]);
+        this.items.push(data.dataAdded);
         this.itemsUpdated.next(this.items);
       } else {
       alert('error adding the item to the database');
