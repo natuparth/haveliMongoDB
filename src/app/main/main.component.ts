@@ -35,10 +35,8 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('came in main component');
     this.groupService.getGroups(localStorage.getItem('userEmail')).subscribe((doc) => {
       this.groupList = doc.items;
-      console.log(this.groupList);
       if (this.groupList.length) {
         this.gid = this.groupList.find(x => x.groupId == localStorage.getItem('groupId')).groupName;
         this.getNotifications();

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, DoCheck } from '@angular/core';
 import { CrudService } from 'src/app/Services/crudService/crud.service';
 import { Observable } from 'rxjs';
 import { Item } from 'src/app/models/item.model';
@@ -8,34 +8,52 @@ import { Item } from 'src/app/models/item.model';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css']
 })
-export class ShoppingListComponent implements OnInit {
+export class ShoppingListComponent implements OnInit ,OnChanges{
+  @Input() inputList: any[] = [];
   Items: Observable<Item[]>;
-  dropdownButton : String;
+  dropdownButton: String;
   items: any[] = [];
   itemsList: any[] = [];
   showSpinner: boolean;
-  errMessage:String;
-  errFlag:Boolean=false;
+  errMessage: String;
+  errFlag: Boolean = false;
+  columnDefs: any = [
+    {headerName: 'S.No', valueGetter: 'node.rowIndex + 1', width: 90},
+    {headerName: 'Name', field: 'name' , width: 150}
+  ];
+  selectedDays: number;
+  gridApi: any;
+  overlayNoRowTemplate: string;
   constructor(private crudService: CrudService) {}
 
   ngOnInit() {
+    console.log('came inside ngONinit');
     this.dropdownButton = 'less than 5 days';
     this.showSpinner = true;
-    this.crudService.getShoppingList(localStorage.getItem('groupId')).subscribe(data => {
-      this.items = data;
-      this.getShoppingListUpdated(5);
-    });
+    this.items = this.inputList;
+    this.getShoppingListUpdated(5);
+  }
+  ngOnChanges(changes: SimpleChanges){
+    this.overlayNoRowTemplate = '<div class="text-danger text-center">your haveli is full!! nothing to purchase<br><br><br><br></div>';
+    console.log('on change called');
+     console.log(changes);
+     this.items = changes.inputList.currentValue;
+     console.log(changes.inputList.currentValue);
+     console.log(this.items);
+     this.getShoppingListUpdated(this.selectedDays);
   }
 
+
   getShoppingListUpdated(noOfDays: number = 5) {
-    this.dropdownButton = 'less than '+ noOfDays.toString() +' days';
+    console.log('get shopping list called');
+    this.dropdownButton = 'less than ' + noOfDays.toString() + ' days';
+    this.selectedDays = noOfDays;
     this.itemsList = [];
-    if(this.items.length === undefined){
-      this.errMessage=this.crudService.getItemListKey(this.items);
-      this.errFlag=true;
-    }
-    else{
-    this.items.forEach(data => {
+    if (this.items.length === undefined) {
+      this.errMessage = this.crudService.getItemListKey(this.items);
+      this.errFlag = true;
+    } else {
+    this.items.forEach((data, index) => {
     const cutOffDays = (new Date(new Date().getTime() + noOfDays * 1000 * 3600 * 24)) ;
       // tslint:disable-next-line: max-line-length
       if (
@@ -43,19 +61,23 @@ export class ShoppingListComponent implements OnInit {
        ) {
         this.itemsList.push(data);
       }
-     // if(this.crudService.getItemListKey(this.items)!=""){
-     //   this.errMessage=this.crudService.getItemListKey(this.items);
-      //  this.errFlag=true;
-      //}
-      if(this.itemsList.length==0){
-        this.errMessage="your haveli is full!! nothing to purchase in "+noOfDays.toString()+" days";
-        this.errFlag=true;
-      }
-      else{
-        this.errFlag=false;
+      if(index == this.items.length - 1){
+        console.log('came inside set');
+        if (this.gridApi) {
+          console.log(this.itemsList);
+          this.gridApi.setRowData(this.itemsList);
+          console.log('this.gridApi set data called');
+        }
       }
     });
+
+
   }
     this.showSpinner = false;
+  }
+
+  onGridReady(event: any){
+    this.gridApi = event.api;
+
   }
 }

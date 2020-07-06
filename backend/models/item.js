@@ -5,7 +5,7 @@ const itemSchema = mongoose.Schema({
 quantity:Number,
 date:Date,
 type: String,
-measurementUnit: ['units','grams'],
+measurementUnit: String,
 consumptionPerDay:{type:Number,required:false},
 price:Number,
 imageUrl:{type:String,required: false},

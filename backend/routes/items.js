@@ -16,8 +16,8 @@ router.post("/postItem/:groupId",checkAuth,(req,res,next)=>{
   });
   group.findOne({groupId: req.params.groupId},(err,doc)=>{
     doc.items.push(item);
-    doc.save().then(()=>{
-      res.send({message:'successful'});
+    doc.save().then((data)=>{
+      res.send({message:'successful', dataAdded: data.items[data.items.length-1]});
     }).catch((err)=>{
       res.send({message: 'error occurred: '+ err})
     });
@@ -43,7 +43,6 @@ router.post("/postItem/:groupId",checkAuth,(req,res,next)=>{
     router.get('/getItem/:name/:groupId',checkAuth,(req,res,next)=>{
       group.findOne({groupId : req.params.groupId}).then((result)=>{
         res.json(result.items.filter(x=> {
-          console.log(x);
           return x.name === req.params.name
         }
         ));
@@ -55,7 +54,6 @@ router.post("/postItem/:groupId",checkAuth,(req,res,next)=>{
     router.get('/searchItems/:name/:groupId',checkAuth,(req,res,next)=>{
       if(req.params.name == 'all'){
         group.findOne({groupId: req.params.groupId}).then((result)=>{
-          console.log(result.items);
           res.send(result.items);
         }).catch((e)=>{
           res.json({message: 'some error occured '})
@@ -73,7 +71,7 @@ router.post("/postItem/:groupId",checkAuth,(req,res,next)=>{
 
     router.delete('/deleteItem',checkAuth,(req,res,next)=>{
         group.findOneAndUpdate({groupId:req.query.gid}, { $pull: { items : {name: req.query.name} }}, (err,doc) => {
-              console.log('deleted object'+ doc);
+
               res.send({message: 'item deleted successfully', name: req.query.name, error: ''})
               if(err)
                res.send({message: "couldn't delete item", name: req.query.name, error: err})
@@ -87,6 +85,8 @@ router.post("/postItem/:groupId",checkAuth,(req,res,next)=>{
       const item = {
       name : req.body.name,
       quantity:req.body.quantity,
+      measurementUnit: req.body.measurementUnit,
+      type: req.body.type,
       date:req.body.date,
       consumptionPerDay: req.body.consumptionPerDay,
       price:req.body.price,
