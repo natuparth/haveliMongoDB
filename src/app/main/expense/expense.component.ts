@@ -39,6 +39,7 @@ export class ExpenseComponent implements OnInit {
   addExpenseForm: FormGroup;
   groupId: string = null;
   prevExpense:any;
+  flag:boolean;
   dateFilterForm: FormGroup;
   custuomDatesFlag: boolean = false;
   constructor(
@@ -49,6 +50,7 @@ export class ExpenseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.flag=true
     this.groupId = localStorage.getItem('groupId');
     this.memberFlag = false;
     this.welcomeFlag = true;

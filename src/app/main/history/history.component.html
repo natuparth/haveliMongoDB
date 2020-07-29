@@ -4,16 +4,47 @@
 <div *ngIf='errFlag' class="text-danger col text-center"><br><br>{{errMessage}}<br><br></div>
                     
  <div *ngIf='!errFlag' class="col-md-10 offset-1 table-responsive" >
+    <form class="form-group form-inline"  [formGroup]="dateFilterForm" (ngSubmit)="chooseCustomDate()">
+        <label for="dateStart" style="padding-right: 10px;padding-left: 10px;">Start Date</label>
+        <input name="dateStart" class="form-control"
+            formControlName="dateStart" type="date" placeholder="Start Date"/>
+        <p class="help-block text-danger"
+            *ngIf="!dateFilterForm.get('dateStart').valid && 
+            dateFilterForm.get('dateStart').touched">
+            Please enter Start Date</p>
+        <label for="dateEnd" style="padding-right: 10px;padding-left: 10px;">End Date</label>
+        <input name="dateEnd" class="form-control"
+            formControlName="dateEnd" type="date" placeholder="End Date"/>
+        <p class="help-block text-danger"
+            *ngIf="!dateFilterForm.get('dateEnd').valid && 
+            dateFilterForm.get('dateEnd').touched">
+            Please enter Start Date</p>
+        &nbsp;
+        <button class="btn btn-primary" type="submit">Apply</button>
+    </form>
+    <div class="text-danger col text-center">{{errMessage}}</div>
      <table class="table table-dark table-hover table-sm">
         <tbody>
-             <tr *ngFor="let history of expHistory ;let i = index">
-                <th scope="row">{{i+1}}</th>
+             <tr *ngFor="let history of filterExpHistory ;let i = index">
+                <th scope="row">{{(pager.currentPage-1)*pager.pageSize+i+1}}</th>
                 <td>{{history.modifyBy}} {{ history.modifyType === 'U'?"  updated  ":(history.modifyType === 'D')? '  deleted  ':'  added  '}}{{"expense  "}}{{history.purpose}}{{"  paid  by  "}}{{history.paidBy}}</td>
                 <td><button *ngIf="!(history.modifyType === 'A')" class="btn btn-info" (click)='expenseHistory = history; flag=true'><span style="font-size:24px" class="fa fa-history"></span> </button></td>
              </tr>
         </tbody>
     </table>
+    <ul *ngIf="pager.pages && pager.pages.length" class="pagination text-primary ">{{"|"}}&nbsp;
+        <li [ngClass]="{disabled:pager.currentPage === 1}">
+            <a (click)="setPage(1)">First</a>
+        </li>&nbsp;{{"|"}}&nbsp;
+        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+            <a (click)="setPage(page)">{{page}}</a>&nbsp;{{"|"}}&nbsp;
+        </li>
+        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+            <a (click)="setPage(pager.totalPages)">Last</a>
+        </li>&nbsp;{{"|"}}
+    </ul>
 </div>
+
 <div class="modal" tabindex="-1" role="dialog" *ngIf='flag' [ngStyle]="{'display':'block'}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

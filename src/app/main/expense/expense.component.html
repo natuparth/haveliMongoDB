@@ -38,22 +38,22 @@
         <br>
         <br>
         <div class="card-deck tabsDiv ">
-            <div class="tabs rounded" [ngClass]="{'border-bottom border-success': !flag}" (click)="flag=!flag">
+            <div class="tabs rounded" [ngClass]="{'border border-dark': flag}" (click)="flag=true">
                 <div>
                     <p>Expense</p>
                 </div>
             </div>
-            <div class="tabs rounded" [ngClass]="{'border-bottom border-success': flag}" (click)="flag=!flag">
+            <div class="tabs rounded" [ngClass]="{'border border-dark': !flag}" (click)="flag=false">
                 <div>
                     <p>History</p>
                 </div>
             </div>
         </div>
         <br>
-        <div *ngIf='flag' class="container">
+        <div *ngIf='!flag' class="container">
             <app-history></app-history>
         </div>
-        <div *ngIf='!flag' class="container ">
+        <div *ngIf='flag' class="container ">
         <div class="row">
             <div class="col-md">
                 <div class="Itemscontainer" >
